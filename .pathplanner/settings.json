@@ -1,0 +1,8 @@
+{
+  //TODO Make Sure to update path planner settings
+  "robotWidth": 0.6858,
+  "robotLength": 0.6858,
+  "holonomicMode": true,
+  "generateJSON": false,
+  "generateCSV": false
+}
