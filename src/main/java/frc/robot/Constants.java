@@ -97,8 +97,6 @@ public final class Constants {
         public static final double TrackWidth = Units.inchesToMeters(18.5);
       }
 
-
-
       public static final class RobotBoundaries {
         public static final double MaxExtensionOverFrame = 1.20; // .120m or 120cm (width)
         public static final double MaxHeight = 1.98; // .198m or 198cm (Height)

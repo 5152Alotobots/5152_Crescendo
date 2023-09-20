@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Library.DriveTrains.Cmds_SubSys_DriveTrain.Cmd_SubSys_DriveTrain_JoysticDefault;
 import frc.robot.ChargedUp.DriverStation.SubSys_DriverStation;
+import frc.robot.Library.DriveTrains.Cmds_SubSys_DriveTrain.Cmd_SubSys_DriveTrain_JoysticDefault;
 import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 import frc.robot.Library.Vision.Limelight.SubSys_LimeLight;
@@ -56,12 +56,13 @@ public class RobotContainer {
   // ---- Driver Station
 
   // ---- Driver Station
-    public final SubSys_DriverStation driverStationSubSys = new SubSys_DriverStation();
+  public final SubSys_DriverStation driverStationSubSys = new SubSys_DriverStation();
   // SetUp Auto
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  //! Auto Commands Go here 
-  // EXAMPLE COMMANDpublic final Command m_leftbluecharge = new Auto_leftbluecharge_Cmd(driveSubSys, gyroSubSys, limeLightSubSys);
 
+  // ! Auto Commands Go here
+  // EXAMPLE COMMANDpublic final Command m_leftbluecharge = new Auto_leftbluecharge_Cmd(driveSubSys,
+  // gyroSubSys, limeLightSubSys);
 
   /*
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,7 +74,7 @@ public class RobotContainer {
     // Configure default commands
 
     /** ***** Control System Components */
- 
+
     //         () -> driverStationSubSys.GetArmExtendAxis()));
 
     // handSubSys.setDefaultCommand(new Cmd_HandWithSensor(
@@ -82,39 +83,27 @@ public class RobotContainer {
     //  distanceSubsys,
     //  () ->  driverStationSubSys.HandSensorBtn())
     // );
-/**
- ** Mecanum Drive
- *mecanumDriveSubSys.setDefaultCommand(
-    new Cmd_MecanumDriveDefault(
-      mecanumDriveSubSys,
-      () -> driverStationSubSys.DriveFwdAxis(),
-      () -> driverStationSubSys.DriveStrAxis(),
-      () -> driverStationSubSys.DriveRotAxis()
-    )
-  );
- */
-
+    /**
+     * * Mecanum Drive mecanumDriveSubSys.setDefaultCommand( new Cmd_MecanumDriveDefault(
+     * mecanumDriveSubSys, () -> driverStationSubSys.DriveFwdAxis(), () ->
+     * driverStationSubSys.DriveStrAxis(), () -> driverStationSubSys.DriveRotAxis() ) );
+     */
     driveSubSys.setDefaultCommand(
-      new Cmd_SubSys_DriveTrain_JoysticDefault(
-        driveSubSys,
-        () -> driverStationSubSys.DriveFwdAxis(),
-        () -> driverStationSubSys.DriveStrAxis(),
-        () -> driverStationSubSys.DriveRotAxis(),
-        true,
-        () -> driverStationSubSys.RotateLeftPt(),
-        () -> driverStationSubSys.RotateRightPt(),
-        () -> driverStationSubSys.DrivePerfModeAActive(),
-        () -> driverStationSubSys.DrivePerfModeBActive()
-      )
-    );
+        new Cmd_SubSys_DriveTrain_JoysticDefault(
+            driveSubSys,
+            () -> driverStationSubSys.DriveFwdAxis(),
+            () -> driverStationSubSys.DriveStrAxis(),
+            () -> driverStationSubSys.DriveRotAxis(),
+            true,
+            () -> driverStationSubSys.RotateLeftPt(),
+            () -> driverStationSubSys.RotateRightPt(),
+            () -> driverStationSubSys.DrivePerfModeAActive(),
+            () -> driverStationSubSys.DrivePerfModeBActive()));
 
-    /**  Sendable Chooser
-    * *EXAMPLE 
-    * m_chooser.addOption("[BASIC] leftbluecharge", m_leftbluecharge);
-    * m_chooser.addOption("[BASIC] leftblueescape", m_leftblueescape);
-    */ 
-
-
+    /**
+     * Sendable Chooser *EXAMPLE m_chooser.addOption("[BASIC] leftbluecharge", m_leftbluecharge);
+     * m_chooser.addOption("[BASIC] leftblueescape", m_leftblueescape);
+     */
     SmartDashboard.putData(m_chooser);
   }
 
@@ -136,16 +125,13 @@ public class RobotContainer {
     driverStationSubSys.PoseResetButton.onTrue(
         new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
 
-    /** 
-     * Button Configuration Example  
-     * driverStationSubSys.RainbowLEDColorButton.onTrue(
-     *     new Cmd_SetBlingColorValue(
-     *         blingSubSys,
-     *         Const_Bling.Controllers.controller1,
-     *         Const_Bling.Patterns.FixedPalette.RainbowRainbow));
-    */
-
+    /**
+     * Button Configuration Example driverStationSubSys.RainbowLEDColorButton.onTrue( new
+     * Cmd_SetBlingColorValue( blingSubSys, Const_Bling.Controllers.controller1,
+     * Const_Bling.Patterns.FixedPalette.RainbowRainbow));
+     */
   }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

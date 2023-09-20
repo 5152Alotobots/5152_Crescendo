@@ -13,15 +13,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 
 public class PwrDistributionSubSys extends SubsystemBase {
-  /**
-   * Creates a new Power distribution Subsystem.
-   */
-
+  /** Creates a new Power distribution Subsystem. */
   PowerDistribution pdp = new PowerDistribution(CAN_IDs.PDP_CAN_ID, ModuleType.kRev);
 
-  public PwrDistributionSubSys() {
-
-  }
+  public PwrDistributionSubSys() {}
 
   @Override
   public void periodic() {

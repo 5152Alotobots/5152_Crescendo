@@ -7,7 +7,6 @@ package frc.robot.ChargedUp.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class SubSys_DriverStation extends SubsystemBase {
   /** Creates a new DriverStationSubSys. */
@@ -23,7 +22,7 @@ public class SubSys_DriverStation extends SubsystemBase {
 
   // Co-Driver Controller
   private XboxController m_CoDriverController = new XboxController(1);
-  //Define Joystick Buttons here 
+  // Define Joystick Buttons here
 
   // AuxDriver Controller
   private XboxController m_AuxDriverController = new XboxController(2);
@@ -70,5 +69,4 @@ public class SubSys_DriverStation extends SubsystemBase {
   public boolean DrivePerfModeBActive() {
     return (m_DriverController.getRawAxis(3) > 0.3);
   }
-
 }
