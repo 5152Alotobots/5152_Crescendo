@@ -25,8 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "cSpell.words": [
-    "Mecanum"
-  ]
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }
