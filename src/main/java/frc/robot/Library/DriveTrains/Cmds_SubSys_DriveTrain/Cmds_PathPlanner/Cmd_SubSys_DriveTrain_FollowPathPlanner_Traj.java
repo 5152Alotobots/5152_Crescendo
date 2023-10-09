@@ -10,9 +10,8 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
@@ -60,11 +59,8 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
 
     // Load Path
     this.constraints = PathPlanner.getConstraintsFromPath(this.pathPlannerTrajName);
-    this.ppTraj =
-        PathPlanner.loadPath(
-            this.pathPlannerTrajName,
-            this.constraints);
-            //new PathConstraints(2.7, 3.0));
+    this.ppTraj = PathPlanner.loadPath(this.pathPlannerTrajName, this.constraints);
+    // new PathConstraints(2.7, 3.0));
 
     this.ppTraj = PathPlannerTrajectory.transformTrajectoryForAlliance(this.ppTraj, setAlliance);
     this.xDistancePID =
@@ -154,6 +150,7 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
     SmartDashboard.putBoolean("y dist at set", this.yDistancePID.atSetpoint());
     SmartDashboard.putBoolean("rot dist at set", this.rotationPID.atSetpoint());
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

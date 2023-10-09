@@ -54,11 +54,23 @@ public class Cmd_AutoBalance extends CommandBase {
           || pitch < SubSys_ChargeStation_Constants.minPitch) {
         // Drive using the pitch as the speed. (gyro angle * 0.01 if the gyro is 8
         // degrees off, the robot will drive at 0.08 speed)
-        m_DriveTrain.Drive((pitch * speed) * SubSys_ChargeStation_Constants.speedMultiplier, 0, 0, false, false, false);
+        m_DriveTrain.Drive(
+            (pitch * speed) * SubSys_ChargeStation_Constants.speedMultiplier,
+            0,
+            0,
+            false,
+            false,
+            false);
       } else if (roll > SubSys_ChargeStation_Constants.maxRoll
           || roll < SubSys_ChargeStation_Constants.minRoll) {
         // Drive using the roll as the speed.
-        m_DriveTrain.Drive(0, (roll * speed) * SubSys_ChargeStation_Constants.speedMultiplier, 0, false, false, false);
+        m_DriveTrain.Drive(
+            0,
+            (roll * speed) * SubSys_ChargeStation_Constants.speedMultiplier,
+            0,
+            false,
+            false,
+            false);
       } else {
         finished = true;
       }
@@ -100,6 +112,7 @@ public class Cmd_AutoBalance extends CommandBase {
       }
     */
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

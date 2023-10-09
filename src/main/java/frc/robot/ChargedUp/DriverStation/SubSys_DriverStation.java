@@ -88,6 +88,7 @@ public class SubSys_DriverStation extends SubsystemBase {
   public double GetArmRotateAxis() {
     return m_CoDriverController.getRawAxis(1);
   }
+
   // Arm Extend Axis
   public double GetArmExtendAxis() {
     return -m_CoDriverController.getRawAxis(5);

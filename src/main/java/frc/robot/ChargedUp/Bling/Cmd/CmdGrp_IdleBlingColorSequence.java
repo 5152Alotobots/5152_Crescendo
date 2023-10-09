@@ -17,6 +17,7 @@ import frc.robot.ChargedUp.Bling.SubSys_Bling;
 public class CmdGrp_IdleBlingColorSequence extends SequentialCommandGroup {
   private SubSys_Bling subSys_Bling;
   private Spark controller;
+
   /** Creates a new CmdGrp_IdleBlingColorSequence. */
   public CmdGrp_IdleBlingColorSequence(SubSys_Bling subSys_Bling, Spark Controller) {
     this.subSys_Bling = subSys_Bling;
