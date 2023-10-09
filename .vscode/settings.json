@@ -2,6 +2,11 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.server.launchMode": "Standard",
   "files.exclude": {
+    "**/.github":true,
+    "**/.Glass":true,
+    "LICENSE":true,
+    "README.md":true,
+    "**/.pathplanner":true,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
@@ -25,5 +30,20 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "workbench.colorCustomizations": {
+    "sash.hoverBorder": "#28693c",
+    "statusBar.background": "#1a4427",
+    "statusBarItem.hoverBackground": "#28693c",
+    "statusBarItem.remoteBackground": "#1a4427",
+    "titleBar.activeBackground": "#1a4427",
+    "titleBar.inactiveBackground": "#1a442799",
+    "tab.activeBorder": "#28693c",
+    "commandCenter.border": "#e7e7e799",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#1a4427"
 }
