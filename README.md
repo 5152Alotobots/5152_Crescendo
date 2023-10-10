@@ -13,7 +13,9 @@ This Repo is designed to eliminate extra hassel cleaning up our code and to make
    - In THE **Non** Imported library delete everything except .vscode and vendorDeps (Make sure you are in VScode while doing this there are hidden files that you don't want to delete)
    - In the **Imported** library delete the .vscode and vendorDeps file
    - Copy Everything from Imported library into the Non Imported Library
-   - Run a build/deploy to verify succses 
+   - Run a build/deploy to verify succses
+   - **When You are Done Please add a Release of the Library so we can revert / reuse an older version of the library**
+   - ***You Should make at least one realese a year***
 #### 3. Install correct WPIlib (Not Nessisary is step one happend)
    - Please use the WPIlib installer (Sean) and install everything. to start the installer go to the most recent release of this repo and find the WPIlib ISO. Download it and extract it
 #### 4. Fork this Repo (IF Not Already Done)
