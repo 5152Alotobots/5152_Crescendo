@@ -1,5 +1,11 @@
 {
     "recommendations": [
-        "johnpapa.vscode-peacock"
+        "johnpapa.vscode-peacock",
+        "aaron-bond.better-comments",
+        "streetsidesoftware.code-spell-checker",
+        "pkief.material-icon-theme",
+        "vscjava.vscode-java-pack",
+        "github.copilot",
+        "eamodio.gitlens"
     ]
 }
