@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Library.Gyroscopes.NavX.SubSys_NavXGyro_Constants;
 
-public class SubSys_PigeonGyro extends Subsystem {
+public class SubSys_PigeonGyro implements Subsystem {
   /** Creates a new NavXGyro. */
   private Pigeon2 pigeon2Gyro;
 

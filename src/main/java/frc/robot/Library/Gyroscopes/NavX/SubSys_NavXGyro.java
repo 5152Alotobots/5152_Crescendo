@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class SubSys_NavXGyro extends Subsystem {
+public class SubSys_NavXGyro implements Subsystem {
   /**
    * Creates a new NavXGyro.
    */

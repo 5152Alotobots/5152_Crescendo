@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 // trick
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 
-public class SubSys_MecanumDrive extends Subsystem {
+public class SubSys_MecanumDrive implements Subsystem {
 
   private final WPI_VictorSPX m_frontLeftMotor =
       new WPI_VictorSPX(Const_MecanumDrive.k_FrontLeftMotorPort);

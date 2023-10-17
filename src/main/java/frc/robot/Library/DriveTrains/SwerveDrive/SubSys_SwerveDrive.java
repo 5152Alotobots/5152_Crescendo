@@ -18,7 +18,7 @@ import frc.robot.Constants.Robot;
 import frc.robot.Library.DriveTrains.SwerveDrive.SwerveModules.MK4i_FalconFalcon.MK4i_FalconFalcon_Module;
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 
-public class SubSys_SwerveDrive extends Subsystem {
+public class SubSys_SwerveDrive implements Subsystem {
   /** Creates a new SubSys_SwerveDrive. */
 
   /* ***** MK4i Swerve *****                                                         */

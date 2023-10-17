@@ -16,7 +16,7 @@ import frc.robot.Constants.Robot;
 import frc.robot.Library.DriveTrains.SwerveDrive.SubSys_SwerveDrive;
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 
-public class SubSys_DriveTrain extends Subsystem {
+public class SubSys_DriveTrain implements Subsystem {
   /** Creates a new Drive SubSystem. */
 
   // Drive Types - Select only 1

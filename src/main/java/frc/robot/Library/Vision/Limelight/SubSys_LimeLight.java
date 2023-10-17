@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.Robot;
 
-public class SubSys_LimeLight extends Subsystem {
+public class SubSys_LimeLight implements Subsystem {
   /** Creates a new LimeLightSubSys. */
 
   // Coordinate System
@@ -46,7 +46,6 @@ public class SubSys_LimeLight extends Subsystem {
     m_TargetDistance = 0.0;
   }
 
-  @Override
   public void periodic() {
     // This method will be called once per scheduler run
     updateLimelightData();
