@@ -43,10 +43,7 @@
     "statusBarItem.remoteForeground": "#e7e7e7",
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveForeground": "#e7e7e799",
-    "activityBar.foreground": "#e7e7e7",
-    "activityBar.inactiveForeground": "#e7e7e799",
-    "activityBarBadge.background": "#04861c",
-    "activityBarBadge.foreground": "#e7e7e7"
+    "tab.activeBorder": "#28693c"
   },
   "peacock.color": "#1a4427"
 }
