@@ -13,7 +13,7 @@ public class SubSys_DriverStation extends SubsystemBase {
   /** Creates a new DriverStationSubSys. */
 
   // Driver Controller
-  private XboxController m_DriverController = new XboxController(0);
+  public XboxController m_DriverController = new XboxController(0);
 
   public JoystickButton GyroResetButton = new JoystickButton(m_DriverController, 4);
   public JoystickButton CloseHandButton = new JoystickButton(m_DriverController, 6);
@@ -22,7 +22,7 @@ public class SubSys_DriverStation extends SubsystemBase {
   public JoystickButton TestButton = new JoystickButton(m_DriverController, 3);
 
   // Co-Driver Controller
-  private XboxController m_CoDriverController = new XboxController(1);
+  public XboxController m_CoDriverController = new XboxController(1);
   public JoystickButton GroundPickupButton = new JoystickButton(m_CoDriverController, 1);
   public JoystickButton HighConeDelivery = new JoystickButton(m_CoDriverController, 4);
   public JoystickButton MidConeDelivery = new JoystickButton(m_CoDriverController, 3);
@@ -58,8 +58,13 @@ public class SubSys_DriverStation extends SubsystemBase {
     return -m_DriverController.getRawAxis(0);
   }
 
-  // Drive Rotate Axis
-  public double DriveRotAxis() {
+  // Drive Rotate Fwd Axis
+  public double DriveRotFwdAxis() {
+    return -m_DriverController.getRawAxis(3);
+  }
+
+  // Drive Rotate Strafe Axis
+  public double DriveRotStrAxis() {
     return -m_DriverController.getRawAxis(4);
   }
 
