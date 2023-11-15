@@ -15,9 +15,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Library.DriveTrains.Cmds_SubSys_DriveTrain.Cmd_SubSys_DriveTrain_JoysticDefault;
 import frc.robot.DriverStation.SubSys_DriverStation;
-import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
+import frc.robot.Library.DriveTrains.SwerveDrive.Cmds.TeleopDrive;
+import frc.robot.Library.DriveTrains.SwerveDrive.SubSys_SwerveDrive;
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 import frc.robot.Library.Vision.Limelight.SubSys_LimeLight;
+
+import java.io.IOException;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,7 +46,7 @@ public class RobotContainer {
   private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
 
   // ---- Drive Subsystem (Swerve)
-  public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
+  public final SubSys_SwerveDrive driveSubSys = new SubSys_SwerveDrive();
   // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
 
   // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
@@ -66,7 +69,7 @@ public class RobotContainer {
   /*
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
+  public RobotContainer() throws IOException {
     // Configure the button bindings
     configureButtonBindings();
 
@@ -95,18 +98,13 @@ public class RobotContainer {
  */
 
     driveSubSys.setDefaultCommand(
-      new Cmd_SubSys_DriveTrain_JoysticDefault(
+      new TeleopDrive(
         driveSubSys,
-        () -> driverStationSubSys.DriveFwdAxis(),
-        () -> driverStationSubSys.DriveStrAxis(),
-        () -> driverStationSubSys.DriveRotAxis(),
-        true,
-        () -> driverStationSubSys.RotateLeftPt(),
-        () -> driverStationSubSys.RotateRightPt(),
-        () -> driverStationSubSys.DrivePerfModeAActive(),
-        () -> driverStationSubSys.DrivePerfModeBActive()
-      )
-    );
+              driverStationSubSys::DriveFwdAxis,
+              driverStationSubSys::DriveStrAxis,
+              driverStationSubSys::DriveRotAxis,
+        () -> false
+      ));
 
     /**  Sendable Chooser
     * *EXAMPLE 
@@ -132,9 +130,6 @@ public class RobotContainer {
     // Gyro Reset Command Button
     driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
 
-    // Pose Reset Command Button
-    driverStationSubSys.PoseResetButton.onTrue(
-        new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
 
     /** 
      * Button Configuration Example  

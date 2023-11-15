@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class SubSys_Pneumatics extends Subsystem {
+public class SubSys_Pneumatics implements Subsystem {
   /** Creates a new SubSys_Pneumatics. */
   public SubSys_Pneumatics() {}
 

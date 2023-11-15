@@ -43,7 +43,7 @@ This Repo is designed to eliminate extra hassel cleaning up our code and to make
     "**/.factorypath": true,
     "**/*~": true,
     //THIS LINE BELOW
-    "**/*/Library": true, 
+    "**/*/Library": true
   },
   "java.test.config": [
     {
@@ -59,6 +59,34 @@ This Repo is designed to eliminate extra hassel cleaning up our code and to make
   "java.test.defaultConfig": "WPIlibUnitTests"
 }
 ```
+
+Can Motor's 
+
+10 PDP
+20 IMU
+30 Volt. Regulator
+40 Pneumatics Ctrl.
+Swerve Drive:
+50's frontLeft
+--> 50 drive
+--> 54 encoder
+--> 55 steer
+60's frontRight
+--> 60 drive
+--> 64 encoder
+--> 65 steer
+70's backLeft
+--> 70 drive
+--> 74 encoder
+--> 75 steer
+80's backRight
+--> 80 drive
+--> 84 encoder
+--> 85 steer
+Anything else 100 and up (100, 110, 120, etc.) 
+Intervals of 10 on up unless you think it logical to use intervals 5 for like
+a motor and a follower motor. 
+External Encoders should be one less than the motor they are attached to.
 
 
     

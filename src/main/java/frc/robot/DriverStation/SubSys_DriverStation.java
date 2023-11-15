@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-public class SubSys_DriverStation extends Subsystem {
+public class SubSys_DriverStation implements Subsystem {
   /** Creates a new DriverStationSubSys. */
 
   // Driver Controller

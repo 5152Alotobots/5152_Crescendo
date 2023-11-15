@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.CAN_IDs;
 
-public class PwrDistributionSubSys extends Subsystem {
+public class PwrDistributionSubSys implements Subsystem {
   /**
    * Creates a new Power distribution Subsystem.
    */
