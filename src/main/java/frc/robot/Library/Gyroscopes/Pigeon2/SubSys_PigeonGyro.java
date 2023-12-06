@@ -44,6 +44,7 @@ public class SubSys_PigeonGyro extends SubsystemBase {
   public double getRawGyroRoll() {
     return this.pigeon2Gyro.getRoll();
   }
+
   /**
    * Return Raw Gyro Angle
    *

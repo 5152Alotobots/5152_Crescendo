@@ -24,6 +24,7 @@ public class Cmd_RotateArmFake extends CommandBase {
   }
 
   public double FalseEncoderValue;
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {

@@ -7,15 +7,12 @@
 
 package frc.robot.Library.Gyroscopes.NavX;
 
-/**
- * Add your docs here.
- */
+/** Add your docs here. */
 public class SubSys_NavXGyro_Constants {
 
-    // NavXGyro Subsystem Enable Shuffleboard
-    public static final boolean NavXGyroSubSys_Shuffleboard_Enable = true;             
+  // NavXGyro Subsystem Enable Shuffleboard
+  public static final boolean NavXGyroSubSys_Shuffleboard_Enable = true;
 
-    // Gyro Reversed
-    public static final boolean GyroReversed = false;
-
+  // Gyro Reversed
+  public static final boolean GyroReversed = false;
 }

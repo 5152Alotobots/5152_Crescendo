@@ -527,6 +527,7 @@ public class SubSys_Arm extends SubsystemBase {
       return Const_Arm
           .kARM_SHOULDER_z; // if not above the pivot point then hight is the pivot point
   }
+
   // x = offset
   public double getLengthOfArmFromBase(double ArmShoulderAngle, double ArmExtensionLength) {
     double radians = Math.toRadians(ArmShoulderAngle); // Convert from degrees to radians
@@ -561,6 +562,7 @@ public class SubSys_Arm extends SubsystemBase {
         break;
     }
   }
+
   //   /**
   //    * @param lockValue 0 = Unlocked, 1 = Ext-No-Rtc, 2 = Rtc-No-Ext, 3 = Slow
   //    * @param PercentOutput -1 - 1 double
@@ -594,6 +596,7 @@ public class SubSys_Arm extends SubsystemBase {
         break;
     }
   }
+
   // *Motor methods (-InBoundsMethods-)
   public void RotateArm_InBounds(double PercentOutput) {
     double ArmShoulderAngle = Arm_ShoulderEncoder.getAbsolutePosition() - Const_Arm.kOffsetTo0;
