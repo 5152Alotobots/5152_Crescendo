@@ -44,7 +44,6 @@ public class RobotContainer {
 
   // ---- Pigeon2
 
-
   public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
 
   // ---- LimeLight
