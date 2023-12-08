@@ -13,6 +13,11 @@ import frc.robot.ChargedUp.PhotonVision.SubSys_Photonvision;
 import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
 import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
 
+/**
+ * The Auto class is responsible for handling the autonomous mode of the robot.
+ * It includes a variety of commands for different tasks such as escaping, state middle leave, state barrier, and others.
+ * The class also includes a SendableChooser object to select the desired command.
+ */
 public class Auto {
   private SubSys_Photonvision photonvisionSubSys;
   private SubSys_Bling blingSubSys;
@@ -23,6 +28,10 @@ public class Auto {
 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  /**
+   * Constructor for the Auto class.
+   * Initializes all the subsystems and commands.
+   */
   public Auto () {
     SubSys_DriveTrain driveSubSys = this.driveSubSys;
     SubSys_PigeonGyro gyroSubSys = this.gyroSubSys;
@@ -80,6 +89,10 @@ public class Auto {
     SmartDashboard.putData(m_chooser);
   }
 
+  /**
+   * Get the selected command from the SendableChooser.
+   * @return The selected command.
+   */
   public Command getAutoCommand() {
     return m_chooser.getSelected();
   }

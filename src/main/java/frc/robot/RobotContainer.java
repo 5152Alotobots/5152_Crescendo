@@ -75,11 +75,7 @@ public class RobotContainer {
   public final SubSys_Bling blingSubSys = new SubSys_Bling();
 
   public final Auto auto = new Auto();
-  /*
-   ***** Charged Up Componentes
-   */
 
-  // ---- Driver Station
   public final SubSys_DriverStation driverStationSubSys = new SubSys_DriverStation();
 
   public RobotContainer() {
