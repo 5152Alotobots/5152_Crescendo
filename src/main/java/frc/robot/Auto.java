@@ -19,23 +19,11 @@ import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
  * others. The class also includes a SendableChooser object to select the desired command.
  */
 public class Auto {
-  private SubSys_Photonvision photonvisionSubSys;
-  private SubSys_Bling blingSubSys;
-  private SubSys_Hand handSubSys;
-  private SubSys_Arm armSubSys;
-  private SubSys_PigeonGyro gyroSubSys;
-  private SubSys_DriveTrain driveSubSys;
-
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** Constructor for the Auto class. Initializes all the subsystems and commands. */
-  public Auto() {
-    SubSys_DriveTrain driveSubSys = this.driveSubSys;
-    SubSys_PigeonGyro gyroSubSys = this.gyroSubSys;
-    SubSys_Arm armSubSys = this.armSubSys;
-    SubSys_Hand handSubSys = this.handSubSys;
-    SubSys_Bling blingSubSys = this.blingSubSys;
-    SubSys_Photonvision photonvisionSubSys = this.photonvisionSubSys;
+  public Auto(SubSys_Bling blingSubSys, SubSys_Photonvision photonvisionSubSys, SubSys_Hand handSubSys, SubSys_Arm armSubSys, SubSys_PigeonGyro gyroSubSys, SubSys_DriveTrain driveSubSys) {
+
 
     Command m_stateescape = new Auto_stateescape_Cmd(driveSubSys, gyroSubSys);
     m_chooser.addOption("[BASIC] stateescape", m_stateescape);
@@ -95,6 +83,7 @@ public class Auto {
             driveSubSys, gyroSubSys, handSubSys, armSubSys, photonvisionSubSys, blingSubSys);
     m_chooser.addOption(
         "[TRIPLE] 1 cone, 2 cube Human Player Side - Red", auto_1cone2CubeHPRed_Cmd);
+
 
     SmartDashboard.putData(m_chooser);
   }

@@ -73,11 +73,12 @@ public class RobotContainer {
 
   public final SubSys_Bling blingSubSys = new SubSys_Bling();
 
-  public final Auto auto = new Auto();
+
 
   public final SubSys_DriverStation driverStationSubSys = new SubSys_DriverStation();
-
+  public Auto auto;
   public RobotContainer() {
+    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);;
     // Configure the button bindings
     configureButtonBindings();
 
@@ -190,13 +191,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    // m_DriveSubSys.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-
-    // return m_BasicAutoCmd;
-    // m_DriveSubSys.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-
-    // return m_BasicAutoCmd;
     return auto.getAutoCommand();
   }
 }

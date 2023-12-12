@@ -33,7 +33,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     CameraServer.startAutomaticCapture();
-
     robotContainer = new RobotContainer();
     m_subSys_Pneumatics.compressorOn();
     // CameraServer.startAutomaticCapture(0);
