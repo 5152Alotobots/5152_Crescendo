@@ -71,7 +71,7 @@ public class RobotContainer {
 
   //public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
 
-  public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
+  //public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
 
   // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
 
@@ -285,24 +285,32 @@ public class RobotContainer {
             OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverStationSubSys.m_DriverController.getRawAxis(2), false);
+        () -> driverStationSubSys.m_DriverController.getRawAxis(2), 
+        false);
    
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
         () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftY(),
             OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverStationSubSys.m_DriverController.getRawAxis(2), () -> true, false, true);
+        () -> driverStationSubSys.m_DriverController.getRightX(), 
+        () -> true, 
+        false, 
+        true);
 
     TeleopDrive closedFieldRel = new TeleopDrive(drivebase,
         () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverStationSubSys.m_DriverController.getRawAxis(3), () -> true, false, true);
+        () -> -driverStationSubSys.m_DriverController.getRightX(), 
+        () -> true, 
+        false, 
+        true);
 
     // Configure default commands
 
     // *** drivebase ***
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
+    //drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
+    drivebase.setDefaultCommand(simClosedFieldRel);
 
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
