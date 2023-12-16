@@ -1,4 +1,4 @@
-package frc.robot.subsystem.hand;
+package frc.robot.subsystems.hand;
 
 public class SubSys_Hand_Constants {
 

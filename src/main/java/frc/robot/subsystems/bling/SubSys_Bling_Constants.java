@@ -1,4 +1,4 @@
-package frc.robot.subsystem.bling;
+package frc.robot.subsystems.bling;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 

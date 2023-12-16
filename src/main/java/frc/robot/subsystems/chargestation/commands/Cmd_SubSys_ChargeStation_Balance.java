@@ -2,13 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystem.chargestation.commands;
+package frc.robot.subsystems.chargestation.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.library.drivetrains.SubSys_DriveTrain;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
-import frc.robot.subsystem.chargestation.SubSys_ChargeStation_Constants;
+import frc.robot.subsystems.chargestation.SubSys_ChargeStation_Constants;
 
 public class Cmd_SubSys_ChargeStation_Balance extends CommandBase {
   /** Creates a new Cmd_AutoBalance. */
