@@ -8,4 +8,4 @@ name = "java"
 
 [[transformers]]
 name = "google-java-format"
-enabled = true
+enabled = false
