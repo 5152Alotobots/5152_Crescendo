@@ -74,44 +74,30 @@ public class RobotContainer {
   public final DriverStation driverStationSubSys = new DriverStation();
   public Auto auto;
   public RobotContainer() {
-    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);;
+    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
     // Configure the button bindings
     configureButtonBindings();
 
     // Configure default commands
 
-    /** ***** Control System Components */
+    /* Control System Components */
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
             armSubSys,
-            () -> driverStationSubSys.GetArmRotateAxis(),
-            () -> driverStationSubSys.GetArmExtendAxis()));
-
-    // handSubSys.setDefaultCommand(new Cmd_HandWithSensor(
-    //  handSubSys,
-    //  colorSubSys,
-    //  distanceSubsys,
-    //  () ->  driverStationSubSys.HandSensorBtn())
-    // );
-
-    // mecanumDriveSubSys.setDefaultCommand(
-    //    new Cmd_MecanumDriveDefault(
-    //        mecanumDriveSubSys,
-    //        () -> driverStationSubSys.DriveFwdAxis(),
-    //        () -> driverStationSubSys.DriveStrAxis(),
-    //        () -> driverStationSubSys.DriveRotAxis()));
+                driverStationSubSys::GetArmRotateAxis,
+                driverStationSubSys::GetArmExtendAxis));
 
     driveSubSys.setDefaultCommand(
         new Cmd_SubSys_DriveTrain_JoysticDefault(
             driveSubSys,
-            () -> driverStationSubSys.DriveFwdAxis(),
-            () -> driverStationSubSys.DriveStrAxis(),
-            () -> driverStationSubSys.DriveRotAxis(),
+                driverStationSubSys::DriveFwdAxis,
+                driverStationSubSys::DriveStrAxis,
+                driverStationSubSys::DriveRotAxis,
             true,
-            () -> driverStationSubSys.RotateLeftPt(),
-            () -> driverStationSubSys.RotateRightPt(),
-            () -> driverStationSubSys.DrivePerfModeAActive(),
-            () -> driverStationSubSys.DrivePerfModeBActive()));
+                driverStationSubSys::RotateLeftPt,
+                driverStationSubSys::RotateRightPt,
+                driverStationSubSys::DrivePerfModeAActive,
+                driverStationSubSys::DrivePerfModeBActive));
   }
 
   /**
