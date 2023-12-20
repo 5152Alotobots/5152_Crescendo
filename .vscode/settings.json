@@ -30,6 +30,7 @@
     "DEADBAND",
     "deadbands",
     "drivebase",
+    "talonfx",
     "Teleop"
   ]
 }
