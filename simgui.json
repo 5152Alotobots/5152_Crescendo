@@ -126,6 +126,7 @@
       "/LiveWindow/Ungrouped/Spark[0]": "Motor Controller",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
+      "/SmartDashboard/Pigeon 2 [20]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {
