@@ -281,11 +281,11 @@ public class RobotContainer {
 
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
         () ->
-            MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftY(),
+            MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(),
             OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverStationSubSys.m_DriverController.getLeftX(),
+        () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverStationSubSys.m_DriverController.getRawAxis(2), 
+        () -> driverStationSubSys.DriveRotStrAxis(), 
         false);
    
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
