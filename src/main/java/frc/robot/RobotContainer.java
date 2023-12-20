@@ -283,9 +283,9 @@ public class RobotContainer {
         () ->
             MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(),
             OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(),
+        () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverStationSubSys.m_DriverController.getRawAxis(2), 
+        () -> driverStationSubSys.DriveRotStrAxis(), 
         false);
    
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
