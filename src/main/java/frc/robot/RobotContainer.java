@@ -277,7 +277,7 @@ public class RobotContainer {
             OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverStationSubSys.m_DriverController.getRightX(),
         () -> -driverStationSubSys.m_DriverController.getRightY(),
-        false);
+        true);
 
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
         () ->
@@ -295,7 +295,7 @@ public class RobotContainer {
             OperatorConstants.LEFT_X_DEADBAND),
         () -> driverStationSubSys.DriveRotStrAxis(), 
         () -> true, 
-        false, 
+        true, 
         false);
 
     TeleopDrive closedFieldRel = new TeleopDrive(drivebase,
@@ -303,15 +303,15 @@ public class RobotContainer {
         () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverStationSubSys.DriveRotStrAxis(), 
         () -> true, 
-        false, 
-        true);
+        true, 
+        false);
 
     // Configure default commands
 
     // *** drivebase ***
-    //drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
-    drivebase.setDefaultCommand(simClosedFieldRel);
-
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? simClosedFieldRel : closedFieldRel );
+    //drivebase.setDefaultCommand(simClosedFieldRel);
+    //drivebase.setDefaultCommand(closedAbsoluteDrive);
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
             armSubSys,
