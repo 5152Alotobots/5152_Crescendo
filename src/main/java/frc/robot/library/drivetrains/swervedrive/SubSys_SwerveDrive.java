@@ -256,12 +256,7 @@ public class SubSys_SwerveDrive extends SubsystemBase {
    * @param degrees
    */
   public void setYaw(double degrees) {
-    gyroSubSys.setYaw(degrees);
-  }
-
-  /** setGyroYawToZero set Gyro Yaw Value to Zero */
-  public void setYawToZero() {
-    gyroSubSys.setYaw(0.0);
+    gyroSubSys.setYawRelativeToFront(degrees);
   }
 
   /**

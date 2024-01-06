@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class DriverStation {
-  /** Creates a new DriverStationSubSys. */
 
   // Driver Controller
-  private XboxController m_DriverController = new XboxController(0);
+  private final XboxController m_DriverController = new XboxController(0);
 
   public JoystickButton GyroResetButton = new JoystickButton(m_DriverController, 4);
   public JoystickButton CloseHandButton = new JoystickButton(m_DriverController, 6);
@@ -21,7 +20,7 @@ public class DriverStation {
   public JoystickButton TestButton = new JoystickButton(m_DriverController, 3);
 
   // Co-Driver Controller
-  private XboxController m_CoDriverController = new XboxController(1);
+  private final XboxController m_CoDriverController = new XboxController(1);
   public JoystickButton GroundPickupButton = new JoystickButton(m_CoDriverController, 1);
   public JoystickButton HighConeDelivery = new JoystickButton(m_CoDriverController, 4);
   public JoystickButton MidConeDelivery = new JoystickButton(m_CoDriverController, 3);
@@ -33,7 +32,7 @@ public class DriverStation {
   public POVButton RainbowStrobeLEDColorButton = new POVButton(m_CoDriverController, 270);
 
   // AuxDriver Controller
-  private XboxController m_AuxDriverController = new XboxController(2);
+  //private final XboxController m_AuxDriverController = new XboxController(2);
 
   public DriverStation() {}
 

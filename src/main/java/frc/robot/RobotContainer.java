@@ -30,74 +30,38 @@ import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  private final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
+  private final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
+  private final SubSys_Hand handSubSys = new SubSys_Hand();
+  private final SubSys_Arm armSubSys = new SubSys_Arm(handSubSys.getHandLength());
+  private final SubSys_Bling blingSubSys = new SubSys_Bling();
+  private final DriverStation driverStation = new DriverStation();
+  private final Auto auto;
 
-  /** **** Library Components */
-
-  // ---- Power Distribution
-  // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
-
-  // ---- NavXGyro
-  // public final NavXGyroSubSys m_NavXGyroSubSys = new NavXGyroSubSys();
-
-  // ---- Pigeon2
-
-  public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
-
-
-  // ---- Drive Subsystem (Swerve)
-  public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
-
-  public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
-
-  // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
-
-  // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
-
-  // public final SubSys_MecanumDrive mecanumDriveSubSys = new SubSys_MecanumDrive();
-
-  // public final SubSys_ColorSensor colorSubSys = new SubSys_ColorSensor();
-
-  // public final SubSys_DistanceSensor distanceSubsys = new SubSys_DistanceSensor();
-  // ---- Driver Station
-
-  // ---- Hand
-  public final SubSys_Hand handSubSys = new SubSys_Hand();
-
-  // Arm
-  public final SubSys_Arm armSubSys = new SubSys_Arm(handSubSys.getHandLength());
-
-  public final SubSys_Bling blingSubSys = new SubSys_Bling();
-
-
-
-  public final DriverStation driverStationSubSys = new DriverStation();
-  public Auto auto;
   public RobotContainer() {
+    SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
+
     auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
-    // Configure the button bindings
+
     configureButtonBindings();
 
-    // Configure default commands
-
-    /* Control System Components */
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
             armSubSys,
-                driverStationSubSys::GetArmRotateAxis,
-                driverStationSubSys::GetArmExtendAxis));
+                driverStation::GetArmRotateAxis,
+                driverStation::GetArmExtendAxis));
 
     driveSubSys.setDefaultCommand(
         new Cmd_SubSys_DriveTrain_JoysticDefault(
             driveSubSys,
-                driverStationSubSys::DriveFwdAxis,
-                driverStationSubSys::DriveStrAxis,
-                driverStationSubSys::DriveRotAxis,
+                driverStation::DriveFwdAxis,
+                driverStation::DriveStrAxis,
+                driverStation::DriveRotAxis,
             true,
-                driverStationSubSys::RotateLeftPt,
-                driverStationSubSys::RotateRightPt,
-                driverStationSubSys::DrivePerfModeAActive,
-                driverStationSubSys::DrivePerfModeBActive));
+                driverStation::RotateLeftPt,
+                driverStation::RotateRightPt,
+                driverStation::DrivePerfModeAActive,
+                driverStation::DrivePerfModeBActive));
   }
 
   /**
@@ -112,55 +76,55 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Gyro Reset Command Button
-    driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
-    driverStationSubSys.CloseHandButton.onTrue(
+    driverStation.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
+    driverStation.CloseHandButton.onTrue(
         new InstantCommand(handSubSys::CloseHand, handSubSys));
-    driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
+    driverStation.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYawToFront, gyroSubSys));
 
     // Gyro Reset Command Button
-    driverStationSubSys.PoseResetButton.onTrue(
+    driverStation.PoseResetButton.onTrue(
         // new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
         new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
 
     // Test Button
-    driverStationSubSys.TestButton.whileTrue(
+    driverStation.TestButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -145.0, true, 1.54, true)
         //   new CmdGrp_TestVisionAuto(driveSubSys, gyroSubSys, armSubSys, handSubSys, blingSubSys,
         // photonvisionSubSys)
         );
 
-    driverStationSubSys.GroundPickupButton.whileTrue(
+    driverStation.GroundPickupButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, 45.0, true, 0.8, true));
 
-    driverStationSubSys.HighConeDelivery.whileTrue(
+    driverStation.HighConeDelivery.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -35.0, true, 1.65, true));
 
-    driverStationSubSys.MidConeDelivery.whileTrue(
+    driverStation.MidConeDelivery.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -25.0, true, 1.00, true));
 
-    driverStationSubSys.HighSafePos.whileTrue(
+    driverStation.HighSafePos.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -80.0, true, 0.8, true));
 
     // CONE/CUBE SIGNALING
-    driverStationSubSys.RequestConeButton.onTrue(
+    driverStation.RequestConeButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Yellow));
-    driverStationSubSys.RequestCubeButton.onTrue(
+    driverStation.RequestCubeButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Violet));
 
     // Fun signaling
-    driverStationSubSys.ResetLEDColorButton.onTrue(
+    driverStation.ResetLEDColorButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
             SubSys_Bling_Constants.Controllers.controller1,
             SubSys_Bling_Constants.Patterns.Color1Color2.ColorWaves));
-    driverStationSubSys.RainbowLEDColorButton.onTrue(
+    driverStation.RainbowLEDColorButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
             SubSys_Bling_Constants.Controllers.controller1,
             SubSys_Bling_Constants.Patterns.FixedPalette.RainbowRainbow));
-    driverStationSubSys.RainbowStrobeLEDColorButton.onTrue(
+    driverStation.RainbowStrobeLEDColorButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
             SubSys_Bling_Constants.Controllers.controller1,

@@ -184,10 +184,6 @@ public class SubSys_DriveTrain extends SubsystemBase {
     this.driveTrain.setYaw(degrees);
   }
 
-  /** setGyroYawToZero set Gyro Yaw Value to Zero */
-  public void setYawToZero() {
-    this.driveTrain.setYawToZero();
-  }
 
   /**
    * getPose Get the X and Y position of the drivetrain from the DriveTrain
@@ -210,8 +206,7 @@ public class SubSys_DriveTrain extends SubsystemBase {
   /**
    * setPoseToOrigin Set Pose of the drivetrain to 0,0
    *
-   * @param pose Pose2d X and Y position of the drivetrain
-   */
+   * */
   public void setPoseToOrigin() {
     this.driveTrain.setPose(new Pose2d());
   }

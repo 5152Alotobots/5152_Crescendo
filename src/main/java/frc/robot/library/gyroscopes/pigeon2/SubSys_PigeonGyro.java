@@ -16,7 +16,7 @@ import frc.robot.library.gyroscopes.navx.SubSys_NavXGyro_Constants;
 
 public class SubSys_PigeonGyro extends SubsystemBase {
   /** Creates a new NavXGyro. */
-  private Pigeon2 pigeon2Gyro;
+  private final Pigeon2 pigeon2Gyro;
 
   private double gyroOffsetDegrees;
 
@@ -37,25 +37,47 @@ public class SubSys_PigeonGyro extends SubsystemBase {
     // SmartDashboard.putNumber("GyroCompass", m_Pigeon2Gyro.getCompassHeading());
   }
 
+  /**
+   * Return the raw gyro pitch
+   * @info In default orientation (z to the sky, x forward, y to the left) pitch is a rotation around the y (front to back tilt)
+   * @return gyro pitch degrees (as a double)
+   */
   public double getRawGyroPitch() {
     return this.pigeon2Gyro.getPitch();
   }
 
+  /**
+   * Return the raw gyro roll
+   * @info In default orientation (z to the sky, x forward, y to the left) Roll is a rotation around the x (side to side tilt)
+   * @return gyro roll degrees (as a double)
+   */
   public double getRawGyroRoll() {
     return this.pigeon2Gyro.getRoll();
   }
 
   /**
-   * Return Raw Gyro Angle
-   *
-   * @return Raw Angle double raw Gyro Angle
+   * Return the raw gyro yaw
+   * @info In default orientation (z to the sky, x forward, y to the left) Yaw is a rotation around the z (rotation)
+   * @return gyro yaw degrees (as a double)
    */
   public double getRawYaw() {
     return this.pigeon2Gyro.getYaw();
   }
 
+  /**
+   * @return Yaw accounting for a set Offset point
+   */
   public double getYaw() {
     return getRawYaw() - this.gyroOffsetDegrees;
+  }
+
+  public void zeroYawToFront() {
+    this.gyroOffsetDegrees = getRawYaw();
+  }
+
+  /** Set Gyro */
+  public void setYawRelativeToFront(double yawDegrees) {
+    this.gyroOffsetDegrees = getRawYaw() - yawDegrees;
   }
 
   /**
@@ -75,15 +97,5 @@ public class SubSys_PigeonGyro extends SubsystemBase {
    */
   public Rotation2d getYawRotation2d() {
     return Rotation2d.fromDegrees(getYawAngle());
-  }
-
-  /** Zero Gyro */
-  public void zeroYaw() {
-    this.gyroOffsetDegrees = getRawYaw();
-  }
-
-  /** Set Gyro */
-  public void setYaw(double yawDegrees) {
-    this.gyroOffsetDegrees = getRawYaw() - yawDegrees;
   }
 }
