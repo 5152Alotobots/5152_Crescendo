@@ -11,19 +11,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.ChargedUp.Arm.Cmds_SubSys_Arm.Cmd_SubSys_Arm_JoysticDefault;
-import frc.robot.ChargedUp.Arm.Cmds_SubSys_Arm.Cmd_SubSys_Arm_PosCmd;
-import frc.robot.ChargedUp.Arm.SubSys_Arm;
-import frc.robot.ChargedUp.Bling.Cmd.Cmd_SetBlingColorValue;
-import frc.robot.ChargedUp.Bling.Const_Bling;
-import frc.robot.ChargedUp.Bling.SubSys_Bling;
-import frc.robot.ChargedUp.DriverStation.SubSys_DriverStation;
-import frc.robot.ChargedUp.Hand.SubSys_Hand;
-import frc.robot.ChargedUp.PhotonVision.SubSys_Photonvision;
-import frc.robot.Library.DriveTrains.Cmds_SubSys_DriveTrain.Cmd_SubSys_DriveTrain_JoysticDefault;
-import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
-import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
-import frc.robot.Library.Vision.Limelight.SubSys_LimeLight;
+import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.library.drivetrains.commands.Cmd_SubSys_DriveTrain_JoysticDefault;
+import frc.robot.chargedup.DriverStation;
+import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
+import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_JoysticDefault;
+import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_RotateAndExtend;
+import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
+import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
+import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
+import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
+import frc.robot.library.drivetrains.SubSys_DriveTrain;
+import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,8 +45,6 @@ public class RobotContainer {
 
   public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
 
-  // ---- LimeLight
-  private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
 
   // ---- Drive Subsystem (Swerve)
   public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
@@ -75,47 +72,33 @@ public class RobotContainer {
 
 
 
-  public final SubSys_DriverStation driverStationSubSys = new SubSys_DriverStation();
+  public final DriverStation driverStationSubSys = new DriverStation();
   public Auto auto;
   public RobotContainer() {
-    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);;
+    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
     // Configure the button bindings
     configureButtonBindings();
 
     // Configure default commands
 
-    /** ***** Control System Components */
+    /* Control System Components */
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
             armSubSys,
-            () -> driverStationSubSys.GetArmRotateAxis(),
-            () -> driverStationSubSys.GetArmExtendAxis()));
-
-    // handSubSys.setDefaultCommand(new Cmd_HandWithSensor(
-    //  handSubSys,
-    //  colorSubSys,
-    //  distanceSubsys,
-    //  () ->  driverStationSubSys.HandSensorBtn())
-    // );
-
-    // mecanumDriveSubSys.setDefaultCommand(
-    //    new Cmd_MecanumDriveDefault(
-    //        mecanumDriveSubSys,
-    //        () -> driverStationSubSys.DriveFwdAxis(),
-    //        () -> driverStationSubSys.DriveStrAxis(),
-    //        () -> driverStationSubSys.DriveRotAxis()));
+                driverStationSubSys::GetArmRotateAxis,
+                driverStationSubSys::GetArmExtendAxis));
 
     driveSubSys.setDefaultCommand(
         new Cmd_SubSys_DriveTrain_JoysticDefault(
             driveSubSys,
-            () -> driverStationSubSys.DriveFwdAxis(),
-            () -> driverStationSubSys.DriveStrAxis(),
-            () -> driverStationSubSys.DriveRotAxis(),
+                driverStationSubSys::DriveFwdAxis,
+                driverStationSubSys::DriveStrAxis,
+                driverStationSubSys::DriveRotAxis,
             true,
-            () -> driverStationSubSys.RotateLeftPt(),
-            () -> driverStationSubSys.RotateRightPt(),
-            () -> driverStationSubSys.DrivePerfModeAActive(),
-            () -> driverStationSubSys.DrivePerfModeBActive()));
+                driverStationSubSys::RotateLeftPt,
+                driverStationSubSys::RotateRightPt,
+                driverStationSubSys::DrivePerfModeAActive,
+                driverStationSubSys::DrivePerfModeBActive));
   }
 
   /**
@@ -142,47 +125,47 @@ public class RobotContainer {
 
     // Test Button
     driverStationSubSys.TestButton.whileTrue(
-        new Cmd_SubSys_Arm_PosCmd(armSubSys, -145.0, true, 1.54, true)
+        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -145.0, true, 1.54, true)
         //   new CmdGrp_TestVisionAuto(driveSubSys, gyroSubSys, armSubSys, handSubSys, blingSubSys,
         // photonvisionSubSys)
         );
 
     driverStationSubSys.GroundPickupButton.whileTrue(
-        new Cmd_SubSys_Arm_PosCmd(armSubSys, 45.0, true, 0.8, true));
+        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, 45.0, true, 0.8, true));
 
     driverStationSubSys.HighConeDelivery.whileTrue(
-        new Cmd_SubSys_Arm_PosCmd(armSubSys, -35.0, true, 1.65, true));
+        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -35.0, true, 1.65, true));
 
     driverStationSubSys.MidConeDelivery.whileTrue(
-        new Cmd_SubSys_Arm_PosCmd(armSubSys, -25.0, true, 1.00, true));
+        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -25.0, true, 1.00, true));
 
     driverStationSubSys.HighSafePos.whileTrue(
-        new Cmd_SubSys_Arm_PosCmd(armSubSys, -80.0, true, 0.8, true));
+        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -80.0, true, 0.8, true));
 
     // CONE/CUBE SIGNALING
     driverStationSubSys.RequestConeButton.onTrue(
-        new Cmd_SetBlingColorValue(
-            blingSubSys, Const_Bling.Controllers.controller1, Const_Bling.SolidColors.Yellow));
+        new Cmd_SubSys_Bling_SetColorValue(
+            blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Yellow));
     driverStationSubSys.RequestCubeButton.onTrue(
-        new Cmd_SetBlingColorValue(
-            blingSubSys, Const_Bling.Controllers.controller1, Const_Bling.SolidColors.Violet));
+        new Cmd_SubSys_Bling_SetColorValue(
+            blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Violet));
 
     // Fun signaling
     driverStationSubSys.ResetLEDColorButton.onTrue(
-        new Cmd_SetBlingColorValue(
+        new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
-            Const_Bling.Controllers.controller1,
-            Const_Bling.Patterns.Color1Color2.ColorWaves));
+            SubSys_Bling_Constants.Controllers.controller1,
+            SubSys_Bling_Constants.Patterns.Color1Color2.ColorWaves));
     driverStationSubSys.RainbowLEDColorButton.onTrue(
-        new Cmd_SetBlingColorValue(
+        new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
-            Const_Bling.Controllers.controller1,
-            Const_Bling.Patterns.FixedPalette.RainbowRainbow));
+            SubSys_Bling_Constants.Controllers.controller1,
+            SubSys_Bling_Constants.Patterns.FixedPalette.RainbowRainbow));
     driverStationSubSys.RainbowStrobeLEDColorButton.onTrue(
-        new Cmd_SetBlingColorValue(
+        new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys,
-            Const_Bling.Controllers.controller1,
-            Const_Bling.Patterns.FixedPalette.StrobeRed));
+            SubSys_Bling_Constants.Controllers.controller1,
+            SubSys_Bling_Constants.Patterns.FixedPalette.StrobeRed));
   }
 
   /**

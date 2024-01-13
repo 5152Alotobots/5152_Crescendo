@@ -3,15 +3,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.ChargedUp.Arm.SubSys_Arm;
-import frc.robot.ChargedUp.AutoCommands.Basic.*;
-import frc.robot.ChargedUp.AutoCommands.SingleElement.Cube.*;
-import frc.robot.ChargedUp.AutoCommands.TripleElement.*;
-import frc.robot.ChargedUp.Bling.SubSys_Bling;
-import frc.robot.ChargedUp.Hand.SubSys_Hand;
-import frc.robot.ChargedUp.PhotonVision.SubSys_Photonvision;
-import frc.robot.Library.DriveTrains.SubSys_DriveTrain;
-import frc.robot.Library.Gyroscopes.Pigeon2.SubSys_PigeonGyro;
+import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.chargedup.commands.auto.basic.*;
+import frc.robot.chargedup.commands.auto.singleelement.cube.*;
+import frc.robot.chargedup.commands.auto.tripleelement.*;
+import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
+import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
+import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
+import frc.robot.library.drivetrains.SubSys_DriveTrain;
+import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
  * The Auto class is responsible for handling the autonomous mode of the robot. It includes a

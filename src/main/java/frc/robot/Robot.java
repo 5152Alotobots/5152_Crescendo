@@ -11,7 +11,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Library.Pneumatics.SubSys_Pneumatics;
+import frc.robot.library.pneumatics.SubSys_Pneumatics;
+
+import java.io.IOError;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,6 +34,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
     CameraServer.startAutomaticCapture();
     robotContainer = new RobotContainer();
     m_subSys_Pneumatics.compressorOn();
