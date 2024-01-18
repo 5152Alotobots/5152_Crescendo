@@ -4,10 +4,10 @@
 
 package frc.robot.library.drivetrains.commands;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+//import com.pathplanner.lib.PathConstraints;
+//import com.pathplanner.lib.PathPlanner;
+//import com.pathplanner.lib.PathPlannerTrajectory;
+//import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -25,15 +25,15 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
   private boolean setPose;
   private boolean setYaw;
   private Alliance setAlliance;
-  private PathConstraints constraints;
+  //private PathConstraints constraints;
 
-  private PathPlannerTrajectory ppTraj;
+  //private PathPlannerTrajectory ppTraj;
 
-  private final PIDController xDistancePID;
-  private final PIDController yDistancePID;
-  private final PIDController rotationPID;
+  //private final PIDController xDistancePID;
+  //private final PIDController yDistancePID;
+  //private final PIDController rotationPID;
 
-  private Timer timer;
+  //private Timer timer;
 
   /**
    * Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj Follow PathPlanner Trajectory
@@ -57,6 +57,7 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subSys_DriveTrain);
 
+    /* 
     // Load Path
     this.constraints = PathPlanner.getConstraintsFromPath(this.pathPlannerTrajName);
     this.ppTraj = PathPlanner.loadPath(this.pathPlannerTrajName, this.constraints);
@@ -90,14 +91,16 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
     this.rotationPID.setTolerance(
         SubSys_DriveTrain_Constants.DriveTrainTrajSettings.RotationTrajectoryPID.PositionTolerance,
         SubSys_DriveTrain_Constants.DriveTrainTrajSettings.RotationTrajectoryPID.VelocityTolerance);
-
+  
     this.timer = new Timer();
+    */
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // Check if the Odometry should be reset
+    /* 
     if (setYaw) {
       this.subSys_DriveTrain.setYaw(ppTraj.getInitialHolonomicPose().getRotation().getDegrees());
     }
@@ -116,11 +119,13 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
 
     timer.reset();
     timer.start();
+    */
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*
     double currentTime = this.timer.get();
     PathPlannerState desiredState = (PathPlannerState) ppTraj.sample(currentTime);
 
@@ -149,6 +154,7 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
     SmartDashboard.putBoolean("x dist at set", this.xDistancePID.atSetpoint());
     SmartDashboard.putBoolean("y dist at set", this.yDistancePID.atSetpoint());
     SmartDashboard.putBoolean("rot dist at set", this.rotationPID.atSetpoint());
+    */
   }
 
   // Called once the command ends or is interrupted.
@@ -160,11 +166,14 @@ public class Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    /*
     PathPlannerState endState = ppTraj.getEndState();
     PathPlannerState currentState = (PathPlannerState) ppTraj.sample(this.timer.get());
     if (endState == currentState) {
       return true;
     }
     return false;
+    */
+    return true;
   }
 }

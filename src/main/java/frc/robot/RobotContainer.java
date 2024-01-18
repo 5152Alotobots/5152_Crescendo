@@ -82,13 +82,16 @@ public class RobotContainer {
     // Configure default commands
 
     /* Control System Components */
+    /*
     armSubSys.setDefaultCommand(
         new Cmd_SubSys_Arm_JoysticDefault(
             armSubSys,
                 driverStationSubSys::GetArmRotateAxis,
                 driverStationSubSys::GetArmExtendAxis));
 
-    driveSubSys.setDefaultCommand(
+    */
+
+    /*     driveSubSys.setDefaultCommand(
         new Cmd_SubSys_DriveTrain_JoysticDefault(
             driveSubSys,
                 driverStationSubSys::DriveFwdAxis,
@@ -99,7 +102,9 @@ public class RobotContainer {
                 driverStationSubSys::RotateRightPt,
                 driverStationSubSys::DrivePerfModeAActive,
                 driverStationSubSys::DrivePerfModeBActive));
+  */
   }
+  
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -123,12 +128,14 @@ public class RobotContainer {
         // new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
         new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
 
+    /*    
     // Test Button
     driverStationSubSys.TestButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -145.0, true, 1.54, true)
         //   new CmdGrp_TestVisionAuto(driveSubSys, gyroSubSys, armSubSys, handSubSys, blingSubSys,
         // photonvisionSubSys)
         );
+    
 
     driverStationSubSys.GroundPickupButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, 45.0, true, 0.8, true));
@@ -141,6 +148,7 @@ public class RobotContainer {
 
     driverStationSubSys.HighSafePos.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -80.0, true, 0.8, true));
+    */
 
     // CONE/CUBE SIGNALING
     driverStationSubSys.RequestConeButton.onTrue(

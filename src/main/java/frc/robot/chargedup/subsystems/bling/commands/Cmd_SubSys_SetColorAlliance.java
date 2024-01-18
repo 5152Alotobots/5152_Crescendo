@@ -27,11 +27,13 @@ public class Cmd_SubSys_SetColorAlliance extends InstantCommand {
   @Override
   public void initialize() {
     if (DriverStation.isDisabled()) {
+      /*
       if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
         subSys_Bling.setBlinkinLEDColor(controller, Patterns.FixedPalette.BreathBlue);
       } else {
         subSys_Bling.setBlinkinLEDColor(controller, Patterns.FixedPalette.BreathRed);
       }
+      */
     }
   }
 }
