@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.library.drivetrains.commands;
+package frc.robot.library.drivetrains.swerve_5152.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -10,8 +10,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.library.drivetrains.SubSys_DriveTrain;
-import frc.robot.library.drivetrains.SubSys_DriveTrain_Constants;
+import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain_Constants;
 
 public class Cmd_SubSys_DriveTrain_Rotate2Heading extends CommandBase {
   /** Creates a new Cmd_SubSys_DriveTrain_Rotate2Heading. */
