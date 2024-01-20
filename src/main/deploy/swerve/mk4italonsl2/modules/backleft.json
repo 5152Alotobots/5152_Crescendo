@@ -11,7 +11,7 @@
     },
     "angle": {
       "type": "talonfx",
-      "id": 56,
+      "id": 58,
       "canbus": null
     },
     "conversionFactor": {
@@ -24,7 +24,7 @@
       "canbus": null
     },
     "inverted": {
-      "drive": false,
+      "drive": true,
       "angle": false
     }
   }
