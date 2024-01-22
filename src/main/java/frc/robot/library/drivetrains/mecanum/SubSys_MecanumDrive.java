@@ -11,6 +11,11 @@ public class SubSys_MecanumDrive extends SubsystemBase {
     private final MecanumDrive robotDrive;
 /** Constructs a MecanumDrive and resets the gyro. */
     public SubSys_MecanumDrive() {
+        frontLeftMotor.configFactoryDefault();
+        frontRightMotor.configFactoryDefault();
+        backLeftMotor.configFactoryDefault();
+        backRightMotor.configFactoryDefault();
+
         frontRightMotor.setInverted(true);
         backRightMotor.setInverted(true);
 
