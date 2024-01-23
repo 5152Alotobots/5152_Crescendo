@@ -4,20 +4,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class SubSys_MecanumDrive extends SubsystemBase {
-    private final VictorWrapper frontLeftMotor = new VictorWrapper(1);
-    private final VictorWrapper frontRightMotor = new VictorWrapper(2);
-    private final VictorWrapper backLeftMotor = new VictorWrapper(3);
-    private final VictorWrapper backRightMotor = new VictorWrapper(4);
+    private final VictorWrapper frontLeftMotor = new VictorWrapper(3);
+    private final VictorWrapper frontRightMotor = new VictorWrapper(1);
+    private final VictorWrapper backLeftMotor = new VictorWrapper(4);
+    private final VictorWrapper backRightMotor = new VictorWrapper(2);
     private final MecanumDrive robotDrive;
 /** Constructs a MecanumDrive and resets the gyro. */
     public SubSys_MecanumDrive() {
-        frontLeftMotor.configFactoryDefault();
-        frontRightMotor.configFactoryDefault();
-        backLeftMotor.configFactoryDefault();
-        backRightMotor.configFactoryDefault();
 
+        frontLeftMotor.setInverted(true);
         frontRightMotor.setInverted(true);
-        backRightMotor.setInverted(true);
+        backLeftMotor.setInverted(true);
 
         robotDrive = new MecanumDrive(frontLeftMotor::set, backLeftMotor::set, frontRightMotor::set, backRightMotor::set);
     }
