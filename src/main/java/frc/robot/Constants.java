@@ -20,11 +20,22 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final class CodeConfigurations {
+    public static final DriveTrainOptions SelectedDriveTrain = DriveTrainOptions.MECANUM;
+    public static final boolean DISABLE_AUTO = true;
+    
+    public enum DriveTrainOptions {
+      MECANUM,
+      SWERVE
+    }
+  }
   public static final class Robot {
 
     public static final class Calibrations {
 
       public static final class DriveTrain {
+        
+
         public static final double PerfModeTransitionTime = 2.0; // s
 
         public static final class PerformanceMode_Default {
