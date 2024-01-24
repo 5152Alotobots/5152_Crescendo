@@ -7,27 +7,21 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.Constants.Robot.Calibrations.DriveTrain;
 import frc.robot.Constants.CodeConfigurations;
-import frc.robot.chargedup.DriverStation;
 import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
-import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_JoysticDefault;
-import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_RotateAndExtend;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
-import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
-import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
+import frc.robot.crescendo.DriverStation;
 import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
 import frc.robot.library.drivetrains.swerve_5152.commands.Cmd_SubSys_DriveTrain_JoysticDefault;
+import frc.robot.library.drivetrains.swerve_yagsl.SubSysSwerveYAGSL;
+import frc.robot.library.drivetrains.swerve_yagsl.commands.AbsoluteDriveAdv;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
@@ -89,16 +83,6 @@ public class RobotContainer {
                         driverStationSubSys::RotateRightPt,
                         driverStationSubSys::DrivePerfModeAActive,
                         driverStationSubSys::DrivePerfModeBActive));
-
-        // Gyro Reset Command Button
-        driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
-        driverStationSubSys.CloseHandButton.onTrue(
-                new InstantCommand(handSubSys::CloseHand, handSubSys));
-        driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
-
-        // Gyro Reset Command Button
-        driverStationSubSys.PoseResetButton.onTrue(
-                new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
     }
 
     private void configureButtonBindingsMecanum(SubSys_MecanumDrive mecanumDriveSubSys, SubSys_Intake intakeSubSys) {
