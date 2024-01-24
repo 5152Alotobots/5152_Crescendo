@@ -61,19 +61,23 @@ public class RobotContainer {
             armSubSys = new SubSys_Arm(0);
             gyroSubSys = new SubSys_PigeonGyro();
             driveSubSys = new SubSys_DriveTrain(gyroSubSys);
-            configureButtonBindings(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
+            configureButtonBindingsOldSwerve(handSubSys, gyroSubSys, driveSubSys);
 
             auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
         } else {
             mecanumDriveSubSys = new SubSys_MecanumDrive();
             intakeSubSys = new SubSys_Intake();
-            configureButtonBindings(mecanumDriveSubSys, intakeSubSys);
+            configureButtonBindingsMecanum(mecanumDriveSubSys, intakeSubSys);
             auto = new Auto();
         }
     }
 
-    private void configureButtonBindings(SubSys_Bling blingSubSys, SubSys_Photonvision photonvisionSubSys,
-            SubSys_Hand handSubSys, SubSys_Arm armSubSys, SubSys_PigeonGyro gyroSubSys, SubSys_DriveTrain driveSubSys) {
+    private void configureButtonBindingsOldSwerve(
+        SubSys_Hand handSubSys,
+        SubSys_PigeonGyro gyroSubSys,
+        SubSys_DriveTrain driveSubSys
+        ) {
+
         driveSubSys.setDefaultCommand(
                 new Cmd_SubSys_DriveTrain_JoysticDefault(
                         driveSubSys,
@@ -97,23 +101,7 @@ public class RobotContainer {
                 new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
     }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}. Use this method to
-     * define your
-     * button->command mappings. Buttons can be created by instantiating a
-     * {@link GenericHID} or one
-     * of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or
-     * {@link XboxController}), and then
-     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     * 
-     * @param mecanumDriveSubSys2
-     */
-    private void configureButtonBindings(SubSys_MecanumDrive mecanumDriveSubSys, SubSys_Intake intakeSubSys) {
+    private void configureButtonBindingsMecanum(SubSys_MecanumDrive mecanumDriveSubSys, SubSys_Intake intakeSubSys) {
         mecanumDriveSubSys.setDefaultCommand(new Cmd_SubSys_MecanumDrive_JoystickDefault(
                 mecanumDriveSubSys,
                 driverStationSubSys::DriveFwdAxis,
