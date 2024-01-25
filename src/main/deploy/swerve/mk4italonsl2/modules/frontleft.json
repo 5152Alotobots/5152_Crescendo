@@ -6,21 +6,21 @@
     "absoluteEncoderOffset": 0,
     "drive": {
       "type": "talonfx",
-      "id": 51,
+      "id": 10,
       "canbus": null
     },
     "angle": {
       "type": "talonfx",
-      "id": 52,
+      "id": 11,
       "canbus": null
     },
     "conversionFactor": {
-        "angle": 16.8,
-        "drive": 0.047286787200699704
+        "angle": 1,
+        "drive": 1
     },
     "encoder": {
       "type": "cancoder",
-      "id": 53,
+      "id": 12,
       "canbus": null
     },
     "inverted": {

@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
@@ -37,11 +38,11 @@ public class SubSysSwerveYAGSL extends SubsystemBase
   /**
    * Swerve drive object.
    */
-  private final SwerveDrive swerveDrive;
+  public final SwerveDrive swerveDrive;
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public double maximumSpeed = Units.feetToMeters(14.5);
+  public double maximumSpeed = Units.feetToMeters(1);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -203,14 +204,16 @@ public class SubSysSwerveYAGSL extends SubsystemBase
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
   {
+    SmartDashboard.putNumber("driveCmd1Y",translationY.getAsDouble());
     return run(() -> {
       // Make the robot move
       swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
                                           Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
                         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
                         false,
-                        true);
+                        false);
     });
+    
   }
 
   /**
@@ -229,6 +232,8 @@ public class SubSysSwerveYAGSL extends SubsystemBase
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative)
   {
+    SmartDashboard.putNumber("swerveXraw", translation.getY());
+    SmartDashboard.putNumber("swerveX", Math.pow(translation.getY(), 3) * swerveDrive.getMaximumVelocity());
     swerveDrive.drive(translation,
                       rotation,
                       fieldRelative,
