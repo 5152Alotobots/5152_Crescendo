@@ -9,7 +9,15 @@ package frc.robot;
 
 import java.io.File;
 
+import com.ctre.phoenix.Logger;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -24,6 +32,8 @@ import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorVa
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
 import frc.robot.crescendo.DriverStation;
 import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.drivetrains.swerve_yagsl.SubSysSwerveYAGSL;
 import frc.robot.library.drivetrains.swerve_yagsl.commands.AbsoluteDriveAdv;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
@@ -43,14 +53,27 @@ public class RobotContainer {
   // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
 
   // ---- Drive Subsystem
+  // swerve_ctre
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstantsmk4il2_2023.DriveTrain; // My drivetrain
+
+//  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                               // driving in open loop
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final Telemetry logger = new Telemetry(MaxSpeed);
+
   // swerve_yagsl
-  private final SubSysSwerveYAGSL drivebase = new SubSysSwerveYAGSL(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve/mk4italonsl2"));
+  //private final SubSysSwerveYAGSL drivebase = new SubSysSwerveYAGSL(new File(Filesystem.getDeployDirectory(),
+  //                                                                       "swerve/mk4italonsl2"));
+
   // swerve_5152
   //public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
-  
-  // swerve_5152 Pigeon2
-  //public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
+   //public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
 
   // Mecanum
   // public final SubSys_MecanumDrive mecanumDriveSubSys = new SubSys_MecanumDrive();
@@ -97,11 +120,11 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-        () -> driverStationSubSys.DriveRotAxis(),
-        () -> driverStationSubSys.m_DriverController.getRightY());
+    //Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
+    //    () -> driverStationSubSys.DriveRotAxis(),
+    //    () -> driverStationSubSys.m_DriverController.getRightY());
 
         
 
@@ -110,15 +133,15 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-        () -> driverStationSubSys.DriveRotAxis());
+    //Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
+    //    () -> driverStationSubSys.DriveRotAxis());
 
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-        () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-        () -> driverStationSubSys.DriveRotAxis());
+    //Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
+    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
+    //    () -> driverStationSubSys.DriveRotAxis());
 
     
         
@@ -127,7 +150,7 @@ public class RobotContainer {
     
 
     // Configure default commands
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     
     /*
     drivebase.setDefaultCommand(
@@ -172,6 +195,24 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(driverStationSubSys.DriveFwdAxis() * MaxSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(driverStationSubSys.DriveStrAxis() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(driverStationSubSys.DriveRotAxis() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
+    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    //joystick.b().whileTrue(drivetrain
+    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
 
     // Gyro Reset Command Button
     //driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));

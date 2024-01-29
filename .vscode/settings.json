@@ -27,11 +27,13 @@
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
   "cSpell.words": [
+    "ctre",
     "Holonomic",
     "Mecanum",
     "Odometry",
     "Photonvision",
     "setpoint",
+    "telemeterize",
     "wpilibj",
     "YAGSL"
   ]
