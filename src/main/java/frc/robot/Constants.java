@@ -180,8 +180,10 @@ public final class Constants {
   }
 
   public static final class CAN_IDs {
-    public static final int PDP_CAN_ID = 1;
-    public static final int PCM_CAN_ID = 2;
+
+    /** **** Start Library Components CAN ID's **** */ 
+    public static final int PDP_CAN_ID = 1;   // Power Distribution Panel
+    public static final int PCM_CAN_ID = 2;   // Pneumatic Control Module
 
     public static final int Pigeon2_ID = 3;
 
@@ -196,20 +198,48 @@ public final class Constants {
     public static final int BackLeftSteerCANCoder_CAN_ID = 18;
     public static final int BackRightDriveMtr_CAN_ID = 19;
     public static final int BackRightSteerMtr_CAN_ID = 20;
-    public static final int BackRightSteerCANCoder_CAN_ID = 21;
+    public static final int BackRightSteerCANCoder_CAN_ID = 21; 
+    /** **** End Library Components CAN ID's **** */ 
+    
+    /** **** Start Crescendo Components CAN ID's **** */
+    // ---- Intake ----
+    public static final int IntakeArmMtr_CAN_ID = 30;       // Talon FX
+    public static final int IntakeArmCANCoder_CAN_ID = 31;  
+    public static final int IntakeRollerMtr_CAN_ID = 32;    // Spark Max 550
+    
+    // ---- Slider ----
 
-    public static final int ArmShoulderMtr_CAN_ID = 30;
-    public static final int ArmShoulderFollowerMtr_CAN_ID = 35;
-    public static final int ArmShoulderCANCoder_CAN_ID = 31;
-    public static final int ArmExtensionMtr_CAN_ID = 32;
-    public static final int ArmExtensionCANCoder_CAN_ID = 34;
+    // ---- Shooter ----
+    public static final int ShooterArmMtr_CAN_ID = 33;      // Talon FX
+    public static final int ShooterArmCANCoder_CAN_ID = 34; 
+    public static final int ShooterWheelsMtr1_CAN_ID = 35;  // Talon SRX?
+    public static final int ShooterWheelsMtr2_CAN_ID = 36;  // Talon SRX?
+    public static final int ShooterRollerMtr_CAN_ID = 37;   // Spark Max 550
 
+    // ---- Climber ----
+    public static final int ClimberMtr1_CAN_ID = 38;        // Talon FX
+    public static final int ClimberMtr2_CAN_ID = 39;        // Talon FX
 
+    /** **** End Crescendo Components CAN ID's **** */
   }
 
   public static final class AnalogInput_IDs {}
 
-  public static final class DigitalIO_IDs {}
+  public static final class DigitalIO_IDs {
+    /** **** Start Crescendo Components CAN ID's **** */
+    // ---- Intake ----
+    public static final int IntakeRollerIREmitter_ID = 30;    
+    public static final int IntakeRollerIRDetector_ID = 31;  
+
+    // ---- Slider ----
+
+    // ---- Shooter ----
+    public static final int ShooterRollerIREmitter_ID = 30;    
+    public static final int ShooterRollerIRDetector_ID = 31;
+    
+    // ---- Climber ----
+    /** **** Start Crescendo Components CAN ID's **** */
+  }
 
   public static final class PWM_IDs {}
 }

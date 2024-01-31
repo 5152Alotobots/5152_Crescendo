@@ -96,6 +96,8 @@ public class RobotContainer {
 
   // ---- Shooter ----
 
+  // ---- Climber ----
+
   /** **** End Crescendo Components **** */
 
   /** **** Auto **** */
