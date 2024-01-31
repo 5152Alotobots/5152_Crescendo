@@ -47,7 +47,7 @@ import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  /** **** Library Components */
+  /** **** Start Library Components **** */
 
   // ---- Power Distribution
   // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
@@ -56,7 +56,7 @@ public class RobotContainer {
   // swerve_ctre
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstantsmk4il2_2023.DriveTrain; // My drivetrain
+  private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023.DriveTrain; // My drivetrain
 
 //  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
   private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
@@ -82,106 +82,43 @@ public class RobotContainer {
   //public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
 
   // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
+  
+  /** **** End Library Components **** */
 
-  // ---- Driver Station
+  /** **** Start Crescendo Components **** */
 
-  // ---- Hand
-  //public final SubSys_Hand handSubSys = new SubSys_Hand();
-
-  // Arm
-  //public final SubSys_Arm armSubSys = new SubSys_Arm(handSubSys.getHandLength());
-
-  //public final SubSys_Bling blingSubSys = new SubSys_Bling();
-
+  // ---- Driver Station ----
   public final DriverStation driverStationSubSys = new DriverStation();
 
+  // ---- Intake ----
+
+  // ---- Slider ----
+
+  // ---- Shooter ----
+
+  /** **** End Crescendo Components **** */
+
+  /** **** Auto **** */
   //public Auto auto;
+
   public RobotContainer() {
     
     // Configure the button bindings
     configureButtonBindings();
 
-    /* 
-    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-                                                                   () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
-                                                                   () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                                                                                OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                   driverXbox::getYButtonPressed,
-                                                                   driverXbox::getAButtonPressed,
-                                                                   driverXbox::getXButtonPressed,
-                                                                   driverXbox::getBButtonPressed);
-    */
+    /** <<<< Start Default Commands >>>> */
     
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    //Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-    //    () -> driverStationSubSys.DriveRotAxis(),
-    //    () -> driverStationSubSys.m_DriverController.getRightY());
-
-        
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
-    //Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-    //    () -> driverStationSubSys.DriveRotAxis());
-
-    //Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveFwdAxis(), 0.1),
-    //    () -> MathUtil.applyDeadband(driverStationSubSys.DriveStrAxis(), 0.1),
-    //    () -> driverStationSubSys.DriveRotAxis());
-
+    /** **** Start Library Components Default Commands **** */ 
+    /** **** EndLibrary Components Default Commands **** */ 
     
-        
+    /** **** Start Crescendo Components Default Commands **** */
+    /** **** End Crescendo Components Default Commands **** */
+
+    /** <<<< End Default Commands >>>> */
+
     //auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
     
     
-
-    // Configure default commands
-    //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    
-    /*
-    drivebase.setDefaultCommand(
-        drivebase.driveCommand(
-            () -> 0.1,
-            () -> 0.0,
-            () -> 0.0));
-    */
-
-    /* Control System Components */
-    /*
-    armSubSys.setDefaultCommand(
-        new Cmd_SubSys_Arm_JoysticDefault(
-            armSubSys,
-                driverStationSubSys::GetArmRotateAxis,
-                driverStationSubSys::GetArmExtendAxis));
-
-    */
-
-    /*     driveSubSys.setDefaultCommand(
-        new Cmd_SubSys_DriveTrain_JoysticDefault(
-            driveSubSys,
-                driverStationSubSys::DriveFwdAxis,
-                driverStationSubSys::DriveStrAxis,
-                driverStationSubSys::DriveRotAxis,
-            true,
-                driverStationSubSys::RotateLeftPt,
-                driverStationSubSys::RotateRightPt,
-                driverStationSubSys::DrivePerfModeAActive,
-                driverStationSubSys::DrivePerfModeBActive));
-  */
   }
   
 

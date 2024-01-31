@@ -11,7 +11,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 
-public class TunerConstantsmk4il2_2023 {
+public class TunerConstants_MK4iL2_2023 {
     // Both sets of gains need to be tuned to your individual robot.
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
