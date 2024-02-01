@@ -119,7 +119,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final double kBackRightEncoderOffset = 0.352294921875;
 
     private static final double kBackRightXPosInches = -11.375;
-    private static final double kBackRightYPosInches = -9.25;lan
+    private static final double kBackRightYPosInches = -9.25;
 
     private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
             kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches), Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
