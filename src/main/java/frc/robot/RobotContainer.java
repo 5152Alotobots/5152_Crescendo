@@ -7,21 +7,35 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import com.ctre.phoenix.Logger;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.library.drivetrains.commands.Cmd_SubSys_DriveTrain_JoysticDefault;
-import frc.robot.chargedup.DriverStation;
 import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
-import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_JoysticDefault;
-import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_RotateAndExtend;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
 import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
-import frc.robot.library.drivetrains.SubSys_DriveTrain;
+import frc.robot.crescendo.DriverStation;
+import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+import frc.robot.library.drivetrains.swerve_yagsl.SubSysSwerveYAGSL;
+import frc.robot.library.drivetrains.swerve_yagsl.commands.AbsoluteDriveAdv;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
@@ -33,73 +47,82 @@ import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  /** **** Library Components */
+  /** **** Start Library Components **** */
 
   // ---- Power Distribution
   // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
 
-  // ---- NavXGyro
-  // public final NavXGyroSubSys m_NavXGyroSubSys = new NavXGyroSubSys();
+  // ---- Drive Subsystem
+  // swerve_ctre
+  private double MaxSpeed = 1.5; // 6 meters per second desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain; // My drivetrain
 
-  // ---- Pigeon2
+//  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                               // driving in open loop
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
+  // swerve_yagsl
+  //private final SubSysSwerveYAGSL drivebase = new SubSysSwerveYAGSL(new File(Filesystem.getDeployDirectory(),
+  //                                                                       "swerve/mk4italonsl2"));
 
+  // swerve_5152
+  //public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
+   //public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
 
-  // ---- Drive Subsystem (Swerve)
-  public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
-
-  public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
-
-  // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
-
-  // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
-
+  // Mecanum
   // public final SubSys_MecanumDrive mecanumDriveSubSys = new SubSys_MecanumDrive();
 
-  // public final SubSys_ColorSensor colorSubSys = new SubSys_ColorSensor();
+  // ---- Photonvision
+  //public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
 
-  // public final SubSys_DistanceSensor distanceSubsys = new SubSys_DistanceSensor();
-  // ---- Driver Station
+  // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
+  
+  /** **** End Library Components **** */
 
-  // ---- Hand
-  public final SubSys_Hand handSubSys = new SubSys_Hand();
+  /** **** Start Crescendo Components **** */
 
-  // Arm
-  public final SubSys_Arm armSubSys = new SubSys_Arm(handSubSys.getHandLength());
-
-  public final SubSys_Bling blingSubSys = new SubSys_Bling();
-
-
-
+  // ---- Driver Station ----
   public final DriverStation driverStationSubSys = new DriverStation();
-  public Auto auto;
+
+  // ---- Intake ----
+
+  // ---- Slider ----
+
+  // ---- Shooter ----
+
+  // ---- Climber ----
+
+  /** **** End Crescendo Components **** */
+
+  /** **** Auto **** */
+  //public Auto auto;
+
   public RobotContainer() {
-    auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
+    
     // Configure the button bindings
     configureButtonBindings();
 
-    // Configure default commands
+    /** <<<< Start Default Commands >>>> */
+    
+    /** **** Start Library Components Default Commands **** */ 
+    /** **** EndLibrary Components Default Commands **** */ 
+    
+    /** **** Start Crescendo Components Default Commands **** */
+    /** **** End Crescendo Components Default Commands **** */
 
-    /* Control System Components */
-    armSubSys.setDefaultCommand(
-        new Cmd_SubSys_Arm_JoysticDefault(
-            armSubSys,
-                driverStationSubSys::GetArmRotateAxis,
-                driverStationSubSys::GetArmExtendAxis));
+    /** <<<< End Default Commands >>>> */
 
-    driveSubSys.setDefaultCommand(
-        new Cmd_SubSys_DriveTrain_JoysticDefault(
-            driveSubSys,
-                driverStationSubSys::DriveFwdAxis,
-                driverStationSubSys::DriveStrAxis,
-                driverStationSubSys::DriveRotAxis,
-            true,
-                driverStationSubSys::RotateLeftPt,
-                driverStationSubSys::RotateRightPt,
-                driverStationSubSys::DrivePerfModeAActive,
-                driverStationSubSys::DrivePerfModeBActive));
+    //auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
+    
+    
   }
+  
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -112,23 +135,43 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // Gyro Reset Command Button
-    driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
-    driverStationSubSys.CloseHandButton.onTrue(
-        new InstantCommand(handSubSys::CloseHand, handSubSys));
-    driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(driverStationSubSys.DriveFwdAxis() * MaxSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(driverStationSubSys.DriveStrAxis() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(driverStationSubSys.DriveRotAxis() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
+    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    //joystick.b().whileTrue(drivetrain
+    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
 
     // Gyro Reset Command Button
-    driverStationSubSys.PoseResetButton.onTrue(
+    //driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
+    //driverStationSubSys.CloseHandButton.onTrue(
+    //    new InstantCommand(handSubSys::CloseHand, handSubSys));
+    //driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
+
+    // Gyro Reset Command Button
+    //driverStationSubSys.PoseResetButton.onTrue(
         // new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
-        new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
+    //    new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
 
+    /*    
     // Test Button
     driverStationSubSys.TestButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -145.0, true, 1.54, true)
         //   new CmdGrp_TestVisionAuto(driveSubSys, gyroSubSys, armSubSys, handSubSys, blingSubSys,
         // photonvisionSubSys)
         );
+    
 
     driverStationSubSys.GroundPickupButton.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, 45.0, true, 0.8, true));
@@ -141,8 +184,10 @@ public class RobotContainer {
 
     driverStationSubSys.HighSafePos.whileTrue(
         new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -80.0, true, 0.8, true));
+    */
 
     // CONE/CUBE SIGNALING
+    /* 
     driverStationSubSys.RequestConeButton.onTrue(
         new Cmd_SubSys_Bling_SetColorValue(
             blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Yellow));
@@ -166,6 +211,7 @@ public class RobotContainer {
             blingSubSys,
             SubSys_Bling_Constants.Controllers.controller1,
             SubSys_Bling_Constants.Patterns.FixedPalette.StrobeRed));
+    */
   }
 
   /**
@@ -174,6 +220,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return auto.getAutoCommand();
+    //return auto.getAutoCommand();
+    return new Command() {
+        
+    };
   }
 }

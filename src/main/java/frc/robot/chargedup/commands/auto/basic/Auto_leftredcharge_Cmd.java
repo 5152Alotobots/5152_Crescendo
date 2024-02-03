@@ -6,9 +6,9 @@ package frc.robot.chargedup.commands.auto.basic;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.library.drivetrains.commands.Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj;
 import frc.robot.chargedup.subsystems.chargestation.commands.Cmd_SubSys_ChargeStation_Balance;
-import frc.robot.library.drivetrains.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_5152.commands.Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**

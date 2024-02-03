@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.library.vision.photonvision.commands.Cmd_NavigateToBestVisionTarget;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.library.drivetrains.commands.Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj;
 import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
 import frc.robot.chargedup.subsystems.arm.commands.Cmd_SubSys_Arm_RotateAndExtend;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
@@ -30,7 +29,8 @@ import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
 import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
 import frc.robot.chargedup.subsystems.chargestation.commands.Cmd_SubSys_ChargeStation_Balance;
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
-import frc.robot.library.drivetrains.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.library.drivetrains.swerve_5152.commands.Cmd_SubSys_DriveTrain_FollowPathPlanner_Traj;
 import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
