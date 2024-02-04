@@ -29,12 +29,12 @@ public final class Constants {
 
         public static final class PerformanceMode_Default {
           // Default Performance Mode Speeds
-          public static double DriveTrainMaxPctOutput = 0.50; // 0-1
-          public static double DriveTrainMaxSpd = 4.0; // m/s
-          public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
-          public static double DriveTrainMaxRotSpd = 250 * Math.PI / 180; // rad/s
-          public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
+          //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
+          public static double DriveTrainMaxSpd = 1.5; // m/s
+          //public static double DriveTrainMaxAccel = 0.35; // m/s^2
+          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
+          public static double DriveTrainMaxRotSpd = 1.5 * Math.PI; // rot/s
+          //public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
         }
 
         public static final class PerformanceMode_A {

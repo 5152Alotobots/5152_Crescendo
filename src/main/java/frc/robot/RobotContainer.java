@@ -25,12 +25,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
 import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
-import frc.robot.crescendo.DriverStation;
+import frc.robot.crescendo.HMIStation;
 import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
@@ -54,18 +55,20 @@ public class RobotContainer {
 
   // ---- Drive Subsystem
   // swerve_ctre
-  private double MaxSpeed = 1.5; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
   private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain; // My drivetrain
 
 //  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
   private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
+      .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final Telemetry logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+
+  /* Path follower */
+  private Command runAuto = drivetrain.getAutoPath("Tests");
 
   // swerve_yagsl
   //private final SubSysSwerveYAGSL drivebase = new SubSysSwerveYAGSL(new File(Filesystem.getDeployDirectory(),
@@ -88,7 +91,7 @@ public class RobotContainer {
   /** **** Start Crescendo Components **** */
 
   // ---- Driver Station ----
-  public final DriverStation driverStationSubSys = new DriverStation();
+  public final HMIStation driverStationSubSys = new HMIStation();
 
   // ---- Intake ----
 
@@ -136,9 +139,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(driverStationSubSys.DriveFwdAxis() * MaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(driverStationSubSys.DriveStrAxis() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(driverStationSubSys.DriveRotAxis() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        drivetrain.applyRequest(() -> 
+            drive.withVelocityX(driverStationSubSys.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(driverStationSubSys.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(driverStationSubSys.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
     //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -149,7 +153,7 @@ public class RobotContainer {
     //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -212,7 +216,7 @@ public class RobotContainer {
             SubSys_Bling_Constants.Controllers.controller1,
             SubSys_Bling_Constants.Patterns.FixedPalette.StrobeRed));
     */
-  }
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -221,8 +225,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     //return auto.getAutoCommand();
-    return new Command() {
-        
-    };
-  }
+    //return new Command() {
+        return runAuto;  
+    }
 }
