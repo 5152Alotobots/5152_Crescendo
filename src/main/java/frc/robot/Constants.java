@@ -228,8 +228,10 @@ public final class Constants {
   public static final class DigitalIO_IDs {
     /** **** Start Crescendo Components CAN ID's **** */
     // ---- Intake ----
-    public static final int IntakeRollerIREmitter_ID = 30;    
-    public static final int IntakeRollerIRDetector_ID = 31;  
+    public static final int IntakeRollerIREmitter_ID = 127;    
+    public static final int IntakeRollerIRDetector_ID = 0;
+    public static final int IntakeArmFwdLimitSw_ID = 1;
+     public static final int IntakeArmRevLimitSw_ID = 2;    
 
     // ---- Slider ----
 
