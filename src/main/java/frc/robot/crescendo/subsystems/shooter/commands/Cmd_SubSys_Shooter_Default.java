@@ -1,13 +1,9 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
-import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.library.driverstation.JoystickUtilities;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class Cmd_SubSys_Shooter_Default extends Command {
@@ -29,7 +25,7 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   @Override
   public void execute() {
     if (shooterArmSpeed != null) {
-      shooterSubSys.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), 0.5, .025));
+      shooterSubSys.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), 0.5, .225));
     }
     shooterSubSys.setIntakeOutput(intakeSpeed);
     shooterSubSys.setShooterOutput(shooterSpeed);

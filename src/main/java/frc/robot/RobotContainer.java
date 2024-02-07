@@ -7,31 +7,17 @@
 
 package frc.robot;
 
-import java.io.File;
-
-import com.ctre.phoenix.Logger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
-import edu.wpi.first.math.MathUtil;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
-import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
-import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
-import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
-import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
-import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
@@ -39,12 +25,8 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
-import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
-import frc.robot.library.drivetrains.swerve_yagsl.SubSysSwerveYAGSL;
-import frc.robot.library.drivetrains.swerve_yagsl.commands.AbsoluteDriveAdv;
-import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -86,7 +68,7 @@ public class RobotContainer {
     final SubSys_Shooter shooterSubSys;
 
     // Switch Robots
-    switch (ROBOT) {
+       switch (GHETTOBOT) {
         // ##### CHARGEDUP_ROBOT_2023 #####
         case CHARGEDUP_ROBOT_2023:
         

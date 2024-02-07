@@ -3,7 +3,7 @@ package frc.robot.crescendo.subsystems.shooter;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = 0.0;
+        public static final double CANcoderMagOffset = -0.316162;
     }
 
     public static final class ShooterRoller {

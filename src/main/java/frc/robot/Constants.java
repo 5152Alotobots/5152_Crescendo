@@ -211,9 +211,9 @@ public final class Constants {
 
     // ---- Shooter ----
     public static final int ShooterArmMtr_CAN_ID = 33;      // Talon FX
-    public static final int ShooterArmCANCoder_CAN_ID = 34; 
-    public static final int ShooterWheelsMtr1_CAN_ID = 35;  // Talon SRX?
-    public static final int ShooterWheelsMtr2_CAN_ID = 36;  // Talon SRX?
+    public static final int ShooterArmCANCoder_CAN_ID = 34;
+    public static final int ShooterWheelsMtrRight_CAN_ID = 35;  // Talon SRX?
+    public static final int ShooterWheelsMtrLeft_CAN_ID = 36;  // Talon SRX?
     public static final int ShooterRollerMtr_CAN_ID = 37;   // Spark Max 550
 
     // ---- Climber ----
