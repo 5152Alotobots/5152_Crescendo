@@ -40,7 +40,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
+  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
   private Command runAuto;
   // The robot's subsystems and commands are defined here...
 
