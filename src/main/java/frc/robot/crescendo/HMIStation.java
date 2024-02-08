@@ -89,6 +89,11 @@ public class HMIStation {
     return -m_CoDriverController.getRawAxis(5);
   }
 
-  
+  public static final class Constants {
+    public static final double DRIVER_XY_DEADBAND = 0.1;
+    public static final double DRIVER_ROT_DEADBAND = 0.1;
+
+  }
 
 }
+

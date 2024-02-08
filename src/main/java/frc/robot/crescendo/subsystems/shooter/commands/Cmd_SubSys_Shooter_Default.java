@@ -1,19 +1,24 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.crescendo.subsystems.shooter.IntakeSpeed;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.library.driverstation.JoystickUtilities;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class Cmd_SubSys_Shooter_Default extends Command {
   /** Creates a new FalconTalonFXDriveTalonSR. */
   private final SubSys_Shooter shooterSubSys;
-  private final double shooterSpeed; 
+  private final DoubleSupplier shooterSpeed;
   private final DoubleSupplier shooterArmSpeed;
-  private final double intakeSpeed;
+  private final Supplier<IntakeSpeed> intakeSpeed;
 
-  public Cmd_SubSys_Shooter_Default(SubSys_Shooter shooterSubSys, double shooterSpeed, double intakeSpeed, DoubleSupplier shooterArmSpeed) {
+  public Cmd_SubSys_Shooter_Default(
+          SubSys_Shooter shooterSubSys,
+          Supplier<IntakeSpeed> intakeSpeed,
+          DoubleSupplier shooterSpeed,
+          DoubleSupplier shooterArmSpeed) {
     this.shooterSubSys = shooterSubSys;
     this.shooterSpeed = shooterSpeed;
     this.shooterArmSpeed = shooterArmSpeed;
@@ -24,18 +29,17 @@ public class Cmd_SubSys_Shooter_Default extends Command {
 
   @Override
   public void execute() {
-    if (shooterArmSpeed != null) {
-      shooterSubSys.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), 0.5, .225));
-    }
-    shooterSubSys.setIntakeOutput(intakeSpeed);
-    shooterSubSys.setShooterOutput(shooterSpeed);
+    shooterSubSys.setIntakeOutput(intakeSpeed.get());
+    shooterSubSys.setShooterArmOutput(shooterArmSpeed.getAsDouble());
+    shooterSubSys.setShooterOutput(shooterSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      shooterSubSys.setShooterArmOutput(0);
-      shooterSubSys.setShooterOutput(0);
+    shooterSubSys.setIntakeOutput(IntakeSpeed.OFF);
+    shooterSubSys.setShooterArmOutput(0);
+    shooterSubSys.setShooterOutput(0);
   }
 
   // Returns true when the command should end.

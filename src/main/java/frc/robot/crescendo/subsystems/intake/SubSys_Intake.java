@@ -1,25 +1,16 @@
 package frc.robot.crescendo.subsystems.intake;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.CANSparkMax;
+import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import edu.wpi.first.hal.CANAPITypes.CANDeviceType;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
@@ -36,85 +27,70 @@ public class SubSys_Intake extends SubsystemBase {
     private final DigitalInput intakeArmFwdLimitSw = new DigitalInput(DigitalIO_IDs.IntakeArmFwdLimitSw_ID);
     private final DigitalInput intakeArmRevLimitSw = new DigitalInput(DigitalIO_IDs.IntakeArmRevLimitSw_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
-    private final TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
-    private final TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
     private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
-    private final CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-    private final CANcoderConfiguration intakeArmCaNcoderConfiguration = new CANcoderConfiguration();
 
     public SubSys_Intake () {
         
         // Configure Intake Arm Motor
+        TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        intakeArmMtrConfiguration.Slot0.kP = 0.5;
+        intakeArmMtrConfiguration.Slot0.kI = 0;
+        intakeArmMtrConfiguration.Slot0.kD = 0;
         //intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1;
-
+        TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
         // Configure Intake Arm CANcoder
+        CANcoderConfiguration intakeArmCaNcoderConfiguration = new CANcoderConfiguration();
         intakeArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         intakeArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         intakeArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
+        CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
         intakeArmCANCoderConfigurator.apply(intakeArmCaNcoderConfiguration);
-
-
-        // orchestra.addInstrument(intakeArmMtr);
-        // orchestra.loadMusic("finalCountdown.chrp");
-        // orchestra.play();
-        
     }
-
-    public void lowerDeployer(double speed) { 
-        intakeArmMtr.set(Math.min(0, speed));
-    }
-
-    public void liftDeployer(double speed) {
-        intakeArmMtr.set(Math.max(0, speed));
-    }
-
-    public void setDeployer(double speed) {
-        intakeArmMtr.set(speed);
-    }
-
-    /**
-     * Set speed of intake motor output. (-1)-1
-     * @param percentOutput
-     */
-    public void setIntakeOutput(double percentOutput) {
-        intakeRollerMtr.set(percentOutput);
-    }
-
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("El sensor de note", getRingSensorValue());
-        SmartDashboard.putBoolean("El sensor de forward", getForwardSensorValue());
-        SmartDashboard.putBoolean("El sensor de reverse", getReverseSensorValue());
-        SmartDashboard.putNumber("intakeArmMtr Output", intakeArmMtr.get());
+    }
+
+    public void setIntakeArmPosition(IntakePosition intakePosition) {
+        if (intakePosition == IntakePosition.UP && !atUpperLimit()) {
+            intakeRollerMtr.set(1);
+        } else if (intakePosition == IntakePosition.DOWN && !atLowerLimit()) {
+            intakeRollerMtr.set(-1);
+        } else {
+            intakeRollerMtr.set(0);
+        }
     }
 
     /**
-     * Set speed of deployer motor output. (-1)-1
-     * @param percentOutput
+     * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
      */
-    // public void setDeployerOutput(double percentOutput) {
-    //     intakeArmMtr.set(percentOutput);
-    // }
-
-    /**
-     * Get value of ring sensor
-     * @return 
-     */
-    public boolean getRingSensorValue() {
-        return intakeRollerIRDetector.get();
+    public void setIntakeSpeed(IntakeSpeed intakeSpeed) {
+        if (intakeSpeed == IntakeSpeed.IN && !getIntakeOccupied()) {
+            intakeRollerMtr.set(1);
+        } else if (intakeSpeed == IntakeSpeed.OUT) {
+            intakeRollerMtr.set(-1);
+        } else intakeRollerMtr.set(0);
     }
 
-    public boolean getForwardSensorValue() {
+    /**
+     * @return true if the intake is occupied with a note
+     * */
+    public boolean getIntakeOccupied() {
+        return !intakeRollerIRDetector.get();
+    }
+
+
+    public boolean atUpperLimit() {
         return intakeArmFwdLimitSw.get();
     }
 
-     public boolean getReverseSensorValue() {
+    public boolean atLowerLimit() {
         return intakeArmRevLimitSw.get();
     }
 }

@@ -13,20 +13,19 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+
+import static frc.robot.crescendo.HMIStation.Constants.DRIVER_ROT_DEADBAND;
+import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -68,8 +67,8 @@ public class RobotContainer {
     final SubSys_Shooter shooterSubSys;
 
     // Switch Robots
-       switch (GHETTOBOT) {
-        // ##### CHARGEDUP_ROBOT_2023 #####
+       switch (CRESCENDO_ROBOT_2024) {
+           // ##### CHARGEDUP_ROBO T_2023 #####
         case CHARGEDUP_ROBOT_2023:
         
             // ---- Drive Subsystem ----
@@ -79,13 +78,7 @@ public class RobotContainer {
             drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
-            /*
-            drive = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
+                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
             runAuto = drivetrain.getAutoPath("Tests");
@@ -121,22 +114,13 @@ public class RobotContainer {
         default:
 
             // ---- Drive Subsystem ----
-            // swerve_ctre
             drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain;
             
             drive = new SwerveRequest.FieldCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
-            /*
-            drive = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
-
+                    .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * DRIVER_XY_DEADBAND)
+                    .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * DRIVER_ROT_DEADBAND) // Add a 10% deadband
+                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
-            runAuto = drivetrain.getAutoPath("Tests");
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
@@ -148,7 +132,8 @@ public class RobotContainer {
             shooterSubSys = new SubSys_Shooter();
 
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation);
+
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys);
             break;
     }  
   }
@@ -183,61 +168,31 @@ public class RobotContainer {
             driverStationSubSys::driveFwdAxisRaw,
             driverStationSubSys::driveStrAxisRaw,
             driverStationSubSys::driveRotAxisRaw));
-
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-            intakeSubSys, 
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-
-        driverStationSubSys.highConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, 1, null));
-        driverStationSubSys.midConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, -1, null));
-        
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-            shooterSubSys, 
-            0,
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-        
-        driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
-        driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}. Use this method to define your
-   * button->command mappings. Buttons can be created by instantiating a {@link GenericHID} or one
-   * of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindingsCrescendoRobot2024(
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
-    HMIStation hmiStation) {
+    HMIStation hmiStation,
+    SubSys_Intake subSysIntake,
+    SubSys_Shooter subSysShooter) {
 
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+      // -- Drivetrain --
+      drivetrain.setDefaultCommand(
         drivetrain.applyRequest(() -> 
             drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
               .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
               .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
-
-    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    //joystick.b().whileTrue(drivetrain
-    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
-    // reset the field-centric heading on left bumper press
-    //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
+      drivetrain.registerTelemetry(logger::telemeterize);
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
+      // -- Intake --
 
-    
-    }
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
