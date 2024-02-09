@@ -3,57 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.290505644074351,
-        "y": 5.528332498106438
+        "x": 1.2257927218557139,
+        "y": 5.537577201280529
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.29050564407435,
-        "y": 5.028332498106438
+        "x": 1.2535268313779868,
+        "y": 5.537577201280529
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.0,
-        "y": 5.0
+        "x": 2.8066369646252807,
+        "y": 5.537577201280529
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 2.7861729417996592,
+        "y": 5.54050063311276
       },
       "nextControl": {
-        "x": 6.0,
-        "y": 4.0
+        "x": 2.8713498868439173,
+        "y": 5.528332498106438
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.4582947183912385,
-        "y": 3.207912001409589
+        "x": 1.2257927218557139,
+        "y": 5.537577201280529
       },
       "prevControl": {
-        "x": 6.2082947183912385,
-        "y": 4.707912001409594
-      },
-      "nextControl": {
-        "x": 6.7082947183912385,
-        "y": 1.7079120014095892
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.441377369241224,
-        "y": 6.71165450439009
-      },
-      "prevControl": {
-        "x": 8.471970414661556,
-        "y": 3.7067329585109614
+        "x": 1.2257927218557139,
+        "y": 5.537577201280529
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,10 +46,41 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "shoot speaker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "pick up note",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "shoot speaker 2",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

@@ -10,18 +10,6 @@
           "data": {
             "pathName": "Auto_Leave"
           }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "alantest"
-          }
         }
       ]
     }
