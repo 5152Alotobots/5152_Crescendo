@@ -7,36 +7,26 @@
 
 package frc.robot;
 
-import java.io.File;
-
-import com.ctre.phoenix.Logger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
-import edu.wpi.first.math.MathUtil;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
-import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
-import frc.robot.chargedup.subsystems.bling.SubSys_Bling_Constants;
-import frc.robot.chargedup.subsystems.bling.commands.Cmd_SubSys_Bling_SetColorValue;
-import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
-import frc.robot.crescendo.DriverStation;
-import frc.robot.library.drivetrains.swerve_5152.SubSys_DriveTrain;
+import frc.robot.Constants.Robot.Calibrations;
+import frc.robot.chargedup.DriverStation;
+import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
+import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
-import frc.robot.library.drivetrains.swerve_yagsl.SubSysSwerveYAGSL;
-import frc.robot.library.drivetrains.swerve_yagsl.commands.AbsoluteDriveAdv;
-import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,84 +35,172 @@ import frc.robot.library.gyroscopes.pigeon2.SubSys_PigeonGyro;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // Structure to switch between robots  
+  private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
+  private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
+  private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
+  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+  private Command runAuto;
   // The robot's subsystems and commands are defined here...
 
-  /** **** Start Library Components **** */
+   public RobotContainer() {
 
-  // ---- Power Distribution
-  // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
+    // ##### CHARGEDUP_ROBOT_2023 #####
+    final DriverStation driverStationSubSys;
 
-  // ---- Drive Subsystem
-  // swerve_ctre
-  private double MaxSpeed = 1.5; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  private final CommandSwerveDrivetrain drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain; // My drivetrain
+    // ##### GHETTOBOT #####
+    final SubSys_MecanumDrive mecanumDriveSubSys;
 
-//  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
-
-  // swerve_yagsl
-  //private final SubSysSwerveYAGSL drivebase = new SubSysSwerveYAGSL(new File(Filesystem.getDeployDirectory(),
-  //                                                                       "swerve/mk4italonsl2"));
-
-  // swerve_5152
-  //public final SubSys_DriveTrain driveSubSys = new SubSys_DriveTrain(gyroSubSys);
-   //public final SubSys_PigeonGyro gyroSubSys = new SubSys_PigeonGyro();
-
-  // Mecanum
-  // public final SubSys_MecanumDrive mecanumDriveSubSys = new SubSys_MecanumDrive();
-
-  // ---- Photonvision
-  //public final SubSys_Photonvision photonvisionSubSys = new SubSys_Photonvision();
-
-  // private final SubSys_LimeLight limeLightSubSys = new SubSys_LimeLight();
-  
-  /** **** End Library Components **** */
-
-  /** **** Start Crescendo Components **** */
-
-  // ---- Driver Station ----
-  public final DriverStation driverStationSubSys = new DriverStation();
-
-  // ---- Intake ----
-
-  // ---- Slider ----
-
-  // ---- Shooter ----
-
-  // ---- Climber ----
-
-  /** **** End Crescendo Components **** */
-
-  /** **** Auto **** */
-  //public Auto auto;
-
-  public RobotContainer() {
+    // ##### CRESCENDO_ROBOT_2024 #####
     
-    // Configure the button bindings
-    configureButtonBindings();
+    // ---- Power Distribution
+    // private final PDPSubSys m_PDPSubSys = new PDPSubSys();
+ 
+    // ---- Drive Subsystem
+    // swerve_ctre
+    final CommandSwerveDrivetrain drivetrain;
+    //final SwerveRequest.RobotCentric drive;
+    final SwerveRequest.FieldCentric drive;
+    final Telemetry logger;
+    final HMIStation hmiStation;
+    final SubSys_Intake intakeSubSys;
+    final SubSys_Shooter shooterSubSys;
 
-    /** <<<< Start Default Commands >>>> */
-    
-    /** **** Start Library Components Default Commands **** */ 
-    /** **** EndLibrary Components Default Commands **** */ 
-    
-    /** **** Start Crescendo Components Default Commands **** */
-    /** **** End Crescendo Components Default Commands **** */
+    // Switch Robots
+       switch (GHETTOBOT) {
+        // ##### CHARGEDUP_ROBOT_2023 #####
+        case CHARGEDUP_ROBOT_2023:
+        
+            // ---- Drive Subsystem ----
+            // swerve_ctre
+            drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023.DriveTrain;
+            
+            drive = new SwerveRequest.FieldCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
+            /*
+            drive = new SwerveRequest.RobotCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
+            */
 
-    /** <<<< End Default Commands >>>> */
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+            runAuto = drivetrain.getAutoPath("Tests");
 
-    //auto = new Auto(blingSubSys, photonvisionSubSys, handSubSys, armSubSys, gyroSubSys, driveSubSys);
+            // ---- Human Machine Interface Station ----
+            hmiStation = new HMIStation();
+
+            // Configure the button bindings
+            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, logger, hmiStation);
+            break;
     
-    
+        // ##### GHETTOBOT #####
+        case GHETTOBOT:
+
+            // ---- Drive Subsystem ----
+            mecanumDriveSubSys = new SubSys_MecanumDrive();
+
+            // ---- Intake Subsystem ----
+            intakeSubSys = new SubSys_Intake();
+
+            // ---- Shooter Subsystem ----
+            shooterSubSys = new SubSys_Shooter();
+
+            // ---- Driver Station ----
+            driverStationSubSys = new DriverStation();
+
+            // Configure the button bindings
+            configureButtonBindingsGhettoBot(mecanumDriveSubSys, intakeSubSys, shooterSubSys, driverStationSubSys);
+
+            break;
+
+        // ##### CRESCENDO_ROBOT_2024 #####
+        default:
+
+            // ---- Drive Subsystem ----
+            // swerve_ctre
+            drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain;
+            
+            drive = new SwerveRequest.FieldCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
+            /*
+            drive = new SwerveRequest.RobotCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
+            */
+
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+            runAuto = drivetrain.getAutoPath("Tests");
+
+            // ---- Human Machine Interface Station ----
+            hmiStation = new HMIStation();
+
+            // ---- Intake Subsystem ----
+            intakeSubSys = new SubSys_Intake();
+
+            // ---- Shooter Subsystem ----
+            shooterSubSys = new SubSys_Shooter();
+
+            // Configure the button bindings
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation);
+            break;
+    }  
   }
   
+
+  private void configureButtonBindingsChargedUpRobot2023(
+    CommandSwerveDrivetrain drivetrain,
+    SwerveRequest.FieldCentric drive,
+    Telemetry logger,
+    HMIStation hmiStation){
+
+        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> 
+            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+        ));
+
+        if (Utils.isSimulation()) {
+            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        }
+        drivetrain.registerTelemetry(logger::telemeterize);
+  }
+
+  private void configureButtonBindingsGhettoBot(
+    SubSys_MecanumDrive mecanumDriveSubSys,
+    SubSys_Intake intakeSubSys,
+    SubSys_Shooter shooterSubSys,
+    DriverStation driverStationSubSys){
+        mecanumDriveSubSys.setDefaultCommand(new Cmd_SubSys_MecanumDrive_JoystickDefault(
+            mecanumDriveSubSys,
+            driverStationSubSys::driveFwdAxisRaw,
+            driverStationSubSys::driveStrAxisRaw,
+            driverStationSubSys::driveRotAxisRaw));
+
+        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+            intakeSubSys, 
+            0,
+            driverStationSubSys::coFwdAxisRaw));
+
+        driverStationSubSys.highConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, 1, null));
+        driverStationSubSys.midConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, -1, null));
+        
+        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
+            shooterSubSys, 
+            0,
+            0,
+            driverStationSubSys::coFwdAxisRaw));
+        
+        driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
+        driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -133,12 +211,17 @@ public class RobotContainer {
    * of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindingsCrescendoRobot2024(
+    CommandSwerveDrivetrain drivetrain,
+    SwerveRequest.FieldCentric drive,
+    Telemetry logger,
+    HMIStation hmiStation) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(driverStationSubSys.DriveFwdAxis() * MaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(driverStationSubSys.DriveStrAxis() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(driverStationSubSys.DriveRotAxis() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        drivetrain.applyRequest(() -> 
+            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
     //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -149,70 +232,12 @@ public class RobotContainer {
     //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // Gyro Reset Command Button
-    //driverStationSubSys.OpenHandButton.onTrue(new InstantCommand(handSubSys::OpenHand, handSubSys));
-    //driverStationSubSys.CloseHandButton.onTrue(
-    //    new InstantCommand(handSubSys::CloseHand, handSubSys));
-    //driverStationSubSys.GyroResetButton.onTrue(new InstantCommand(gyroSubSys::zeroYaw, gyroSubSys));
-
-    // Gyro Reset Command Button
-    //driverStationSubSys.PoseResetButton.onTrue(
-        // new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
-    //    new InstantCommand(driveSubSys::setPoseToOrigin, driveSubSys));
-
-    /*    
-    // Test Button
-    driverStationSubSys.TestButton.whileTrue(
-        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -145.0, true, 1.54, true)
-        //   new CmdGrp_TestVisionAuto(driveSubSys, gyroSubSys, armSubSys, handSubSys, blingSubSys,
-        // photonvisionSubSys)
-        );
     
-
-    driverStationSubSys.GroundPickupButton.whileTrue(
-        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, 45.0, true, 0.8, true));
-
-    driverStationSubSys.HighConeDelivery.whileTrue(
-        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -35.0, true, 1.65, true));
-
-    driverStationSubSys.MidConeDelivery.whileTrue(
-        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -25.0, true, 1.00, true));
-
-    driverStationSubSys.HighSafePos.whileTrue(
-        new Cmd_SubSys_Arm_RotateAndExtend(armSubSys, -80.0, true, 0.8, true));
-    */
-
-    // CONE/CUBE SIGNALING
-    /* 
-    driverStationSubSys.RequestConeButton.onTrue(
-        new Cmd_SubSys_Bling_SetColorValue(
-            blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Yellow));
-    driverStationSubSys.RequestCubeButton.onTrue(
-        new Cmd_SubSys_Bling_SetColorValue(
-            blingSubSys, SubSys_Bling_Constants.Controllers.controller1, SubSys_Bling_Constants.SolidColors.Violet));
-
-    // Fun signaling
-    driverStationSubSys.ResetLEDColorButton.onTrue(
-        new Cmd_SubSys_Bling_SetColorValue(
-            blingSubSys,
-            SubSys_Bling_Constants.Controllers.controller1,
-            SubSys_Bling_Constants.Patterns.Color1Color2.ColorWaves));
-    driverStationSubSys.RainbowLEDColorButton.onTrue(
-        new Cmd_SubSys_Bling_SetColorValue(
-            blingSubSys,
-            SubSys_Bling_Constants.Controllers.controller1,
-            SubSys_Bling_Constants.Patterns.FixedPalette.RainbowRainbow));
-    driverStationSubSys.RainbowStrobeLEDColorButton.onTrue(
-        new Cmd_SubSys_Bling_SetColorValue(
-            blingSubSys,
-            SubSys_Bling_Constants.Controllers.controller1,
-            SubSys_Bling_Constants.Patterns.FixedPalette.StrobeRed));
-    */
-  }
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -221,8 +246,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     //return auto.getAutoCommand();
-    return new Command() {
-        
-    };
-  }
+    //return new Command()
+        return runAuto;  
+    }
 }

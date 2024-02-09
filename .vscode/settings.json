@@ -27,13 +27,20 @@
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
   "cSpell.words": [
+    "Brushless",
+    "CHARGEDUP",
+    "chrp",
     "ctre",
+    "deadband",
+    "GHETTOBOT",
     "Holonomic",
     "Mecanum",
+    "Mechanum",
     "Odometry",
     "Photonvision",
     "setpoint",
     "telemeterize",
+    "Testbench",
     "wpilibj",
     "YAGSL"
   ]

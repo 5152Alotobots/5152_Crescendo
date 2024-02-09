@@ -29,12 +29,12 @@ public final class Constants {
 
         public static final class PerformanceMode_Default {
           // Default Performance Mode Speeds
-          public static double DriveTrainMaxPctOutput = 0.50; // 0-1
-          public static double DriveTrainMaxSpd = 4.0; // m/s
-          public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
-          public static double DriveTrainMaxRotSpd = 250 * Math.PI / 180; // rad/s
-          public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
+          //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
+          public static double DriveTrainMaxSpd = 1.5; // m/s
+          //public static double DriveTrainMaxAccel = 0.35; // m/s^2
+          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
+          public static double DriveTrainMaxRotSpd = 1.5 * Math.PI; // rot/s
+          //public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
         }
 
         public static final class PerformanceMode_A {
@@ -211,9 +211,9 @@ public final class Constants {
 
     // ---- Shooter ----
     public static final int ShooterArmMtr_CAN_ID = 33;      // Talon FX
-    public static final int ShooterArmCANCoder_CAN_ID = 34; 
-    public static final int ShooterWheelsMtr1_CAN_ID = 35;  // Talon SRX?
-    public static final int ShooterWheelsMtr2_CAN_ID = 36;  // Talon SRX?
+    public static final int ShooterArmCANCoder_CAN_ID = 34;
+    public static final int ShooterWheelsMtrRight_CAN_ID = 35;  // Talon SRX?
+    public static final int ShooterWheelsMtrLeft_CAN_ID = 36;  // Talon SRX?
     public static final int ShooterRollerMtr_CAN_ID = 37;   // Spark Max 550
 
     // ---- Climber ----
@@ -228,8 +228,10 @@ public final class Constants {
   public static final class DigitalIO_IDs {
     /** **** Start Crescendo Components CAN ID's **** */
     // ---- Intake ----
-    public static final int IntakeRollerIREmitter_ID = 30;    
-    public static final int IntakeRollerIRDetector_ID = 31;  
+    public static final int IntakeRollerIREmitter_ID = 127;    
+    public static final int IntakeRollerIRDetector_ID = 0;
+    public static final int IntakeArmFwdLimitSw_ID = 1;
+     public static final int IntakeArmRevLimitSw_ID = 2;    
 
     // ---- Slider ----
 

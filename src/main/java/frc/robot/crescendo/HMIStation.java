@@ -4,11 +4,12 @@
 
 package frc.robot.crescendo;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-public class DriverStation {
+public class HMIStation {
   /** Creates a new DriverStationSubSys. */
 
   // Driver Controller
@@ -35,8 +36,12 @@ public class DriverStation {
   // AuxDriver Controller
   private XboxController m_AuxDriverController = new XboxController(2);
 
-  public DriverStation() {}
+  public HMIStation() {}
 
+  // ---- Alliance Color
+  public void DriverStationPosition(){
+    DriverStation.getAlliance();
+  }
   // ---- Drive Subsystem
   // Drive Fwd Axis
   public double DriveFwdAxis() {
@@ -83,5 +88,7 @@ public class DriverStation {
   public double GetArmExtendAxis() {
     return -m_CoDriverController.getRawAxis(5);
   }
+
+  
 
 }
