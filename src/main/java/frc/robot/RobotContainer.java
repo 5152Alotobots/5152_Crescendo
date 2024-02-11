@@ -162,9 +162,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
         if (Utils.isSimulation()) {
@@ -219,9 +219,9 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
     //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));

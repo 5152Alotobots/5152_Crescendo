@@ -9,86 +9,134 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
+ /**
+ * The DriverStation class represents the available inputs to the robot, providing access to controllers
+ * and defining buttons for various commands.
+ */
 public class HMIStation {
-  /** Creates a new DriverStationSubSys. */
 
-  // Driver Controller
-  public XboxController m_DriverController = new XboxController(0);
+    // Driver Controller
+    private final XboxController driverController = new XboxController(0);
 
-  public JoystickButton GyroResetButton = new JoystickButton(m_DriverController, 4);
-  public JoystickButton CloseHandButton = new JoystickButton(m_DriverController, 6);
-  public JoystickButton OpenHandButton = new JoystickButton(m_DriverController, 5);
-  public JoystickButton PoseResetButton = new JoystickButton(m_DriverController, 1);
-  public JoystickButton TestButton = new JoystickButton(m_DriverController, 3);
+    public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
+ 
+    public final POVButton climberUp = new POVButton(driverController, 0);
+    public final POVButton climberDn = new POVButton(driverController, 180);
+    
+    public final JoystickButton testButton = new JoystickButton(driverController, 3);
 
-  // Co-Driver Controller
-  private XboxController m_CoDriverController = new XboxController(1);
-  public JoystickButton GroundPickupButton = new JoystickButton(m_CoDriverController, 1);
-  public JoystickButton HighConeDelivery = new JoystickButton(m_CoDriverController, 4);
-  public JoystickButton MidConeDelivery = new JoystickButton(m_CoDriverController, 3);
-  public JoystickButton HighSafePos = new JoystickButton(m_CoDriverController, 2);
-  public JoystickButton RequestConeButton = new JoystickButton(m_CoDriverController, 6);
-  public JoystickButton RequestCubeButton = new JoystickButton(m_CoDriverController, 5);
-  public POVButton ResetLEDColorButton = new POVButton(m_CoDriverController, 180);
-  public POVButton RainbowLEDColorButton = new POVButton(m_CoDriverController, 0);
-  public POVButton RainbowStrobeLEDColorButton = new POVButton(m_CoDriverController, 270);
+    // CoDriver Controller
+    private final XboxController coDriverController = new XboxController(1);
 
-  // AuxDriver Controller
-  private XboxController m_AuxDriverController = new XboxController(2);
+    public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
+    public final JoystickButton shooterOut = new JoystickButton(coDriverController, 5);
+    //public final JoystickButton shooterStage = new JoystickButton(coDriverController, 5);
 
-  public HMIStation() {}
+    public final JoystickButton sliderIn = new JoystickButton(coDriverController, 6);
+    public final JoystickButton sliderOut = new JoystickButton(coDriverController, 7);
 
-  // ---- Alliance Color
-  public void DriverStationPosition(){
-    DriverStation.getAlliance();
-  }
-  // ---- Drive Subsystem
-  // Drive Fwd Axis
-  public double DriveFwdAxis() {
-    return -m_DriverController.getRawAxis(1);
-  }
+    //public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+    //public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
 
-  // Drive Strafe Axis
-  public double DriveStrAxis() {
-    return -m_DriverController.getRawAxis(0);
-  }
+    public final POVButton resetLEDColorButton = new POVButton(coDriverController, 180);
+    public final POVButton rainbowLEDColorButton = new POVButton(coDriverController, 0);
+    public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
 
-  // Drive Rotate Axis
-  public double DriveRotAxis() {
-    return -m_DriverController.getRawAxis(4);
-  }
+    private final XboxController auxdriverController = new XboxController(2);
 
-  // Drive RotateLeftPoint
-  public boolean RotateLeftPt() {
-    return m_DriverController.getRawButton(5);
-  }
+    // ---- Alliance Color
+    public void alliancePosition(){
+      DriverStation.getAlliance();
+    }
 
-  // Drive RotateRightPoint
-  public boolean RotateRightPt() {
-    return m_DriverController.getRawButton(6);
-  }
+    /**
+     * Gets the forward axis value for driving.
+     * 
+     * @return The value used for driving forward. unmodified. 
+     */
+    public double driveFwdAxisRaw() {
+        return driverController.getRawAxis(1);
+    }
 
-  // Drive Performance Mode A
-  public boolean DrivePerfModeAActive() {
-    return (m_DriverController.getRawAxis(2) > 0.3);
-  }
+    /**
+     * Gets the strafe axis value for driving. unmodified.
+     *
+     * @return The strafe axis value.
+     */
+    public double driveStrAxisRaw() {
+      return driverController.getRawAxis(0);
+    }
 
-  // Drive Performance Mode B
-  public boolean DrivePerfModeBActive() {
-    return (m_DriverController.getRawAxis(3) > 0.3);
+  /**
+   * Gets the rotation axis value for driving. unmodified.
+   *
+   * @return The rotation axis value.
+   */
+  public double driveRotAxisRaw() {
+    return driverController.getRawAxis(4);
   }
 
-  // ----- Arm Subsystem
-  // Arm ShoulderRotate Axis
-  public double GetArmRotateAxis() {
-    return m_CoDriverController.getRawAxis(1);
+    /**
+   * Gets the axis value for rotating the Shooter.
+   * 
+   * @return The value used for driving forward. unmodified. 
+   */
+  public double shooterRotateAxisRaw() {
+    return coDriverController.getRawAxis(5);
   }
 
-  // Arm Extend Axis
-  public double GetArmExtendAxis() {
-    return -m_CoDriverController.getRawAxis(5);
+  /**
+   * Gets the strafe axis value for driving. unmodified.
+   *
+   * @return The strafe axis value.
+   */
+  public double coStrAxisRaw() {
+    return coDriverController.getRawAxis(0);
   }
 
-  
+  /**
+   * Gets the rotation axis value for driving. unmodified.
+   *
+   * @return The rotation axis value.
+   */
+  public double coRotAxisRaw() {
+    return coDriverController.getRawAxis(4);
+  }
 
+
+  /**
+   * Checks if the left rotation point button is pressed.
+   *
+   * @return True if the button is pressed, false otherwise.
+   */
+  public boolean rotateLeftPt() {
+    return driverController.getRawButton(5);
+  }
+
+  /**
+   * Checks if the right rotation point button is pressed.
+   *
+   * @return True if the button is pressed, false otherwise.
+   */
+  public boolean rotateRightPt() {
+    return driverController.getRawButton(6);
+  }
+
+  /**
+   * Checks if the performance mode A is active.
+   *
+   * @return True if the mode is active, false otherwise.
+   */
+  public boolean drivePerfModeAActive() {
+    return (driverController.getRawAxis(2) > 0.3);
+  }
+
+  /**
+   * Checks if the performance mode B is active.
+   *
+   * @return True if the mode is active, false otherwise.
+   */
+  public boolean drivePerfModeBActive() {
+    return (driverController.getRawAxis(3) > 0.3);
+  }
 }
