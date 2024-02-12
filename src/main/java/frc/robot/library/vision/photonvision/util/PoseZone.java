@@ -33,4 +33,12 @@ public class PoseZone {
         boolean yInside = pose.getY() > lowerLeft.getY() && pose.getY() < upperRight.getY();
         return xInside && yInside;
     }
+
+    public boolean isInside(Pose2d pose) {
+        Pose2d lowerLeft = getLowerLeftBound();
+        Pose2d upperRight = getUpperRightBound();
+        boolean xInside = pose.getX() > lowerLeft.getX() && pose.getX() < upperRight.getX();
+        boolean yInside = pose.getY() > lowerLeft.getY() && pose.getY() < upperRight.getY();
+        return xInside && yInside;
+    }
 }
