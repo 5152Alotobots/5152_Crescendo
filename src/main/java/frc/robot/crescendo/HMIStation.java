@@ -35,50 +35,50 @@ public class HMIStation {
     public final JoystickButton sliderIn = new JoystickButton(coDriverController, 6);
     public final JoystickButton sliderOut = new JoystickButton(coDriverController, 7);
 
-    //public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
-    //public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
+    public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+    public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
 
     public final POVButton resetLEDColorButton = new POVButton(coDriverController, 180);
     public final POVButton rainbowLEDColorButton = new POVButton(coDriverController, 0);
     public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
 
-    private final XboxController auxdriverController = new XboxController(2);
+    //Button Box
+    private final XboxController buttonBoxController = new XboxController(2);
 
-    // ---- Alliance Color
-    public void alliancePosition(){
-      DriverStation.getAlliance();
-    }
+  /**
+     * Gets the alliance
+     * @return The Current Alliance
+     */
+  public void alliancePosition() {
+    DriverStation.getAlliance();
+  }
 
-    /**
+  /**
      * Gets the forward axis value for driving.
-     * 
      * @return The value used for driving forward. unmodified. 
      */
-    public double driveFwdAxisRaw() {
-        return driverController.getRawAxis(1);
-    }
+  public double driveFwdAxisRaw() {
+      return driverController.getRawAxis(1);
+  }
 
-    /**
+  /**
      * Gets the strafe axis value for driving. unmodified.
-     *
      * @return The strafe axis value.
      */
-    public double driveStrAxisRaw() {
-      return driverController.getRawAxis(0);
-    }
+  public double driveStrAxisRaw() {
+    return driverController.getRawAxis(0);
+  }
 
   /**
    * Gets the rotation axis value for driving. unmodified.
-   *
    * @return The rotation axis value.
    */
   public double driveRotAxisRaw() {
     return driverController.getRawAxis(4);
   }
 
-    /**
+  /**
    * Gets the axis value for rotating the Shooter.
-   * 
    * @return The value used for driving forward. unmodified. 
    */
   public double shooterRotateAxisRaw() {
@@ -87,26 +87,14 @@ public class HMIStation {
 
   /**
    * Gets the strafe axis value for driving. unmodified.
-   *
    * @return The strafe axis value.
    */
-  public double coStrAxisRaw() {
+  public double intakeArmAxisRaw() {
     return coDriverController.getRawAxis(0);
   }
 
   /**
-   * Gets the rotation axis value for driving. unmodified.
-   *
-   * @return The rotation axis value.
-   */
-  public double coRotAxisRaw() {
-    return coDriverController.getRawAxis(4);
-  }
-
-
-  /**
    * Checks if the left rotation point button is pressed.
-   *
    * @return True if the button is pressed, false otherwise.
    */
   public boolean rotateLeftPt() {
@@ -115,7 +103,6 @@ public class HMIStation {
 
   /**
    * Checks if the right rotation point button is pressed.
-   *
    * @return True if the button is pressed, false otherwise.
    */
   public boolean rotateRightPt() {
@@ -124,7 +111,6 @@ public class HMIStation {
 
   /**
    * Checks if the performance mode A is active.
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean drivePerfModeAActive() {
@@ -133,7 +119,6 @@ public class HMIStation {
 
   /**
    * Checks if the performance mode B is active.
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean drivePerfModeBActive() {

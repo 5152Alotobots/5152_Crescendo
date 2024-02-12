@@ -18,6 +18,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
@@ -105,11 +106,8 @@ public class RobotContainer {
             // ---- Driver Station ----
             driverStationSubSys = new DriverStation();
 
-            // Configure the button bindings
             configureButtonBindingsGhettoBot(mecanumDriveSubSys, intakeSubSys, shooterSubSys, driverStationSubSys);
-
             break;
-
         // ##### CRESCENDO_ROBOT_2024 #####
         default:
 
@@ -178,18 +176,20 @@ public class RobotContainer {
     SubSys_Intake subSysIntake,
     SubSys_Shooter subSysShooter) {
 
-      // -- Drivetrain --
-      drivetrain.setDefaultCommand(
-        drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
-        ));
+    // -- Drivetrain --
+    drivetrain.setDefaultCommand(
+      drivetrain.applyRequest(() -> 
+        drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+             .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+             .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+      ));
       drivetrain.registerTelemetry(logger::telemeterize);
-    if (Utils.isSimulation()) {
-        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-      // -- Intake --
+    if (Utils.isSimulation()) drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    
+    // -- Intake --
+    subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(subSysIntake, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
+    // -- Shooter --
+      
 
 
   }
