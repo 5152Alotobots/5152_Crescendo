@@ -12,7 +12,7 @@ import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 
 public class TunerConstants_MK4iL2_2023 {
-        // Both sets of gains need to be tuned to your individual robot.
+    // Both sets of gains need to be tuned to your individual robot.
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
@@ -48,9 +48,9 @@ public class TunerConstants_MK4iL2_2023 {
     private static final double kSteerGearRatio = 21.428571428571427;
     private static final double kWheelRadiusInches = 2;
 
-    private static final boolean kSteerMotorReversed = true;
-    private static final boolean kInvertLeftSide = false;
-    private static final boolean kInvertRightSide = true;
+    private static final boolean kSteerMotorReversed = false;
+    private static final boolean kInvertLeftSide = true;
+    private static final boolean kInvertRightSide = false;
 
     private static final String kCANbusName = "";
     private static final int kPigeonId = 3;
@@ -90,7 +90,7 @@ public class TunerConstants_MK4iL2_2023 {
     private static final int kFrontLeftDriveMotorId = 10;
     private static final int kFrontLeftSteerMotorId = 11;
     private static final int kFrontLeftEncoderId = 12;
-    private static final double kFrontLeftEncoderOffset = 0.491943359375;
+    private static final double kFrontLeftEncoderOffset = 0.48828125;
 
     private static final double kFrontLeftXPosInches = 9.25;
     private static final double kFrontLeftYPosInches = 9.25;
@@ -99,7 +99,7 @@ public class TunerConstants_MK4iL2_2023 {
     private static final int kFrontRightDriveMotorId = 13;
     private static final int kFrontRightSteerMotorId = 14;
     private static final int kFrontRightEncoderId = 15;
-    private static final double kFrontRightEncoderOffset = 0.1962890625;
+    private static final double kFrontRightEncoderOffset = 0.195556640625;
 
     private static final double kFrontRightXPosInches = 9.25;
     private static final double kFrontRightYPosInches = -9.25;
@@ -108,7 +108,7 @@ public class TunerConstants_MK4iL2_2023 {
     private static final int kBackLeftDriveMotorId = 16;
     private static final int kBackLeftSteerMotorId = 17;
     private static final int kBackLeftEncoderId = 18;
-    private static final double kBackLeftEncoderOffset = -0.468017578125;
+    private static final double kBackLeftEncoderOffset = -0.462890625;
 
     private static final double kBackLeftXPosInches = -9.25;
     private static final double kBackLeftYPosInches = 9.25;
@@ -117,7 +117,7 @@ public class TunerConstants_MK4iL2_2023 {
     private static final int kBackRightDriveMotorId = 19;
     private static final int kBackRightSteerMotorId = 20;
     private static final int kBackRightEncoderId = 21;
-    private static final double kBackRightEncoderOffset = -0.2978515625;
+    private static final double kBackRightEncoderOffset = -0.2939453125;
 
     private static final double kBackRightXPosInches = -9.25;
     private static final double kBackRightYPosInches = -9.25;

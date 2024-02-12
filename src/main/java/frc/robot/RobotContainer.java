@@ -39,7 +39,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
+  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
   private Command runAuto;
   // The robot's subsystems and commands are defined here...
 
@@ -147,9 +147,9 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
         if (Utils.isSimulation()) {
@@ -181,9 +181,9 @@ public class RobotContainer {
       // -- Drivetrain --
       drivetrain.setDefaultCommand(
         drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.DriveFwdAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.DriveStrAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.DriveRotAxis() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
+              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
+              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
       drivetrain.registerTelemetry(logger::telemeterize);
     if (Utils.isSimulation()) {

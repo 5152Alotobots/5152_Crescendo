@@ -11,28 +11,23 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
-import frc.robot.Constants.DigitalIO_IDs;
 
 public class SubSys_Climber extends SubsystemBase {
- 
+
  private final TalonFX climberLeftMtr = new TalonFX(CAN_IDs.ClimberLeftMtr_CAN_ID);
  private final TalonFX climberRightMtr = new TalonFX(CAN_IDs.ClimberRightMtr_CAN_ID);
+
 // PIDs
 final PositionVoltage climberLeftPid;
 final PositionVoltage climberRightPid;
-         private final DigitalInput climberLeftHighSwitch = new DigitalInput(DigitalIO_IDs.climberLeftHighSwitchID);
-         private final DigitalInput climberLeftLowSwitch = new DigitalInput(DigitalIO_IDs.climberLeftLowSwitchID);
-         private final DigitalInput climberRightHighSwitch = new DigitalInput(DigitalIO_IDs.climberRightHighSwitchID);
-         private final DigitalInput climberRightLowSwitch = new DigitalInput(DigitalIO_IDs.climberRightLowSwitchID);
-  /** Creates a new SubSys_Slider. */
-  public SubSys_Climber() {
+
+    /** Creates a new SubSys_Slider. */
+    public SubSys_Climber() {
 
 
-     // Configure climber Left Motor
+        // Configure climber Left Motor
         TalonFXConfiguration climberLeftMtrConfiguration = new TalonFXConfiguration();
         climberLeftMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         climberLeftMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -63,13 +58,16 @@ final PositionVoltage climberRightPid;
         climberRightPid = new PositionVoltage(0).withSlot(0);
 
         TalonFXConfigurator climberRightMtrConfigurator = climberRightMtr.getConfigurator();
-        climberRightMtrConfigurator.apply(climberRightMtrConfiguration);
-
-         
+        climberRightMtrConfigurator.apply(climberRightMtrConfiguration);  
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
+   @Override
+  public void simulationPeriodic() {
     // This method will be called once per scheduler run
   }
 }
