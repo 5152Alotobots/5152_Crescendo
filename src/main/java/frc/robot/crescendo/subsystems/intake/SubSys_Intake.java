@@ -11,21 +11,19 @@ import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
+import frc.robot.library.driverstation.JoystickUtilities;
 
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake intakeRollerMtr.
  */
 public class SubSys_Intake extends SubsystemBase {
-
-    private final Orchestra orchestra = new Orchestra();
     private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, MotorType.kBrushless);
-    private final DigitalInput intakeRollerIRDetector = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
-    private final DigitalInput intakeArmFwdLimitSw = new DigitalInput(DigitalIO_IDs.IntakeArmFwdLimitSw_ID);
-    private final DigitalInput intakeArmRevLimitSw = new DigitalInput(DigitalIO_IDs.IntakeArmRevLimitSw_ID);
+    private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
     private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
 
@@ -45,35 +43,72 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
         // Configure Intake Arm CANcoder
-        CANcoderConfiguration intakeArmCaNcoderConfiguration = new CANcoderConfiguration();
-        intakeArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-        intakeArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        intakeArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
+        CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
+        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-        intakeArmCANCoderConfigurator.apply(intakeArmCaNcoderConfiguration);
+        intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
     }
+    
     @Override
     public void periodic() {
+        SmartDashboard.putString("Intake/Arm Forward Value", intakeArmMtr.getForwardLimit().toString());
+        SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
+        SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
+        SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+        SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
     }
 
-    public void setIntakeArmPosition(IntakePosition intakePosition) {
-        if (intakePosition == IntakePosition.UP && !atUpperLimit()) {
-            intakeRollerMtr.set(1);
-        } else if (intakePosition == IntakePosition.DOWN && !atLowerLimit()) {
-            intakeRollerMtr.set(-1);
-        } else {
-            intakeRollerMtr.set(0);
+    /**
+     * Calls correct IntakeArm method depending on the values of limit switches
+     * @param speed Speed from -1 - 1 (unscaled)
+     */
+    public void setIntakeArmSpeedWithLimits(double intakeArmSpeed) {
+        ForwardLimitValue forwardLimitValue = intakeArmMtr.getForwardLimit().getValue();
+        ReverseLimitValue reverseLimitValue = intakeArmMtr.getReverseLimit().getValue();
+        
+        if (forwardLimitValue == ForwardLimitValue.ClosedToGround) {
+            liftIntakeArmSpeed(intakeArmSpeed);
+        } else if (reverseLimitValue == ReverseLimitValue.ClosedToGround) {
+            lowerIntakeArmSpeed(intakeArmSpeed);
+        } else if (forwardLimitValue == ForwardLimitValue.Open && reverseLimitValue == ReverseLimitValue.Open) {
+            setIntakeArmSpeed(intakeArmSpeed);
         }
+    }
+
+    /**
+     * Calls setIntakeArmSpeed with a Math.min to make sure the value is not negitive
+     * @param speed Speed from -1 - 1 (unscaled, anything positive will be ignored)
+     */
+    public void lowerIntakeArmSpeed(double speed) { 
+        setIntakeArmSpeed(Math.min(0, speed));
+    }
+
+    /**
+     * Calls setIntakeArmSpeed with a Math.max to make sure the value is not negitive
+     * @param speed Speed from -1 - 1 (unscaled, anything negative will be ignored)
+     */
+    public void liftIntakeArmSpeed(double speed) {
+        setIntakeArmSpeed(Math.max(0, speed));
+    }
+
+    /**
+     * Takes a speed scales (Applies deadband as well) it and sends it to the motor
+     * @param speed Speed from -1 - 1 (unscaled)
+     */
+    public void setIntakeArmSpeed(double speed) {
+        intakeArmMtr.set(JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.2));
     }
 
     /**
      * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
      */
-    public void setIntakeSpeed(IntakeSpeed intakeSpeed) {
-        if (intakeSpeed == IntakeSpeed.IN && !getIntakeOccupied()) {
+    public void setIntakeDirection(IntakeDirection intakeDirection) {
+        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
             intakeRollerMtr.set(1);
-        } else if (intakeSpeed == IntakeSpeed.OUT) {
+        } else if (intakeDirection == IntakeDirection.OUT) {
             intakeRollerMtr.set(-1);
         } else intakeRollerMtr.set(0);
     }
@@ -82,15 +117,6 @@ public class SubSys_Intake extends SubsystemBase {
      * @return true if the intake is occupied with a note
      * */
     public boolean getIntakeOccupied() {
-        return !intakeRollerIRDetector.get();
-    }
-
-
-    public boolean atUpperLimit() {
-        return intakeArmFwdLimitSw.get();
-    }
-
-    public boolean atLowerLimit() {
-        return intakeArmRevLimitSw.get();
+        return !intakeRollerIR.get();
     }
 }

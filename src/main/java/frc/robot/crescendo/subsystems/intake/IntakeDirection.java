@@ -1,7 +1,7 @@
 package frc.robot.crescendo.subsystems.intake;
 
-public enum IntakeSpeed {
+public enum IntakeDirection {
     IN,
-    OFF,
-    OUT
+    OUT,
+    NONE,
 }
