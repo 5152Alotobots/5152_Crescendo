@@ -39,6 +39,7 @@
     "Mechanum",
     "Odometry",
     "Photonvision",
+    "REVPH",
     "setpoint",
     "telemeterize",
     "Testbench",
