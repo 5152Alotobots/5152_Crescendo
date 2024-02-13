@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 
@@ -60,10 +61,11 @@ public class SubSys_Shooter extends SubsystemBase {
 
     }
 
-    public void setIntakeOutput(IntakeSpeed intakeSpeed) {
-        if (intakeSpeed == IntakeSpeed.IN) {
+    public void setIntakeOutput(IntakeDirection intakeDirection) {
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(intakeDirection));
+        if (intakeDirection == IntakeDirection.IN) {
             shooterRollerMtr.set(1);
-        } else if (intakeSpeed == IntakeSpeed.OUT) {
+        } else if (intakeDirection == IntakeDirection.OUT) {
             shooterRollerMtr.set(-1);
         } else {
             shooterRollerMtr.set(0);
@@ -76,9 +78,11 @@ public class SubSys_Shooter extends SubsystemBase {
      * @param percentOutput -1 -> 1
      */
     public void setShooterOutput(double percentOutput) {
+        SmartDashboard.putNumber("Shooter/Shooter Speed", percentOutput);
         shooterWheelsMtr1.set(TalonSRXControlMode.PercentOutput, percentOutput);
-        shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, percentOutput);   
+        shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, percentOutput);
     }
+
 
     // Arm ------
     /**
@@ -95,8 +99,10 @@ public class SubSys_Shooter extends SubsystemBase {
      * @param degree The degree to rotate to
      */
     public void setShooterArmDegree(double degree) {
+        SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", degree);
         shooterArmMtr.setControl(shooterArmPid.withPosition(degree / 360.0));
     }
+
 
     /**
      * @return If the motors velocity does not equal 0
@@ -105,4 +111,14 @@ public class SubSys_Shooter extends SubsystemBase {
         return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
+        SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
+        /* --- PID --- */
+        SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
+        SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
+
+    }
 }

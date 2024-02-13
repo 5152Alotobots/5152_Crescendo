@@ -1,7 +1,7 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.crescendo.subsystems.shooter.IntakeSpeed;
+import frc.robot.crescendo.subsystems.shooter.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 import java.util.function.DoubleSupplier;
@@ -12,17 +12,17 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   private final SubSys_Shooter shooterSubSys;
   private final DoubleSupplier shooterSpeed;
   private final DoubleSupplier shooterArmSpeed;
-  private final Supplier<IntakeSpeed> intakeSpeed;
+  private final Supplier<IntakeDirection> intakeSpeed;
 
   public Cmd_SubSys_Shooter_Default(
           SubSys_Shooter shooterSubSys,
-          Supplier<IntakeSpeed> intakeSpeed,
+          Supplier<IntakeDirection> intakeDirection,
           DoubleSupplier shooterSpeed,
           DoubleSupplier shooterArmSpeed) {
     this.shooterSubSys = shooterSubSys;
     this.shooterSpeed = shooterSpeed;
     this.shooterArmSpeed = shooterArmSpeed;
-    this.intakeSpeed = intakeSpeed;
+    this.intakeSpeed = intakeDirection;
 
     addRequirements(shooterSubSys);
   }
@@ -37,7 +37,7 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubSys.setIntakeOutput(IntakeSpeed.OFF);
+    shooterSubSys.setIntakeOutput(IntakeDirection.OFF);
     shooterSubSys.setShooterArmOutput(0);
     shooterSubSys.setShooterOutput(0);
   }
