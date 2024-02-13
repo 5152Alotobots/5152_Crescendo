@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -66,6 +67,7 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
+    final SubSys_Climber climberSubSys;
 
     // Switch Robots
        switch (GHETTOBOT) {
@@ -147,6 +149,9 @@ public class RobotContainer {
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
 
+            // ---- Climber Subsystem ----
+            climberSubSys = new SubSys_Climber();
+            
             // Configure the button bindings
             configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation);
             break;
