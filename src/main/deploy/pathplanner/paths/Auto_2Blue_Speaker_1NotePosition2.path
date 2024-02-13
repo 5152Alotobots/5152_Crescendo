@@ -48,7 +48,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Pick up and Wait",
+      "name": "Pick up Note",
       "waypointRelativePos": 1.05,
       "command": {
         "type": "parallel",

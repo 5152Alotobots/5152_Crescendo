@@ -68,7 +68,7 @@
       }
     },
     {
-      "name": "shoot speaker 2",
+      "name": "shoot speaker",
       "waypointRelativePos": 2.0,
       "command": {
         "type": "parallel",

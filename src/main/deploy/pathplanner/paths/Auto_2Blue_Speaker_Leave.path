@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Speaker and Wait",
+      "name": "Shoot Speaker",
       "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",

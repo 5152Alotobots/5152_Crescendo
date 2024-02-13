@@ -91,7 +91,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Amp Deposit and Wait",
+      "name": "Shoot Amp",
       "waypointRelativePos": 2.0,
       "command": {
         "type": "parallel",
