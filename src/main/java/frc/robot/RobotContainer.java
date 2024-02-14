@@ -23,6 +23,7 @@ import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -66,6 +67,7 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
+    final SubSys_Slider sliderSubSys;
 
     // Switch Robots
        switch (GHETTOBOT) {
@@ -147,6 +149,9 @@ public class RobotContainer {
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
 
+            // ---- Slider Subsystem ----
+            sliderSubSys = new SubSys_Slider();
+
             // Configure the button bindings
             configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation);
             break;
@@ -200,6 +205,8 @@ public class RobotContainer {
         
         driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
         driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
+
+        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
