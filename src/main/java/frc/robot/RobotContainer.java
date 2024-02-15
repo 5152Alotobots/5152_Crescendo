@@ -32,6 +32,11 @@ import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import static frc.robot.crescendo.HMIStation.Constants.DRIVER_ROT_DEADBAND;
 import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
 
+enum RobotSelection {
+    CRESCENDO,
+    CHARGEDUP,
+    GHETTOBOT
+}
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -40,11 +45,8 @@ import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
  */
 public class RobotContainer {
 
-  // Structure to switch between robots  
-  private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
-  private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
-  private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+    // Structure to switch between robots
+    private static final RobotSelection ROBOT = RobotSelection.CRESCENDO;    // 2024 Robot
   private Command runAuto;
   // The robot's subsystems and commands are defined here...
 
@@ -75,7 +77,7 @@ public class RobotContainer {
     // Switch Robots
        switch (ROBOT) {
            // ##### CHARGEDUP_ROBOT_2023 #####
-        case CHARGEDUP_ROBOT_2023:
+           case CHARGEDUP:
         
             // ---- Drive Subsystem ----
             // swerve_ctre
@@ -199,13 +201,16 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-      // -- Intake --
+
+      // -- Shooter --
       subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
               subSysShooter,
               hmiStation::shooterRotateAxisRaw,
               () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
               () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
       ));
+
+      // -- Climber --
       hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
       hmiStation.climberDn.whileTrue(new climberSetVoltDown(climberSubSys));
   }
