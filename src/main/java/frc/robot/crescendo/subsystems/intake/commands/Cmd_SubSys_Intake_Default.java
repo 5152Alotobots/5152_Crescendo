@@ -1,5 +1,6 @@
 package frc.robot.crescendo.subsystems.intake.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.IntakeDirection;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -25,6 +26,7 @@ public class Cmd_SubSys_Intake_Default extends Command {
 
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Intake/Input Axis", intakeArmSpeedAxis.getAsDouble());
     intakeSubSys.setIntakeArmSpeedWithLimits(intakeArmSpeedAxis.getAsDouble());
     if (intakeButton.getAsBoolean()) 
       intakeSubSys.setIntakeDirection(IntakeDirection.IN);

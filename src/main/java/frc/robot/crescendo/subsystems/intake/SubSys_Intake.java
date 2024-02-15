@@ -10,6 +10,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -70,10 +72,19 @@ public class SubSys_Intake extends SubsystemBase {
         ReverseLimitValue reverseLimitValue = intakeArmMtr.getReverseLimit().getValue();
         
         if (forwardLimitValue == ForwardLimitValue.ClosedToGround) {
+            SmartDashboard.putBoolean("Intake/ForwardLimitMode", true);
+            SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
+            SmartDashboard.putBoolean("Intake/NoLimitMode", false);
             liftIntakeArmSpeed(intakeArmSpeed);
         } else if (reverseLimitValue == ReverseLimitValue.ClosedToGround) {
+            SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
+            SmartDashboard.putBoolean("Intake/ReverseLimitMode", true);
+            SmartDashboard.putBoolean("Intake/NoLimitMode", false);
             lowerIntakeArmSpeed(intakeArmSpeed);
         } else if (forwardLimitValue == ForwardLimitValue.Open && reverseLimitValue == ReverseLimitValue.Open) {
+            SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
+            SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
+            SmartDashboard.putBoolean("Intake/NoLimitMode", true);
             setIntakeArmSpeed(intakeArmSpeed);
         }
     }
@@ -99,7 +110,8 @@ public class SubSys_Intake extends SubsystemBase {
      * @param speed Speed from -1 - 1 (unscaled)
      */
     public void setIntakeArmSpeed(double speed) {
-        intakeArmMtr.set(JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.2));
+        SmartDashboard.putNumber("Intake/Input Scaled", JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.2));
+        // intakeArmMtr.set(JoystickUtilities.joyDeadBndSqrdScaled(speed, 0.25, 0.2));
     }
 
     /**
