@@ -120,7 +120,7 @@ public class SubSys_Intake extends SubsystemBase {
     public void setIntakeDirection(IntakeDirection intakeDirection) {
         SmartDashboard.putString("Direction Intake", intakeDirection.toString());
         if (intakeDirection == IntakeDirection.IN && getIntakeOccupied()) {
-               SmartDashboard.putBool tan("Intake/intake", true);
+               SmartDashboard.putBoolean("Intake/intake", true);
             intakeRollerMtr.set(1);
         } else if (intakeDirection == IntakeDirection.OUT) {
                   SmartDashboard.putBoolean("Intake/outake", true);
