@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -22,6 +23,7 @@ import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
@@ -72,7 +74,8 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
-       final SubSys_Climber climberSubSys;
+    final SubSys_Climber climberSubSys;
+    final SubSys_Slider sliderSubSys;
 
     // Switch Robots
        switch (ROBOT) {
@@ -138,12 +141,14 @@ public class RobotContainer {
 
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
+            
+            sliderSubSys = new SubSys_Slider();
 
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys, climberSubSys);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys, sliderSubSys, climberSubSys);
 
             break;
     }  
@@ -188,7 +193,8 @@ public class RobotContainer {
     HMIStation hmiStation,
     SubSys_Intake subSysIntake,
     SubSys_Shooter subSysShooter,
-    SubSys_Climber climberSubSys) {
+    SubSys_Slider subSysSlider,
+    SubSys_Climber subSysClimber) {
 
       // -- Drivetrain --
       drivetrain.setDefaultCommand(
@@ -211,8 +217,11 @@ public class RobotContainer {
       ));
 
       // -- Climber --
-      hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-      hmiStation.climberDn.whileTrue(new climberSetVoltDown(climberSubSys));
+      hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
+      hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
+
+      hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::extend));
+      hmiStation.sliderIn.onTrue(new InstantCommand(subSysSlider::retract));
   }
 
   /**

@@ -33,9 +33,6 @@ public class HMIStation {
      public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
     //public final JoystickButton shooterStage = new JoystickButton(coDriverController, 5);
 
-     public final JoystickButton sliderIn = new JoystickButton(coDriverController, 7);
-     public final JoystickButton sliderOut = new JoystickButton(coDriverController, 8);
-
     //public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
     //public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
 
@@ -44,6 +41,9 @@ public class HMIStation {
     public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
 
     private final XboxController auxdriverController = new XboxController(2);
+    
+     public final JoystickButton sliderIn = new JoystickButton(auxdriverController, 2);
+     public final JoystickButton sliderOut = new JoystickButton(auxdriverController, 4);
 
     // ---- Alliance Color
     public void alliancePosition(){
