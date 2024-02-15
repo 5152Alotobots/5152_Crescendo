@@ -217,8 +217,8 @@ public final class Constants {
     public static final int ShooterRollerMtr_CAN_ID = 37;   // Spark Max 550
 
     // ---- Climber ----
-    public static final int ClimberMtr1_CAN_ID = 38;        // Talon FX
-    public static final int ClimberMtr2_CAN_ID = 39;        // Talon FX
+    public static final int ClimberLeftMtr_CAN_ID = 38;        // Talon FX
+    public static final int ClimberRightMtr_CAN_ID = 39;        // Talon FX
 
     /** **** End Crescendo Components CAN ID's **** */
   }

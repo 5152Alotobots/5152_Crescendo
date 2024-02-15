@@ -1,0 +1,100 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.290505644074351,
+        "y": 5.565311310802802
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2704441805280005,
+        "y": 5.574556013976893
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5108064630543674,
+        "y": 5.565311310802802
+      },
+      "prevControl": {
+        "x": 0.9484516266329812,
+        "y": 5.565311310802802
+      },
+      "nextControl": {
+        "x": 2.584764088447096,
+        "y": 5.565311310802802
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.290505644074351,
+        "y": 5.565311310802802
+      },
+      "prevControl": {
+        "x": 1.900656053564359,
+        "y": 5.565311310802802
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Pick up Note",
+      "waypointRelativePos": 1.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 10.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot in Speaker",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
