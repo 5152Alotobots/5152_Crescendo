@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -67,10 +70,11 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
+       final SubSys_Climber climberSubSys;
 
     // Switch Robots
-       switch (CRESCENDO_ROBOT_2024) {
-           // ##### CHARGEDUP_ROBO T_2023 #####
+       switch (ROBOT) {
+           // ##### CHARGEDUP_ROBOT_2023 #####
         case CHARGEDUP_ROBOT_2023:
         
             // ---- Drive Subsystem ----
@@ -133,9 +137,12 @@ public class RobotContainer {
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
 
+            // ---- Climber Subsystem ----
+            climberSubSys = new SubSys_Climber();
+            
             // Configure the button bindings
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys, climberSubSys);
 
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys);
             break;
     }  
   }
@@ -178,7 +185,8 @@ public class RobotContainer {
     Telemetry logger,
     HMIStation hmiStation,
     SubSys_Intake subSysIntake,
-    SubSys_Shooter subSysShooter) {
+    SubSys_Shooter subSysShooter,
+    SubSys_Climber climberSubSys) {
 
       // -- Drivetrain --
       drivetrain.setDefaultCommand(
@@ -198,7 +206,8 @@ public class RobotContainer {
               () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
               () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
       ));
-
+      hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
+      hmiStation.climberDn.whileTrue(new climberSetVoltDown(climberSubSys));
   }
 
   /**

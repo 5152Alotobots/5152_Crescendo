@@ -95,10 +95,10 @@ public class SubSys_Shooter extends SubsystemBase {
         double speed = 0;
         switch (shooterDirection) {
             case IN:
-                speed = MAX_SHOOTER_SPEED;
+                speed = -MAX_SHOOTER_SPEED;
                 break;
             case OUT:
-                speed = -MAX_SHOOTER_SPEED;
+                speed = MAX_SHOOTER_SPEED;
                 break;
             default:
                 break;
