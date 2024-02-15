@@ -20,6 +20,8 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDn;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -70,7 +72,7 @@ public class RobotContainer {
     final SubSys_Climber climberSubSys;
 
     // Switch Robots
-       switch (GHETTOBOT) {
+       switch (ROBOT) {
         // ##### CHARGEDUP_ROBOT_2023 #####
         case CHARGEDUP_ROBOT_2023:
         
@@ -153,7 +155,7 @@ public class RobotContainer {
             climberSubSys = new SubSys_Climber();
             
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys);
             break;
     }  
   }
@@ -220,7 +222,8 @@ public class RobotContainer {
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
-    HMIStation hmiStation) {
+    HMIStation hmiStation,
+    SubSys_Climber climberSubSys) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
@@ -240,8 +243,9 @@ public class RobotContainer {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
-
     
+    hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
+    hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
     }
 
   /**
