@@ -25,8 +25,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDn;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
+import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -261,8 +260,10 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
     
-    hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-    hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
+    climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
+        hmiStation.climberUp, 
+        hmiStation.climberDn, 
+        climberSubSys));
     }
 
   /**

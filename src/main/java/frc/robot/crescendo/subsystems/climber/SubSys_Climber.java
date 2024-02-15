@@ -8,7 +8,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.controls.compound.Diff_PositionVoltage_Velocity;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
@@ -42,18 +41,18 @@ public SubSys_Climber() {
   climberLeftMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
   climberLeftMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
   climberLeftMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-  //climberLeftMtrConfiguration.Feedback.SensorToMechanismRatio = 
+  climberLeftMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
   climberLeftMtrConfiguration.Slot0.kP = 0.5;
   climberLeftMtrConfiguration.Slot0.kI = 0;
   climberLeftMtrConfiguration.Slot0.kD = 0;
   climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
   climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
   climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMaxPos;
+  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMaxHeight;
   climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
   climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMinPos;
+  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMinHeight;
 
   // create a position closed-loop request, voltage output, slot 0 configs
         climberLeftPid = new PositionVoltage(0).withSlot(0);
@@ -67,17 +66,18 @@ public SubSys_Climber() {
   climberRightMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
   climberRightMtrConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
   climberRightMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+  climberRightMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
   climberRightMtrConfiguration.Slot0.kP = 0.5;
   climberRightMtrConfiguration.Slot0.kI = 0;
   climberRightMtrConfiguration.Slot0.kD = 0;
   climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
   climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
   climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMaxPos;
+  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMaxHeight;
   climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
   climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMinPos;
+  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMinHeight;
         //climberLeftMtrConfiguration.Feedback.RotorToSensorRatio = 1;
 
         // create a position closed-loop request, voltage output, slot 0 configs
@@ -108,18 +108,6 @@ public SubSys_Climber() {
     final VoltageOut requestVoltOut = new VoltageOut(0);
     climberLeftMtr.setControl(requestVoltOut.withOutput(voltCmd));
     climberRightMtr.setControl(requestVoltOut.withOutput(voltCmd));
-  }
-
-  public void setVoltCmdUp(){
-    final VoltageOut requestVoltOut = new VoltageOut(0);
-    climberLeftMtr.setControl(requestVoltOut.withOutput(5));
-    climberRightMtr.setControl(requestVoltOut.withOutput(5));
-  }
-
-  public void setVoltCmdDn(){
-    final VoltageOut requestVoltOut = new VoltageOut(0);
-    climberLeftMtr.setControl(requestVoltOut.withOutput(-5));
-    climberRightMtr.setControl(requestVoltOut.withOutput(-5));
   }
 
   public boolean setPositionCmd(double posCmd){
