@@ -254,8 +254,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
+
+
     //return auto.getAutoCommand();
-    //return new Command()
-        return runAuto;  
+    //return new Command()   
+    return runAuto;  
     }
 }
