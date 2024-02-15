@@ -18,7 +18,9 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.shooter.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -190,7 +192,12 @@ public class RobotContainer {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
       // -- Intake --
-
+      subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
+              subSysShooter,
+              hmiStation::shooterRotateAxisRaw,
+              () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
+              () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
+      ));
 
   }
 

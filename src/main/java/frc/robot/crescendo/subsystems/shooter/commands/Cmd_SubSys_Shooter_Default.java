@@ -1,45 +1,49 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.MAX_ARM_ROTATION_SPEED;
+
 public class Cmd_SubSys_Shooter_Default extends Command {
   /** Creates a new FalconTalonFXDriveTalonSR. */
   private final SubSys_Shooter shooterSubSys;
-  private final DoubleSupplier shooterSpeed;
   private final DoubleSupplier shooterArmSpeed;
-  private final Supplier<IntakeDirection> intakeSpeed;
+  private final Supplier<ShooterDirection> shooterDirection;
+  private final Supplier<IntakeDirection> intakeDirection;
 
   public Cmd_SubSys_Shooter_Default(
           SubSys_Shooter shooterSubSys,
-          Supplier<IntakeDirection> intakeDirection,
-          DoubleSupplier shooterSpeed,
-          DoubleSupplier shooterArmSpeed) {
+          DoubleSupplier shooterArmSpeed,
+          Supplier<ShooterDirection> shooterDirection,
+          Supplier<IntakeDirection> intakeDirection) {
     this.shooterSubSys = shooterSubSys;
-    this.shooterSpeed = shooterSpeed;
     this.shooterArmSpeed = shooterArmSpeed;
-    this.intakeSpeed = intakeDirection;
+    this.shooterDirection = shooterDirection;
+    this.intakeDirection = intakeDirection;
 
     addRequirements(shooterSubSys);
   }
-
   @Override
   public void execute() {
-    shooterSubSys.setIntakeOutput(intakeSpeed.get());
-    shooterSubSys.setShooterArmOutput(shooterArmSpeed.getAsDouble());
-    shooterSubSys.setShooterOutput(shooterSpeed.getAsDouble());
+    // Arm Rotation
+    shooterSubSys.setShooterArmOutput(MathUtil.clamp(shooterArmSpeed.getAsDouble(), -MAX_ARM_ROTATION_SPEED, MAX_ARM_ROTATION_SPEED));
+    shooterSubSys.setIntakeOutput(intakeDirection.get());
+    shooterSubSys.setShooterOutput(shooterDirection.get());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubSys.setIntakeOutput(IntakeDirection.OFF);
     shooterSubSys.setShooterArmOutput(0);
-    shooterSubSys.setShooterOutput(0);
+    shooterSubSys.setIntakeOutput(IntakeDirection.OFF);
+    shooterSubSys.setShooterOutput(ShooterDirection.OFF);
   }
 
   // Returns true when the command should end.
