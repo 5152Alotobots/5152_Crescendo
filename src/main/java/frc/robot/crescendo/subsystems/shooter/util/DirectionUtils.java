@@ -1,4 +1,4 @@
-package frc.robot.crescendo.subsystems.shooter;
+package frc.robot.crescendo.subsystems.shooter.util;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 

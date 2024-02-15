@@ -2,8 +2,8 @@ package frc.robot.crescendo.subsystems.shooter.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.crescendo.subsystems.shooter.IntakeDirection;
-import frc.robot.crescendo.subsystems.shooter.ShooterDirection;
+import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 import java.util.function.DoubleSupplier;
