@@ -94,7 +94,7 @@ public class SubSys_Intake extends SubsystemBase {
      * @param speed Speed from -1 - 1 (unscaled, anything positive will be ignored)
      */
     public void lowerIntakeArmSpeed(double speed) { 
-        setIntakeArmSpeed(Math.min(0, speed));
+        setIntakeArmSpeed(Math.max(0, speed));
     }
 
     /**
@@ -102,7 +102,7 @@ public class SubSys_Intake extends SubsystemBase {
      * @param speed Speed from -1 - 1 (unscaled, anything negative will be ignored)
      */
     public void liftIntakeArmSpeed(double speed) {
-        setIntakeArmSpeed(Math.max(0, speed));
+        setIntakeArmSpeed(Math.min(0, speed));
     }
 
     /**
@@ -111,16 +111,19 @@ public class SubSys_Intake extends SubsystemBase {
      */
     public void setIntakeArmSpeed(double speed) {
         SmartDashboard.putNumber("Intake/Input Scaled", JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.2));
-        // intakeArmMtr.set(JoystickUtilities.joyDeadBndSqrdScaled(speed, 0.25, 0.2));
+        intakeArmMtr.set(JoystickUtilities.joyDeadBndSqrdScaled(speed, 0.25, 0.2));
     }
 
     /**
      * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
-        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
+        SmartDashboard.putString("Direction Intake", intakeDirection.toString());
+        if (intakeDirection == IntakeDirection.IN && getIntakeOccupied()) {
+               SmartDashboard.putBool tan("Intake/intake", true);
             intakeRollerMtr.set(1);
         } else if (intakeDirection == IntakeDirection.OUT) {
+                  SmartDashboard.putBoolean("Intake/outake", true);
             intakeRollerMtr.set(-1);
         } else intakeRollerMtr.set(0);
     }
