@@ -10,11 +10,16 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
@@ -44,7 +49,9 @@ public class RobotContainer {
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
   private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
-  private Command runAuto;
+
+  public final SendableChooser<Command> autoChooser;
+
   // The robot's subsystems and commands are defined here...
 
    public RobotContainer() {
@@ -92,7 +99,9 @@ public class RobotContainer {
             */
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
-            runAuto = drivetrain.getAutoPath("Tests");
+
+            // Auto
+            autoChooser = drivetrain.getAutoChooser();
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
@@ -106,6 +115,9 @@ public class RobotContainer {
 
             // ---- Drive Subsystem ----
             mecanumDriveSubSys = new SubSys_MecanumDrive();
+
+            // Null 
+            autoChooser = null;
 
             // ---- Intake Subsystem ----
             intakeSubSys = new SubSys_Intake();
@@ -140,7 +152,9 @@ public class RobotContainer {
             */
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
-            runAuto = drivetrain.getAutoPath("Tests");
+            
+            // Auto
+            autoChooser = drivetrain.getAutoChooser();
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
@@ -157,7 +171,10 @@ public class RobotContainer {
             // Configure the button bindings
             configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys);
             break;
-    }  
+    }
+    
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    
   }
   
 
@@ -254,11 +271,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-
-
-    //return auto.getAutoCommand();
-    //return new Command()   
-    return runAuto;  
+        return autoChooser.getSelected();
     }
 }
