@@ -229,7 +229,7 @@ public final class Constants {
     /** **** Start Crescendo Components CAN ID's **** */
     // ---- Intake ----
     public static final int IntakeRollerIREmitter_ID = 127;    
-    public static final int IntakeRollerIRDetector_ID = 0;
+    public static final int IntakeRollerIRDetector_ID = 1;
     public static final int IntakeArmFwdLimitSw_ID = 1;
      public static final int IntakeArmRevLimitSw_ID = 2;    
     public static final int climberLeftHighSwitchID = 3;
