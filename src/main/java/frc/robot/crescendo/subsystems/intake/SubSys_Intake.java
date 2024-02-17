@@ -1,6 +1,5 @@
 package frc.robot.crescendo.subsystems.intake;
 
-import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -10,8 +9,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -119,7 +116,7 @@ public class SubSys_Intake extends SubsystemBase {
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
         SmartDashboard.putString("Direction Intake", intakeDirection.toString());
-        if (intakeDirection == IntakeDirection.IN && getIntakeOccupied()) {
+        if (intakeDirection == IntakeDirection.IN) {
                SmartDashboard.putBoolean("Intake/intake", true);
             intakeRollerMtr.set(1);
         } else if (intakeDirection == IntakeDirection.OUT) {
