@@ -209,15 +209,14 @@ public class RobotContainer {
 
     // -- Intake --
     subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(subSysIntake, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
-    // -- Shooter --
 
-      // -- Shooter --
-      subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-              subSysShooter,
-              hmiStation::shooterRotateAxisRaw,
-              () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
-              () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
-      ));
+    // -- Shooter --
+    subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
+        subSysShooter,
+        hmiStation::shooterRotateAxisRaw,
+        () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
+        () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
+    ));
 
       // -- Climber --
       hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));

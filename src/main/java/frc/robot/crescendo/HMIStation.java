@@ -28,16 +28,12 @@ public class HMIStation {
     // CoDriver Controller
     private final XboxController coDriverController = new XboxController(1);
 
-     public final JoystickButton shooterIn = new JoystickButton(coDriverController, 5);
-     public final JoystickButton shooterOut = new JoystickButton(coDriverController, 6);
+     public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
+     public final JoystickButton shooterOut = new JoystickButton(coDriverController, 1);
      public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
-    //public final JoystickButton shooterStage = new JoystickButton(coDriverController, 5);
 
-    //public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
-    //public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
-
-    public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
-    public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
+    public final JoystickButton intakeIn = new JoystickButton(coDriverController, 5);
+    public final JoystickButton intakeOut = new JoystickButton(coDriverController, 6);
 
     public final POVButton resetLEDColorButton = new POVButton(coDriverController, 180);
     public final POVButton rainbowLEDColorButton = new POVButton(coDriverController, 0);

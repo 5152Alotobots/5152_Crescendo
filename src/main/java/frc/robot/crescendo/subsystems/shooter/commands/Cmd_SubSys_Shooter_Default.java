@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
+import frc.robot.library.driverstation.JoystickUtilities;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 import java.util.function.DoubleSupplier;
@@ -33,7 +34,7 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   @Override
   public void execute() {
     // Arm Rotation
-    shooterSubSys.setShooterArmOutput(MathUtil.clamp(shooterArmSpeed.getAsDouble(), -MAX_ARM_ROTATION_SPEED, MAX_ARM_ROTATION_SPEED));
+    shooterSubSys.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), .5, .2));
     shooterSubSys.setIntakeOutput(intakeDirection.get());
     shooterSubSys.setShooterOutput(shooterDirection.get());
   }
