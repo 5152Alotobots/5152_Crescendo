@@ -125,6 +125,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if(DriverStation.getAlliance().isPresent()){
             if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
                 m_flipPath = true;
+                SmartDashboard.putBoolean("NotPeriodic", m_flipPath);
+                //smartdash and in periodic driver for side switching
             }
         }
 
