@@ -2,13 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.crescendo.commands.auto;
+package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class Cmd_PickUpNote extends Command {
-  /** Creates a new Cmd_PickUpNote. */
-  public Cmd_PickUpNote() {
+public class Cmd_ScoreSpeakerCenter extends Command {
+  /** Creates a new Score Speaker Command. 
+   * This command will Start at the defined pose and aim, spin up and shoot
+   * 1. Aim, Spin Up and Drive to shooting spot
+   * 2. Shoot
+   * 3. Stow Shooter and back away to defined pose
+  */
+  public Cmd_ScoreSpeakerCenter() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

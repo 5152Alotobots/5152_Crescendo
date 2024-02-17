@@ -10,6 +10,12 @@
           "data": {
             "pathName": "Auto_2Blue_Speaker_1NotePosition2"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePickupNote"
+          }
         }
       ]
     }

@@ -6,9 +6,14 @@ package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class Cmd_ShootSpeaker extends Command {
-  /** Creates a new shootspeaker. */
-  public Cmd_ShootSpeaker() {
+public class Cmd_ScoreSpeakerLeft extends Command {
+  /** Creates a new Score Speaker Command. 
+   * This command will Start at the defined pose and aim, spin up and shoot
+   * 1. Aim, Spin Up and Drive to shooting spot
+   * 2. Shoot
+   * 3. Stow Shooter and back away to defined pose
+  */
+  public Cmd_ScoreSpeakerLeft() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -2,13 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.crescendo.commands.auto;
+package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class Cmd_ShootAmp extends Command {
-  /** Creates a new Cmd_ShootAmp. */
-  public Cmd_ShootAmp() {
+public class Cmd_ScoreAmp extends Command {
+  /** Creates a new Cmd_ShootAmp. 
+   * This Command will start from the defined pose in front of the Amp, aim drive forward, score the note and back off.
+   * 1. Aim the Shooter for the Amp
+   * 2. Drive forward
+   * 3. Shoot the Note
+   * 4. Drive backward
+   * 5. Stow the Shooter
+  */
+  public Cmd_ScoreAmp() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
