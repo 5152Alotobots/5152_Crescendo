@@ -23,22 +23,6 @@
         "x": 2.7861729417996592,
         "y": 5.54050063311276
       },
-      "nextControl": {
-        "x": 2.8713498868439173,
-        "y": 5.528332498106438
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.2257927218557139,
-        "y": 5.537577201280529
-      },
-      "prevControl": {
-        "x": 1.2257927218557139,
-        "y": 5.537577201280529
-      },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
@@ -69,7 +53,7 @@
     },
     {
       "name": "shoot speaker",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 1.5,
       "command": {
         "type": "parallel",
         "data": {

@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Auto_2Blue_Speaker_Leave"

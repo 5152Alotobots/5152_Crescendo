@@ -6,33 +6,33 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part1"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "name": "ScoreAmp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Part1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakePickupNote"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Part2"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "name": "ScoreAmp"
           }
         }
       ]

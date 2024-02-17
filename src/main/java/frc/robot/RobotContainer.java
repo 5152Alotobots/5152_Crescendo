@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.commands.Cmd_ScoreAmp;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
@@ -53,7 +54,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
 
   public final SendableChooser<Command> autoChooser;
 
@@ -176,6 +177,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
+            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp());
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
@@ -206,7 +208,9 @@ public class RobotContainer {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
         drivetrain.registerTelemetry(logger::telemeterize);
-  }
+      
+        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    }
 
   private void configureButtonBindingsGhettoBot(
     SubSys_MecanumDrive mecanumDriveSubSys,
@@ -265,7 +269,7 @@ public class RobotContainer {
     //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

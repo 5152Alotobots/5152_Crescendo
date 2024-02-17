@@ -8,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker"
+            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part2"
           }
         }
       ]
