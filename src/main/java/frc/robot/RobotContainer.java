@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -174,7 +175,7 @@ public class RobotContainer {
             climberSubSys = new SubSys_Climber();
             
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
             break;
     }
     
@@ -247,7 +248,8 @@ public class RobotContainer {
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys) {
+    SubSys_Climber climberSubSys,
+    SubSys_Slider sliderSubSys) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
@@ -270,6 +272,9 @@ public class RobotContainer {
     
     hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
     hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
+    
+    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
+    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
     }
 
   /**

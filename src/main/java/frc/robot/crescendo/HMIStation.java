@@ -29,11 +29,11 @@ public class HMIStation {
     private final XboxController coDriverController = new XboxController(1);
 
     public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
-    public final JoystickButton shooterOut = new JoystickButton(coDriverController, 5);
+    public final JoystickButton shooterOut = new JoystickButton(coDriverController, 7);
     //public final JoystickButton shooterStage = new JoystickButton(coDriverController, 5);
 
     public final JoystickButton sliderIn = new JoystickButton(coDriverController, 6);
-    public final JoystickButton sliderOut = new JoystickButton(coDriverController, 7);
+    public final JoystickButton sliderOut = new JoystickButton(coDriverController, 5);
 
     //public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
     //public final JoystickButton intakeOut = new JoystickButton(coDriverController, 7);
