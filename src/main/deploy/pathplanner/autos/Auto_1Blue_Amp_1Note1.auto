@@ -1,20 +1,32 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.43,
+      "y": 7.02
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ScoreAmp"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part1"
+            "pathName": "Move_To_Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreAmp"
           }
         },
         {
