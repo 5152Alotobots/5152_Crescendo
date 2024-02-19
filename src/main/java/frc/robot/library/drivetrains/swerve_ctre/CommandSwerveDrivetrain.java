@@ -46,6 +46,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putNumber("PoseY", this.m_odometry.getEstimatedPosition().getY());
         field.setRobotPose(this.m_odometry.getEstimatedPosition());
         SmartDashboard.putData("Field", field);
+
+        boolean lclFlipPath = false;
+        if(DriverStation.getAlliance().isPresent()){
+            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
+                lclFlipPath = true;              
+            }
+        }
+        SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
+
     }
 
 
@@ -124,10 +133,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         m_flipPath = false;
         if(DriverStation.getAlliance().isPresent()){
             if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                m_flipPath = true;
-                SmartDashboard.putBoolean("NotPeriodic", m_flipPath);
-                //smartdash and in periodic driver for side switching
+                m_flipPath = true;              
             }
+        SmartDashboard.putBoolean("ConfigPP_flipPath", m_flipPath);
         }
 
         AutoBuilder.configureHolonomic(
