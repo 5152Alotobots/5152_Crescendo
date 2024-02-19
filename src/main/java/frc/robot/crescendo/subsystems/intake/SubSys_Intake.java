@@ -4,6 +4,9 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -24,7 +27,7 @@ public class SubSys_Intake extends SubsystemBase {
     private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, MotorType.kBrushless);
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
-    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
+    // private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
 
     public SubSys_Intake () {
         
@@ -32,23 +35,20 @@ public class SubSys_Intake extends SubsystemBase {
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
+        // intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        intakeArmMtrConfiguration.Slot0.kP = 0.5;
-        intakeArmMtrConfiguration.Slot0.kI = 0;
-        intakeArmMtrConfiguration.Slot0.kD = 0;
-        //intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1;
+
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
-        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
-        CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-        intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
+        // CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
+        // intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
     }
     
     @Override
@@ -57,6 +57,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+        // SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
     }
 
@@ -116,12 +118,21 @@ public class SubSys_Intake extends SubsystemBase {
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
         SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
-        if (intakeDirection == IntakeDirection.IN) {
-            intakeRollerMtr.set(1);
+        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
+            intakeRollerMtr.set1);
         } else if (intakeDirection == IntakeDirection.OUT) {
-            intakeRollerMtr.set(-1);
+            intakeRollerMtr.set(1);
         } else intakeRollerMtr.set(0);
     }
+    
+    /**
+     * Set the degree of the arm rotation
+     * @param degree The degree to rotate to
+     */
+    // public void setShooterArmDegree(double degree) {
+    //     SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
+    //     intakeArmMtr.setControl(new PositionVoltage(degree / 360.0).withSlot(0));
+    // }
 
     /**
      * @return true if the intake is occupied with a note
