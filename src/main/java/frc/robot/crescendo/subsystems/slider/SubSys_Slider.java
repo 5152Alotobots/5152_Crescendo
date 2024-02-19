@@ -19,7 +19,7 @@ public class SubSys_Slider extends SubsystemBase {
   }
 
   public final DoubleSolenoid extend =
-    new DoubleSolenoid(2, PneumaticsModuleType.REVPH, 0, 1);
+    new DoubleSolenoid(2, PneumaticsModuleType.CTREPCM, 0, 1);
 
     public void retract() {
     extend.set(Value.kReverse);
