@@ -31,7 +31,7 @@ public class SubSys_Intake extends SubsystemBase {
         // Configure Intake Arm Motor
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         intakeArmMtrConfiguration.Slot0.kP = 0.5;
@@ -43,8 +43,8 @@ public class SubSys_Intake extends SubsystemBase {
         
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
-        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-        intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
@@ -58,6 +58,9 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
+        SmartDashboard.putNumber("IntakeArmPos", intakeArmMtr.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakeArmRotorPos", intakeArmMtr.getRotorPosition().getValueAsDouble());
+
     }
 
     /**

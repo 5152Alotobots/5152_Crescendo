@@ -1,5 +1,6 @@
 package frc.robot.crescendo.subsystems.shooter;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -12,6 +13,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +44,7 @@ public class SubSys_Shooter extends SubsystemBase {
         // Configure Shooter Arm Motor
         TalonFXConfiguration shooterArmMtrConfiguration = new TalonFXConfiguration();
         shooterArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        shooterArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        shooterArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         shooterArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = shooterArmCANCoder.getDeviceID();
         shooterArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         shooterArmMtrConfiguration.Slot0.kP = 1.5;
@@ -56,9 +59,10 @@ public class SubSys_Shooter extends SubsystemBase {
 
         // Configure Intake Arm CANcoder
         CANcoderConfiguration shooterArmCaNcoderConfiguration = new CANcoderConfiguration();
-        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-        shooterArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        shooterArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         shooterArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Shooter_Constants.ShooterArm.CANcoderMagOffset;
+        
 
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
@@ -145,6 +149,9 @@ public class SubSys_Shooter extends SubsystemBase {
         /* --- PID --- */
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
-
+        SmartDashboard.putNumber("ShooterArmPos", shooterArmMtr.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("ShooterArmRotatorPos", shooterArmMtr.getRotorPosition().getValueAsDouble());
+        SmartDashboard.putBoolean("FwdLimitSwitch", shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed).isPressed());
+        SmartDashboard.putBoolean("RevLimitSwitch", shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed).isPressed());
     }
 }
