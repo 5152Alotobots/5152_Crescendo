@@ -8,31 +8,25 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "name": "ScoreAmp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part1"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "IntakePickupNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeakerCenter"
           }
         }
       ]
