@@ -18,16 +18,81 @@ public class HMIStation {
     // Driver Controller
     private final XboxController driverController = new XboxController(0);
 
+    public final POVButton climberUp = new POVButton(driverController, 0);
+
+    //public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
+
+    public final POVButton climberDn = new POVButton(driverController, 180);
+
+    public final POVButton shooterSlowButton = new POVButton(driverController, 270);
+
+    public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
+
+    //public final JoystickButton blankDriverBButton = new JoystickButton(driverController, 2);
+
+    //public final JoystickButton blankDriverXButton = new JoystickButton(driverController, 3);
+
     public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
- 
+
+    public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
+
+    public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
+
+    public double driveFwdAxisRaw() {
+        return driverController.getRawAxis(5);
+    }
+
+    public double driveStrAxisRaw() {
+        return driverController.getRawAxis(4);
+    }
+
+    public double driveRotAxis() {
+        return driverController.getRawAxis(0);
+    }
+
+    // *** Old Driver **** //
+    /*
+    public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
+  
     public final POVButton climberUp = new POVButton(driverController, 0);
     public final POVButton climberDn = new POVButton(driverController, 180);
     
     public final JoystickButton testButton = new JoystickButton(driverController, 3);
+    */
 
     // CoDriver Controller
     private final XboxController coDriverController = new XboxController(1);
 
+    public final POVButton sliderOut = new POVButton(coDriverController, 0);
+
+    //public final POVButton blankDriverPOVRightButton = new POVButton(coDriverController, 90);
+
+    public final POVButton sliderIn = new POVButton(coDriverController, 180);
+
+    //public final POVButton blankCoDriverPOVLeftButton = new POVButton(coDriverController, 270);
+
+    public final JoystickButton shooterOut = new JoystickButton(coDriverController, 1);
+
+    public final JoystickButton subwooferAngleSetButton = new JoystickButton(coDriverController, 2);
+
+    public final JoystickButton ampAngleSetButton = new JoystickButton(coDriverController, 3);
+
+    public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
+
+    public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
+
+    public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+
+    public double shooterRotateAxisRaw() {
+    return coDriverController.getRawAxis(5);
+  }
+
+    public double intakeRotateAxisRaw() {
+    return coDriverController.getRawAxis(1);
+  }
+
+    // **** Old CoDriver **** //
+    /* 
     public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
     public final JoystickButton shooterOut = new JoystickButton(coDriverController, 7);
     //public final JoystickButton shooterStage = new JoystickButton(coDriverController, 5);
@@ -41,6 +106,7 @@ public class HMIStation {
     public final POVButton resetLEDColorButton = new POVButton(coDriverController, 180);
     public final POVButton rainbowLEDColorButton = new POVButton(coDriverController, 0);
     public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
+    */
 
     private final XboxController auxdriverController = new XboxController(2);
 
@@ -53,7 +119,7 @@ public class HMIStation {
      * Gets the forward axis value for driving.
      * 
      * @return The value used for driving forward. unmodified. 
-     */
+     *//* 
     public double driveFwdAxisRaw() {
         return driverController.getRawAxis(1);
     }
@@ -62,7 +128,7 @@ public class HMIStation {
      * Gets the strafe axis value for driving. unmodified.
      *
      * @return The strafe axis value.
-     */
+     *//* 
     public double driveStrAxisRaw() {
       return driverController.getRawAxis(0);
     }
@@ -71,7 +137,7 @@ public class HMIStation {
    * Gets the rotation axis value for driving. unmodified.
    *
    * @return The rotation axis value.
-   */
+   *//* 
   public double driveRotAxisRaw() {
     return driverController.getRawAxis(4);
   }
@@ -80,7 +146,7 @@ public class HMIStation {
    * Gets the axis value for rotating the Shooter.
    * 
    * @return The value used for driving forward. unmodified. 
-   */
+   *//* 
   public double shooterRotateAxisRaw() {
     return coDriverController.getRawAxis(5);
   }
