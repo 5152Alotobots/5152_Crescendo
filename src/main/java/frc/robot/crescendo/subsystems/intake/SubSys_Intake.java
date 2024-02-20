@@ -19,6 +19,9 @@ import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.library.driverstation.JoystickUtilities;
 
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.SLOW_OUTTAKE_SPEED;
+
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake intakeRollerMtr.
@@ -64,7 +67,6 @@ public class SubSys_Intake extends SubsystemBase {
 
     /**
      * Calls correct IntakeArm method depending on the values of limit switches
-     * @param speed Speed from -1 - 1 (unscaled)
      */
     public void setIntakeArmSpeedWithLimits(double intakeArmSpeed) {
         ForwardLimitValue forwardLimitValue = intakeArmMtr.getForwardLimit().getValue();
@@ -114,15 +116,25 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     /**
-     * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
+     * @param intakeDirection {@link IntakeDirection} - The speed to run the intake at
      */
-    public void setIntakeDirection(frc.robot.crescendo.subsystems.intake.IntakeDirection in) {
-        SmartDashboard.putString("Intake/Direction Intake", in.toString());
-        if (in == IntakeDirection.IN && !getIntakeOccupied()) {
-            intakeRollerMtr.set(-1);
-        } else if (in == IntakeDirection.OUT) {
-            intakeRollerMtr.set(1);
-        } else intakeRollerMtr.set(0);
+    public void setIntakeDirection(IntakeDirection intakeDirection) {
+        SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
+        double speed = 0;
+        switch (intakeDirection) {
+            case IN:
+                speed = MAX_INTAKE_SPEED;
+                break;
+            case OUT_SLOW:
+                speed = SLOW_OUTTAKE_SPEED;
+                break;
+            case OUT:
+                speed = -MAX_INTAKE_SPEED;
+                break;
+            default:
+                break;
+        }
+        intakeRollerMtr.set(speed);
     }
     
     /**

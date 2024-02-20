@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -77,6 +78,9 @@ public class SubSys_Shooter extends SubsystemBase {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
+            case IN_SLOW:
+                speed = SLOW_INTAKE_SPEED;
+                break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
                 break;
@@ -84,6 +88,13 @@ public class SubSys_Shooter extends SubsystemBase {
                 break;
         }
         shooterRollerMtr.set(speed);
+    }
+
+    /**
+     * @return true when the intake is occupied
+     */
+    public boolean getIntakeOccupied() {
+        return !shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
     }
 
     // Intake ------
@@ -145,6 +156,8 @@ public class SubSys_Shooter extends SubsystemBase {
         /* --- PID --- */
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
+        /* --- SENSORS --- */
+        SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
 
     }
 }
