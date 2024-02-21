@@ -7,6 +7,7 @@ package frc.robot.library.pneumatics;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SubSys_Pneumatics extends SubsystemBase {
   /** Creates a new SubSys_Pneumatics. */
@@ -17,7 +18,7 @@ public class SubSys_Pneumatics extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  Compressor pcmCompressor = new Compressor(21, PneumaticsModuleType.CTREPCM);
+  Compressor pcmCompressor = new Compressor(Constants.CAN_IDs.PCM_CAN_ID, PneumaticsModuleType.CTREPCM);
 
   public void compressorOn() {
     pcmCompressor.enableDigital();

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.26,
-      "y": 5.56
+      "x": 0.39,
+      "y": 2.87
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_Leave"
+            "pathName": "Auto_Leave"
           }
         }
       ]
