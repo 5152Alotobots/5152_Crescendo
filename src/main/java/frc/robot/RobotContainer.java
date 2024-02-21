@@ -46,14 +46,6 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 
-import static frc.robot.crescendo.HMIStation.Constants.DRIVER_ROT_DEADBAND;
-import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
-
-enum RobotSelection {
-    CRESCENDO,
-    CHARGEDUP,
-    GHETTOBOT
-}
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -96,12 +88,12 @@ public class RobotContainer {
     final SubSys_Shooter shooterSubSys;
     final SubSys_Slider sliderSubSys;
     final SubSys_Climber climberSubSys;
-    final SubSys_Slider sliderSubSys;
+
 
     // Switch Robots
        switch (ROBOT) {
            // ##### CHARGEDUP_ROBOT_2023 #####
-           case CHARGEDUP:
+           case CHARGEDUP_ROBOT_2023:
         
             // ---- Drive Subsystem ----
             // swerve_ctre
@@ -189,7 +181,7 @@ public class RobotContainer {
             autoChooser = drivetrain.getAutoChooser();
 
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, intakeSubSys, shooterSubSys, sliderSubSys,climberSubSys );
             break;
     }
     
@@ -229,25 +221,6 @@ public class RobotContainer {
             driverStationSubSys::driveFwdAxisRaw,
             driverStationSubSys::driveStrAxisRaw,
             driverStationSubSys::driveRotAxisRaw));
-
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-            intakeSubSys, 
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-
-        driverStationSubSys.highConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, 1, null));
-        driverStationSubSys.midConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, -1, null));
-        
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-            shooterSubSys, 
-            0,
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-        
-        driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
-        driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
-
-        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
@@ -259,7 +232,7 @@ public class RobotContainer {
    * of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  }
+
 
   private void configureButtonBindingsCrescendoRobot2024(
     CommandSwerveDrivetrain drivetrain,
@@ -293,22 +266,19 @@ public class RobotContainer {
     subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(subSysIntake, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
 
     // -- Shooter --
-    subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-        subSysShooter,
-        hmiStation::shooterRotateAxisRaw,
-        () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
-        () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
-    ));
+    //subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
+    //    subSysShooter,
+    //    hmiStation::shooterArmAxisRaw,
+    //    () -> DirectionUtils.toShooterDirection(hmiStation.shooterOut()),
+    //    () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
+    //));
 
-      // -- Climber --
-      hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
+   // -- Climber --
+     hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
       hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
-
-      hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::extend));
-      hmiStation.sliderIn.onTrue(new InstantCommand(subSysSlider::retract));
     
-    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
-    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
+    hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::sliderExtendCmd));
+    hmiStation.sliderIn.onTrue(new InstantCommand(subSysSlider::sliderRetractCmd));
   }
 
   /**

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.library.driverstation.JoystickUtilities;
 
 /**
@@ -117,11 +116,11 @@ public class SubSys_Intake extends SubsystemBase {
     /**
      * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
      */
-    public void setIntakeDirection(IntakeDirection intakeDirection) {
-        SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
-        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
+    public void setIntakeDirection(frc.robot.crescendo.subsystems.intake.IntakeDirection in) {
+        SmartDashboard.putString("Intake/Direction Intake", in.toString());
+        if (in == IntakeDirection.IN && !getIntakeOccupied()) {
             intakeRollerMtr.set(-1);
-        } else if (intakeDirection == IntakeDirection.OUT) {
+        } else if (in == IntakeDirection.OUT) {
             intakeRollerMtr.set(1);
         } else intakeRollerMtr.set(0);
     }
