@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -37,6 +38,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -82,6 +84,7 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
+    final SubSys_Slider sliderSubSys;
     final SubSys_Climber climberSubSys;
 
     // Switch Robots
@@ -168,6 +171,9 @@ public class RobotContainer {
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
 
+            // ---- Slider Subsystem ----
+            sliderSubSys = new SubSys_Slider();
+
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
@@ -182,7 +188,7 @@ public class RobotContainer {
             autoChooser = drivetrain.getAutoChooser();
 
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
             break;
     }
     
@@ -239,6 +245,8 @@ public class RobotContainer {
         
         driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
         driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
+
+        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
@@ -255,7 +263,8 @@ public class RobotContainer {
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys) {
+    SubSys_Climber climberSubSys,
+    SubSys_Slider sliderSubSys) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
@@ -278,6 +287,9 @@ public class RobotContainer {
     
     hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
     hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
+    
+    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
+    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
     }
 
   /**
