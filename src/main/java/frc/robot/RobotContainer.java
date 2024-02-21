@@ -254,6 +254,12 @@ public class RobotContainer {
         )
     );
 
+    intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+        intakeSubSys, 
+        hmiStation::intakeArmAxisRaw,
+        hmiStation.intakeIn,
+        hmiStation.intakeOut));
+        
     // reset the field-centric heading on left bumper press
     hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
