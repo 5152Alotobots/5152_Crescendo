@@ -28,7 +28,7 @@ public class Cmd_SubSys_Shooter_ShootTemp extends Command {
     @Override
     public void execute() {
 
-        subSysShooter.shoot(timer);
+        subSysShooter.shootDumb(timer);
         finished = true;
     }
 
