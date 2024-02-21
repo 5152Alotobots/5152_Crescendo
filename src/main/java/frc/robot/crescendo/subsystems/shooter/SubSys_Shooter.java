@@ -148,6 +148,20 @@ public class SubSys_Shooter extends SubsystemBase {
         return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
+
+    public void shoot() {
+        setShooterOutput(ShooterDirection.OUT);
+        setIntakeOutput(IntakeDirection.IN);
+    }
+
+    /**
+     * Stops all motors
+     */
+    public void stopAll() {
+        setShooterOutput(ShooterDirection.OFF);
+        setIntakeOutput(IntakeDirection.OFF);
+        setShooterArmOutput(0);
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());

@@ -11,45 +11,46 @@ import java.util.function.Supplier;
 
 public class Cmd_SubSys_Shooter_Default extends Command {
   /** Creates a new FalconTalonFXDriveTalonSR. */
-  private final SubSys_Shooter shooterSubSys;
+  private final SubSys_Shooter subSysShooter;
   private final DoubleSupplier shooterArmSpeed;
   private final Supplier<ShooterDirection> shooterDirection;
   private final Supplier<IntakeDirection> intakeDirection;
 
   public Cmd_SubSys_Shooter_Default(
-          SubSys_Shooter shooterSubSys,
+          SubSys_Shooter subSysShooter,
           DoubleSupplier shooterArmSpeed,
           Supplier<ShooterDirection> shooterDirection,
           Supplier<IntakeDirection> intakeDirection) {
-    this.shooterSubSys = shooterSubSys;
+    this.subSysShooter = subSysShooter;
     this.shooterArmSpeed = shooterArmSpeed;
     this.shooterDirection = shooterDirection;
     this.intakeDirection = intakeDirection;
 
-    addRequirements(shooterSubSys);
+    addRequirements(subSysShooter);
   }
   @Override
   public void execute() {
     // Arm Rotation
-    shooterSubSys.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), .5, .2));
-    if (!shooterSubSys.getIntakeOccupied()) {
-      shooterSubSys.setIntakeOutput(intakeDirection.get());
-    }
+    subSysShooter.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), .5, .2));
+
+    // If nothing is in the shooter, allow either way intake
+    if (!subSysShooter.getIntakeOccupied()) subSysShooter.setIntakeOutput(intakeDirection.get());
+
+    // If we want to shoot, spin the wheels and the intake at the same time
     if (shooterDirection.get().equals(ShooterDirection.OUT)) {
-      shooterSubSys.setShooterOutput(ShooterDirection.OUT);
-      shooterSubSys.setIntakeOutput(IntakeDirection.IN);
+      subSysShooter.setShooterOutput(ShooterDirection.OUT);
+      subSysShooter.setIntakeOutput(IntakeDirection.IN);
     } else {
-      shooterSubSys.setShooterOutput(shooterDirection.get());
-      shooterSubSys.setIntakeOutput(intakeDirection.get());
+      // Otherwise, allow reverse shooter or intake
+      subSysShooter.setShooterOutput(shooterDirection.get());
+      subSysShooter.setIntakeOutput(intakeDirection.get());
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubSys.setShooterArmOutput(0);
-    shooterSubSys.setIntakeOutput(IntakeDirection.OFF);
-    shooterSubSys.setShooterOutput(ShooterDirection.OFF);
+    subSysShooter.stopAll();
   }
 
   // Returns true when the command should end.
