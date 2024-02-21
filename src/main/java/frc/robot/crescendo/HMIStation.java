@@ -26,11 +26,28 @@ public class HMIStation {
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
 
-  // Driver POV
-  public final POVButton climberUp = new POVButton(driverController, 0);
-  //public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
-  public final POVButton climberDn = new POVButton(driverController, 180);
-  public final POVButton shooterSlowButton = new POVButton(driverController, 270);
+  // CoDriver Controller
+  private final XboxController coDriverController = new XboxController(1);
+
+  public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
+  public final JoystickButton shooterOut = new JoystickButton(coDriverController, 1);
+  public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
+  public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
+  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
+
+  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 5);
+  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 6);
+
+  public final POVButton resetLEDColorButton = new POVButton(coDriverController, 180);
+  public final POVButton rainbowLEDColorButton = new POVButton(coDriverController, 0);
+  public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
+
+  private final XboxController auxdriverController = new XboxController(2);
+    
+  public final JoystickButton sliderIn = new JoystickButton(auxdriverController, 2);
+  public final JoystickButton sliderOut = new JoystickButton(auxdriverController, 4);
 
   // Driver Axes
   /**
@@ -87,23 +104,7 @@ public class HMIStation {
   
   public final JoystickButton testButton = new JoystickButton(driverController, 3);
   */
-
-  // **** Co-Driver Controller ****
-  private final XboxController coDriverController = new XboxController(1);
-
   // Co-Driver Buttons
-  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
-  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
-  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
-
-  // Co-Driver POV
-  public final POVButton sliderOut = new POVButton(coDriverController, 0);
-  //public final POVButton blankDriverPOVRightButton = new POVButton(coDriverController, 90);
-  public final POVButton sliderIn = new POVButton(coDriverController, 180);
-  //public final POVButton blankCoDriverPOVLeftButton = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
   /**

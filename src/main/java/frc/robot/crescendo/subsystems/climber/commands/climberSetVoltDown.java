@@ -7,13 +7,13 @@ package frc.robot.crescendo.subsystems.climber.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 
-public class climberSetVoltUp extends Command {
+public class climberSetVoltDown extends Command {
     /**
      * Creates a new climberSetVolt.
      */
     private final SubSys_Climber m_climberSubSys;
 
-    public climberSetVoltUp(SubSys_Climber climberSubSys) {
+    public climberSetVoltDown(SubSys_Climber climberSubSys) {
         m_climberSubSys = climberSubSys;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(climberSubSys);
@@ -27,7 +27,7 @@ public class climberSetVoltUp extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_climberSubSys.setVoltCmdUp();
+        m_climberSubSys.setVoltCmdDn();
     }
 
     // Called once the command ends or is interrupted.

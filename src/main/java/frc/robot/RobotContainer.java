@@ -31,9 +31,12 @@ import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDn;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
+import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -91,7 +94,6 @@ public class RobotContainer {
        switch (ROBOT) {
         // ##### CHARGEDUP_ROBOT_2023 #####
         case CHARGEDUP_ROBOT_2023:
-        
             // ---- Drive Subsystem ----
             // swerve_ctre
             drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023.DriveTrain;
@@ -151,20 +153,10 @@ public class RobotContainer {
             */
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
-
-            // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
-
-            // ---- Intake Subsystem ----
             intakeSubSys = new SubSys_Intake();
-
-            // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
-
-            // ---- Slider Subsystem ----
             sliderSubSys = new SubSys_Slider();
-
-            // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
             // ---- Auto ----
@@ -269,11 +261,14 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
     
     hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-    hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
-    
-    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
-    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
-    }
+    hmiStation.climberDn.whileTrue(new climberSetVoltDown(climberSubSys));
+
+    // -- Intake --
+    intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(intakeSubSys, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
+
+    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::extend));
+    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::retract));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

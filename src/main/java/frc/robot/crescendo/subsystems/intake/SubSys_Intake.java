@@ -16,6 +16,9 @@ import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.library.driverstation.JoystickUtilities;
 
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.SLOW_OUTTAKE_SPEED;
+
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake intakeRollerMtr.
@@ -37,7 +40,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kP = 0.5;
         intakeArmMtrConfiguration.Slot0.kI = 0;
         intakeArmMtrConfiguration.Slot0.kD = 0;
-        //intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1;
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = .005291;
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
@@ -60,11 +63,11 @@ public class SubSys_Intake extends SubsystemBase {
 // SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
+        SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**
      * Calls correct IntakeArm method depending on the values of limit switches
-     * @param speed Speed from -1 - 1 (unscaled)
      */
     public void setIntakeArmSpeedWithLimits(double intakeArmSpeed) {
         ForwardLimitValue forwardLimitValue = intakeArmMtr.getForwardLimit().getValue();
@@ -114,15 +117,25 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     /**
-     * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
+     * @param intakeDirection {@link IntakeDirection} - The speed to run the intake at
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
         SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
-        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
-            intakeRollerMtr.set(-1);
-        } else if (intakeDirection == IntakeDirection.OUT) {
-                  intakeRollerMtr.set(1);
-        } else intakeRollerMtr.set(0);
+        double speed = 0;
+        switch (intakeDirection) {
+            case IN:
+                if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
+                break;
+            case TRANSFER:
+                speed = SLOW_OUTTAKE_SPEED;
+                break;
+            case OUT:
+                speed = -MAX_INTAKE_SPEED;
+                break;
+            default:
+                break;
+        }
+        intakeRollerMtr.set(speed);
     }
 
     /**

@@ -16,7 +16,7 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
     public void initialize() {
         subSysShooter.setShooterArmDegree(degrees);
     }
-
+  
     @Override
     public void execute() {
 
