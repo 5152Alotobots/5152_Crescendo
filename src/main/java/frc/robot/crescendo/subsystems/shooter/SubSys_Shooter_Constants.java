@@ -19,6 +19,7 @@ public class SubSys_Shooter_Constants {
 
     public static final class AutoAim {
         public static final double LAUNCH_TOLERANCE = 1; // +- 1 Meter to launch
+        public static final double SHOOT_SPIN_UP_TEMP = 3.0;
     }
 
     public static final class FieldConstants {
