@@ -43,7 +43,7 @@ public class SubSys_Intake extends SubsystemBase {
         
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
-        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
@@ -57,6 +57,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+// SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
     }
 
@@ -115,15 +117,22 @@ public class SubSys_Intake extends SubsystemBase {
      * @param intakeSpeed {@link IntakeSpeed} - The speed to run the intake at
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
-        SmartDashboard.putString("Direction Intake", intakeDirection.toString());
-        if (intakeDirection == IntakeDirection.IN) {
-               SmartDashboard.putBoolean("Intake/intake", true);
-            intakeRollerMtr.set(1);
-        } else if (intakeDirection == IntakeDirection.OUT) {
-                  SmartDashboard.putBoolean("Intake/outake", true);
+        SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
+        if (intakeDirection == IntakeDirection.IN && !getIntakeOccupied()) {
             intakeRollerMtr.set(-1);
+        } else if (intakeDirection == IntakeDirection.OUT) {
+                  intakeRollerMtr.set(1);
         } else intakeRollerMtr.set(0);
     }
+
+    /**
+     * Set the degree of the arm rotation
+     * @param degree The degree to rotate to
+     */
+    // public void setShooterArmDegree(double degree) {
+    //     SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
+    //     intakeArmMtr.setControl(new PositionVoltage(degree / 360.0).withSlot(0));
+    // }
 
     /**
      * @return true if the intake is occupied with a note
