@@ -40,13 +40,13 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kP = 0.5;
         intakeArmMtrConfiguration.Slot0.kI = 0;
         intakeArmMtrConfiguration.Slot0.kD = 0;
-        //intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1;
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = .005291;
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
-        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
@@ -61,6 +61,7 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
+        SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**
@@ -121,7 +122,7 @@ public class SubSys_Intake extends SubsystemBase {
         double speed = 0;
         switch (intakeDirection) {
             case IN:
-                speed = MAX_INTAKE_SPEED;
+                if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
                 break;
             case OUT_SLOW:
                 speed = SLOW_OUTTAKE_SPEED;
