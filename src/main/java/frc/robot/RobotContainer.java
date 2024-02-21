@@ -34,6 +34,7 @@ import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
@@ -273,8 +274,10 @@ public class RobotContainer {
     //    () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
     //));
 
-   // -- Climber --
-     hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
+      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_ShootTemp(subSysShooter));
+
+      // -- Climber --
+      hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
       hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
     
     hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::sliderExtendCmd));

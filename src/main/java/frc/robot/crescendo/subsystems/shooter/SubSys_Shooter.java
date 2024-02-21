@@ -14,12 +14,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOT_SPIN_UP_TEMP;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
 
 
@@ -149,9 +151,11 @@ public class SubSys_Shooter extends SubsystemBase {
     }
 
 
-    public void shoot() {
+    public void shoot(Timer timer) {
         setShooterOutput(ShooterDirection.OUT);
-        setIntakeOutput(IntakeDirection.IN);
+        if (timer.get() > SHOOT_SPIN_UP_TEMP) {
+            setIntakeOutput(IntakeDirection.IN);
+        }
     }
 
     /**
