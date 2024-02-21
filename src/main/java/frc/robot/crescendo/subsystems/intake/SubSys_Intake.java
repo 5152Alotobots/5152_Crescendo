@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
+import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.library.driverstation.JoystickUtilities;
 
 /**
