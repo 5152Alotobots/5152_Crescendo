@@ -11,6 +11,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,15 +22,22 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.commands.Cmd_ScoreAmp;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -47,7 +55,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
 
   public final SendableChooser<Command> autoChooser;
 
@@ -75,6 +83,7 @@ public class RobotContainer {
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Shooter shooterSubSys;
+    final SubSys_Slider sliderSubSys;
     final SubSys_Climber climberSubSys;
 
     // Switch Robots
@@ -150,10 +159,7 @@ public class RobotContainer {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
             */
 
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
-            
-            // Auto
-            autoChooser = drivetrain.getAutoChooser();
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
@@ -164,11 +170,24 @@ public class RobotContainer {
             // ---- Shooter Subsystem ----
             shooterSubSys = new SubSys_Shooter();
 
+            // ---- Slider Subsystem ----
+            sliderSubSys = new SubSys_Slider();
+
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
+            // ---- Auto ----
+            // Register Named Commands for PathPlanner
+            NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote());
+            NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
+            NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
+            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
+            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp());
+            // Auto Chooser
+            autoChooser = drivetrain.getAutoChooser();
+
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys);
+            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
             break;
     }
     
@@ -194,7 +213,9 @@ public class RobotContainer {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
         drivetrain.registerTelemetry(logger::telemeterize);
-  }
+      
+        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    }
 
   private void configureButtonBindingsGhettoBot(
     SubSys_MecanumDrive mecanumDriveSubSys,
@@ -223,6 +244,8 @@ public class RobotContainer {
         
         driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
         driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
+
+        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
@@ -239,7 +262,8 @@ public class RobotContainer {
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys) {
+    SubSys_Climber climberSubSys,
+    SubSys_Slider sliderSubSys) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
@@ -253,7 +277,7 @@ public class RobotContainer {
     //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -264,6 +288,9 @@ public class RobotContainer {
         hmiStation.climberUp, 
         hmiStation.climberDn, 
         climberSubSys));
+    
+    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
+    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
     }
 
   /**

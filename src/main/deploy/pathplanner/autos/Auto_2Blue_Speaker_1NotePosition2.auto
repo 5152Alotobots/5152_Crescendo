@@ -6,9 +6,33 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2"
+            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Part1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePickupNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Part2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
           }
         }
       ]
