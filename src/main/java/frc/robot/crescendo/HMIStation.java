@@ -141,19 +141,4 @@ public class HMIStation {
   public boolean shooterSourcePos() {
     return (driverController.getRawAxis(2) > 0.3);
   }
-  
-  // Aux Driver Controller
-  //private final XboxController auxdriverController = new XboxController(2);
-
-  // Button Box
-
-  
-  // ---- Alliance Color
-  public void alliancePosition(){
-    DriverStation.getAlliance();
-  }
-
-
-
-
 }

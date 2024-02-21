@@ -12,15 +12,21 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
+import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
+
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
+
 
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake spinner.
  */
 public class SubSys_Shooter extends SubsystemBase {
-
     private final TalonSRX shooterWheelsMtr1 = new TalonSRX(CAN_IDs.ShooterWheelsMtrRight_CAN_ID);
     private final TalonSRX shooterWheelsMtr2 = new TalonSRX(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID);
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
@@ -38,10 +44,9 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         shooterArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = shooterArmCANCoder.getDeviceID();
         shooterArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        shooterArmMtrConfiguration.Slot0.kP = 0.5;
-        shooterArmMtrConfiguration.Slot0.kI = 0;
+        shooterArmMtrConfiguration.Slot0.kP = 1.5;
+        shooterArmMtrConfiguration.Slot0.kI = 0.4;
         shooterArmMtrConfiguration.Slot0.kD = 0;
-        //shooterArmMtrConfiguration.Feedback.RotorToSensorRatio = 1;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterArmPid = new PositionVoltage(0).withSlot(0);
@@ -60,44 +65,86 @@ public class SubSys_Shooter extends SubsystemBase {
 
     }
 
-    // Intake ------
     /**
-     * Set speed of shooter motor output. (-1)-1
-     * @param percentOutput -1 -> 1
+     * Sets the Intake output
+     *
+     * @param intakeDirection The {@link IntakeDirection} to move in
      */
-    public void setShooterOutput(double percentOutput) {
-        shooterWheelsMtr1.set(TalonSRXControlMode.PercentOutput, percentOutput);
-        shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, percentOutput);   
+    public void setIntakeOutput(IntakeDirection intakeDirection) {
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(intakeDirection));
+        double speed = 0;
+        switch (intakeDirection) {
+            case IN:
+                speed = MAX_INTAKE_SPEED;
+                break;
+            case OUT:
+                speed = -MAX_INTAKE_SPEED;
+                break;
+            default:
+                break;
+        }
+        shooterRollerMtr.set(speed);
     }
 
-    public void setIntakeOutput(double percentOutput) {
-        shooterRollerMtr.set(percentOutput);
+    // Intake ------
+
+    /**
+     * Set direction of shooter motor output
+     * @param shooterDirection The {@link ShooterDirection} to run the motor at
+     */
+    public void setShooterOutput(ShooterDirection shooterDirection) {
+        SmartDashboard.putString("Shooter/Shooter Speed", shooterDirection.toString());
+        double speed = 0;
+        switch (shooterDirection) {
+            case IN:
+                speed = -MAX_SHOOTER_SPEED;
+                break;
+            case OUT:
+                speed = MAX_SHOOTER_SPEED;
+                break;
+            default:
+                break;
+        }
+        shooterWheelsMtr1.set(TalonSRXControlMode.PercentOutput, speed);
+        shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, speed);
     }
 
 
     // Arm ------
+
     /**
-     * Set speed of shooterArmMtr motor output. (-1)-1
+     * Sets the speed of shooterArmMtr motor output
      * @param percentOutput -1 -> 1
      */
     public void setShooterArmOutput(double percentOutput) {
-        shooterArmMtr.set(percentOutput);
+        shooterArmMtr.set(MathUtil.clamp(percentOutput, -MAX_ARM_ROTATION_SPEED, MAX_ARM_ROTATION_SPEED));
     }
 
     /**
      * Set the degree of the arm rotation
-     *
      * @param degree The degree to rotate to
      */
     public void setShooterArmDegree(double degree) {
+        SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", degree);
         shooterArmMtr.setControl(shooterArmPid.withPosition(degree / 360.0));
     }
 
+
     /**
-     * @return If the motors velocity does not equal 0
+     * @return true if the motors velocity does not equal 0
      */
     public boolean shooterArmMtrBusy() {
         return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
+        SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
+        /* --- PID --- */
+        SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
+        SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
+
+    }
 }

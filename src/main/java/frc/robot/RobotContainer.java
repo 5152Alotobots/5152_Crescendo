@@ -31,9 +31,11 @@ import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDn;
+import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -44,6 +46,14 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 
+import static frc.robot.crescendo.HMIStation.Constants.DRIVER_ROT_DEADBAND;
+import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
+
+enum RobotSelection {
+    CRESCENDO,
+    CHARGEDUP,
+    GHETTOBOT
+}
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -86,11 +96,12 @@ public class RobotContainer {
     final SubSys_Shooter shooterSubSys;
     final SubSys_Slider sliderSubSys;
     final SubSys_Climber climberSubSys;
+    final SubSys_Slider sliderSubSys;
 
     // Switch Robots
        switch (ROBOT) {
-        // ##### CHARGEDUP_ROBOT_2023 #####
-        case CHARGEDUP_ROBOT_2023:
+           // ##### CHARGEDUP_ROBOT_2023 #####
+           case CHARGEDUP:
         
             // ---- Drive Subsystem ----
             // swerve_ctre
@@ -99,13 +110,7 @@ public class RobotContainer {
             drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
-            /*
-            drive = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
+                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
 
@@ -137,16 +142,12 @@ public class RobotContainer {
             // ---- Driver Station ----
             driverStationSubSys = new DriverStation();
 
-            // Configure the button bindings
             configureButtonBindingsGhettoBot(mecanumDriveSubSys, intakeSubSys, shooterSubSys, driverStationSubSys);
-
             break;
-
         // ##### CRESCENDO_ROBOT_2024 #####
         default:
 
             // ---- Drive Subsystem ----
-            // swerve_ctre
             drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain;
             
             drive = new SwerveRequest.FieldCentric()
@@ -258,13 +259,17 @@ public class RobotContainer {
    * of its subclasses ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
+  }
+
   private void configureButtonBindingsCrescendoRobot2024(
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys,
-    SubSys_Slider sliderSubSys) {
+    SubSys_Intake subSysIntake,
+    SubSys_Shooter subSysShooter,
+    SubSys_Slider subSysSlider,
+    SubSys_Climber subSysClimber) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
@@ -283,14 +288,28 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
-    
-    hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-    hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
+
+    // -- Intake --
+    subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(subSysIntake, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
+
+    // -- Shooter --
+    subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
+        subSysShooter,
+        hmiStation::shooterRotateAxisRaw,
+        () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
+        () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
+    ));
+
+      // -- Climber --
+      hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
+      hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
+
+      hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::extend));
+      hmiStation.sliderIn.onTrue(new InstantCommand(subSysSlider::retract));
     
     hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
     hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
-    }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
