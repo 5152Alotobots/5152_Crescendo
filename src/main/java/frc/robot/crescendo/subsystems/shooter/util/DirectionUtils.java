@@ -13,7 +13,7 @@ public class DirectionUtils {
      */
     public static IntakeDirection toIntakeDirection(JoystickButton inButton, JoystickButton outButton) {
         if (inButton.getAsBoolean() && !outButton.getAsBoolean()) {
-            return IntakeDirection.IN_SLOW;
+            return IntakeDirection.TRANSFER;
         } else if (!inButton.getAsBoolean() && outButton.getAsBoolean()) {
             return IntakeDirection.OUT;
         } else {

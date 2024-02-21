@@ -78,7 +78,7 @@ public class SubSys_Shooter extends SubsystemBase {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
-            case IN_SLOW:
+            case TRANSFER:
                 speed = SLOW_INTAKE_SPEED;
                 break;
             case OUT:

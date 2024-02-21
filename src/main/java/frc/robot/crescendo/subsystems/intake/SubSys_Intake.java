@@ -123,7 +123,7 @@ public class SubSys_Intake extends SubsystemBase {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
-            case OUT_SLOW:
+            case TRANSFER:
                 speed = SLOW_OUTTAKE_SPEED;
                 break;
             case OUT:
