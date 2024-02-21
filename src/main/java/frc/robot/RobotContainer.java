@@ -44,9 +44,6 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 
-import static frc.robot.crescendo.HMIStation.Constants.DRIVER_ROT_DEADBAND;
-import static frc.robot.crescendo.HMIStation.Constants.DRIVER_XY_DEADBAND;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -59,7 +56,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
+  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
 
   public final SendableChooser<Command> autoChooser;
 
@@ -134,7 +131,7 @@ public class RobotContainer {
             // ---- Driver Station ----
             driverStationSubSys = new DriverStation();
 
-            configureButtonBindingsGhettoBot(mecanumDriveSubSys, intakeSubSys, shooterSubSys, driverStationSubSys);
+            configureButtonBindingsGhettoBot(mecanumDriveSubSys, driverStationSubSys);
             break;
         // ##### CRESCENDO_ROBOT_2024 #####
         default:
@@ -181,7 +178,16 @@ public class RobotContainer {
             autoChooser = drivetrain.getAutoChooser();
 
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
+            configureButtonBindingsCrescendoRobot2024(
+                drivetrain,
+                drive,
+                logger,
+                hmiStation,
+                intakeSubSys,
+                sliderSubSys,
+                shooterSubSys,
+                climberSubSys);
+                
             break;
     }
     
@@ -213,33 +219,12 @@ public class RobotContainer {
 
   private void configureButtonBindingsGhettoBot(
     SubSys_MecanumDrive mecanumDriveSubSys,
-    SubSys_Intake intakeSubSys,
-    SubSys_Shooter shooterSubSys,
     DriverStation driverStationSubSys){
         mecanumDriveSubSys.setDefaultCommand(new Cmd_SubSys_MecanumDrive_JoystickDefault(
             mecanumDriveSubSys,
             driverStationSubSys::driveFwdAxisRaw,
             driverStationSubSys::driveStrAxisRaw,
             driverStationSubSys::driveRotAxisRaw));
-
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-            intakeSubSys, 
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-
-        driverStationSubSys.highConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, 1, null));
-        driverStationSubSys.midConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, -1, null));
-        
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-            shooterSubSys, 
-            0,
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-        
-        driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
-        driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
-
-        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
@@ -256,21 +241,18 @@ public class RobotContainer {
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys,
+    SubSys_Intake intakeSubSys,
     SubSys_Slider sliderSubSys,
-    SubSys_Intake subSysIntake,
-    SubSys_Shooter subSysShooter) {
+    SubSys_Shooter shooterSubSys,
+    SubSys_Climber climberSubSys) {
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> 
             drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
               .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
               .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
-        ));
-
-    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    //joystick.b().whileTrue(drivetrain
-    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+        )
+    );
 
     // reset the field-centric heading on left bumper press
     hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));

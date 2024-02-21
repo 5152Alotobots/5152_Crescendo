@@ -4,9 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.chargedup.commands.auto.basic.*;
-import frc.robot.chargedup.commands.auto.singleelement.cube.*;
-import frc.robot.chargedup.commands.auto.tripleelement.*;
 import frc.robot.chargedup.subsystems.arm.SubSys_Arm;
 import frc.robot.chargedup.subsystems.bling.SubSys_Bling;
 import frc.robot.chargedup.subsystems.hand.SubSys_Hand;
@@ -24,7 +21,6 @@ public class Auto {
   /** Constructor for the Auto class. Initializes all the subsystems and commands. */
   public Auto(SubSys_Bling blingSubSys, SubSys_Photonvision photonvisionSubSys, SubSys_Hand handSubSys, SubSys_Arm armSubSys, SubSys_PigeonGyro gyroSubSys, SubSys_DriveTrain driveSubSys) {
 
-    SmartDashboard.putData(m_chooser);*/
   }
 
   /**
