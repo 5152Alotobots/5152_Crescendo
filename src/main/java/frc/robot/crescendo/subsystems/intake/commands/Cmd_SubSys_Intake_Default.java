@@ -31,7 +31,7 @@ public class Cmd_SubSys_Intake_Default extends Command {
     if (intakeButton.getAsBoolean()) 
       intakeSubSys.setIntakeDirection(IntakeDirection.IN);
     else if (outputButton.getAsBoolean())
-      intakeSubSys.setIntakeDirection(IntakeDirection.OUT_SLOW);
+      intakeSubSys.setIntakeDirection(IntakeDirection.TRANSFER);
     else 
       intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
   }
