@@ -40,7 +40,10 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         // intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-
+        intakeArmMtrConfiguration.Slot0.kP = 0.5;
+        intakeArmMtrConfiguration.Slot0.kI = 0;
+        intakeArmMtrConfiguration.Slot0.kD = 0;
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = .005291;
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
@@ -63,6 +66,7 @@ public class SubSys_Intake extends SubsystemBase {
         // SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
+        SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**
@@ -123,7 +127,7 @@ public class SubSys_Intake extends SubsystemBase {
         double speed = 0;
         switch (intakeDirection) {
             case IN:
-                speed = MAX_INTAKE_SPEED;
+                if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
                 break;
             case OUT_SLOW:
                 speed = SLOW_OUTTAKE_SPEED;

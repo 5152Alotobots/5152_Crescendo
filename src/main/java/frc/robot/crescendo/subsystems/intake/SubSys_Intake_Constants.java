@@ -2,7 +2,7 @@ package frc.robot.crescendo.subsystems.intake;
 
 public class SubSys_Intake_Constants {
     public static final class IntakeArm {
-        public static final double CANcoderMagOffset = 0.0;
+        public static final double CANcoderMagOffset = .825195;
     }
 
     public static final class MaxSpeeds {

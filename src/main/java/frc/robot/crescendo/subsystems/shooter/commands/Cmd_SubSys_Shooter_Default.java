@@ -5,6 +5,8 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.library.driverstation.JoystickUtilities;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -37,11 +39,13 @@ public class Cmd_SubSys_Shooter_Default extends Command {
     }
     if (shooterDirection.get().equals(ShooterDirection.OUT)) {
       shooterSubSys.setShooterOutput(ShooterDirection.OUT);
-      shooterSubSys.setIntakeOutput(IntakeDirection.IN);
+        shooterSubSys.setIntakeOutput(IntakeDirection.IN);
     } else {
+      
       shooterSubSys.setShooterOutput(shooterDirection.get());
       shooterSubSys.setIntakeOutput(intakeDirection.get());
     }
+
   }
 
   // Called once the command ends or is interrupted.
