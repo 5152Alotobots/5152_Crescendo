@@ -12,13 +12,16 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOT_SPIN_UP_TEMP;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
 
 
@@ -38,6 +41,7 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     public SubSys_Shooter () {
 
+        shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
         // Configure Shooter Arm Motor
         TalonFXConfiguration shooterArmMtrConfiguration = new TalonFXConfiguration();
         shooterArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -56,7 +60,7 @@ public class SubSys_Shooter extends SubsystemBase {
 
         // Configure Intake Arm CANcoder
         CANcoderConfiguration shooterArmCaNcoderConfiguration = new CANcoderConfiguration();
-        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         shooterArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         shooterArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Shooter_Constants.ShooterArm.CANcoderMagOffset;
 
@@ -77,6 +81,9 @@ public class SubSys_Shooter extends SubsystemBase {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
+            case TRANSFER:
+                speed = TRANSFER_INTAKE_SPEED;
+                break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
                 break;
@@ -84,6 +91,13 @@ public class SubSys_Shooter extends SubsystemBase {
                 break;
         }
         shooterRollerMtr.set(speed);
+    }
+
+    /**
+     * @return true when the intake is occupied
+     */
+    public boolean getIntakeOccupied() {
+        return shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
     }
 
     // Intake ------
@@ -137,6 +151,27 @@ public class SubSys_Shooter extends SubsystemBase {
         return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
+
+    public void shootDumb(Timer timer) {
+        setShooterOutput(ShooterDirection.OUT);
+        if (timer.get() > SHOOT_SPIN_UP_TEMP) {
+            setIntakeOutput(IntakeDirection.IN);
+        }
+    }
+
+    public void shoot() {
+        setShooterOutput(ShooterDirection.OUT);
+        setIntakeOutput(IntakeDirection.IN);
+    }
+
+    /**
+     * Stops all motors
+     */
+    public void stopAll() {
+        setShooterOutput(ShooterDirection.OFF);
+        setIntakeOutput(IntakeDirection.OFF);
+        setShooterArmOutput(0);
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
@@ -145,6 +180,8 @@ public class SubSys_Shooter extends SubsystemBase {
         /* --- PID --- */
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
+        /* --- SENSORS --- */
+        SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
 
     }
 }
