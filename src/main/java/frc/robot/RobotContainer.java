@@ -22,12 +22,13 @@ import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
 import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
-import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
-import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Transfer;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -214,13 +215,12 @@ public class RobotContainer {
     // -- Shooter --
     subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
         subSysShooter,
-        hmiStation::shooterRotateAxisRaw,
-        () -> DirectionUtils.toShooterDirection(hmiStation.shooterShoot),
-        () -> DirectionUtils.toIntakeDirection(hmiStation.shooterIn, hmiStation.shooterOut)
+            hmiStation::shooterRotateAxisRaw
     ));
 
       hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_ShootTemp(subSysShooter));
-
+      hmiStation.shooterIn.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
+      hmiStation.shooterOut.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
       // -- Climber --
       hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
       hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
