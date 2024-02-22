@@ -23,13 +23,12 @@ public class Cmd_SubSys_Shooter_ShootTemp extends Command {
     @Override
     public void initialize() {
         timer.reset();
+        timer.start();
     }
 
     @Override
     public void execute() {
-
-        subSysShooter.shoot(timer);
-        finished = true;
+        subSysShooter.shootDumb(timer);
     }
 
     @Override

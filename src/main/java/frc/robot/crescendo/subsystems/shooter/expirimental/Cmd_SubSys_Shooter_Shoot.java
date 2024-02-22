@@ -1,10 +1,9 @@
-package frc.robot.crescendo.subsystems.shooter.commands;
+package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.util.AimModule;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.LAUNCH_TOLERANCE;

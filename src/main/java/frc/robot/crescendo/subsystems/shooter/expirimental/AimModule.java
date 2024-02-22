@@ -1,4 +1,4 @@
-package frc.robot.crescendo.subsystems.shooter.util;
+package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;

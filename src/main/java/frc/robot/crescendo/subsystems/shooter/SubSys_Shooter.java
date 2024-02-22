@@ -41,6 +41,7 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     public SubSys_Shooter () {
 
+        shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
         // Configure Shooter Arm Motor
         TalonFXConfiguration shooterArmMtrConfiguration = new TalonFXConfiguration();
         shooterArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -59,7 +60,7 @@ public class SubSys_Shooter extends SubsystemBase {
 
         // Configure Intake Arm CANcoder
         CANcoderConfiguration shooterArmCaNcoderConfiguration = new CANcoderConfiguration();
-        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         shooterArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         shooterArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Shooter_Constants.ShooterArm.CANcoderMagOffset;
 
@@ -81,7 +82,7 @@ public class SubSys_Shooter extends SubsystemBase {
                 speed = MAX_INTAKE_SPEED;
                 break;
             case TRANSFER:
-                speed = SLOW_INTAKE_SPEED;
+                speed = TRANSFER_INTAKE_SPEED;
                 break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
@@ -96,7 +97,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true when the intake is occupied
      */
     public boolean getIntakeOccupied() {
-        return !shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+        return shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
     }
 
     // Intake ------
