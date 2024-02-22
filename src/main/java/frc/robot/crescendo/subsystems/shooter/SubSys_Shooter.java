@@ -152,11 +152,16 @@ public class SubSys_Shooter extends SubsystemBase {
     }
 
 
-    public void shoot(Timer timer) {
+    public void shootDumb(Timer timer) {
         setShooterOutput(ShooterDirection.OUT);
         if (timer.get() > SHOOT_SPIN_UP_TEMP) {
             setIntakeOutput(IntakeDirection.IN);
         }
+    }
+
+    public void shoot() {
+        setShooterOutput(ShooterDirection.OUT);
+        setIntakeOutput(IntakeDirection.IN);
     }
 
     /**
