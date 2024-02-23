@@ -15,12 +15,12 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 
+
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake spinner.
  */
 public class SubSys_Shooter extends SubsystemBase {
-
     private final TalonSRX shooterWheelsMtr1 = new TalonSRX(CAN_IDs.ShooterWheelsMtrRight_CAN_ID);
     private final TalonSRX shooterWheelsMtr2 = new TalonSRX(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID);
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
@@ -60,6 +60,16 @@ public class SubSys_Shooter extends SubsystemBase {
 
     }
 
+    public void setIntakeOutput(IntakeSpeed intakeSpeed) {
+        if (intakeSpeed == IntakeSpeed.IN) {
+            shooterRollerMtr.set(1);
+        } else if (intakeSpeed == IntakeSpeed.OUT) {
+            shooterRollerMtr.set(-1);
+        } else {
+            shooterRollerMtr.set(0);
+        }
+    }
+
     // Intake ------
     /**
      * Set speed of shooter motor output. (-1)-1
@@ -69,11 +79,6 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtr1.set(TalonSRXControlMode.PercentOutput, percentOutput);
         shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, percentOutput);   
     }
-
-    public void setIntakeOutput(double percentOutput) {
-        shooterRollerMtr.set(percentOutput);
-    }
-
 
     // Arm ------
     /**

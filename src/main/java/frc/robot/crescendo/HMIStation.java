@@ -59,7 +59,6 @@ public class HMIStation {
 
   /**
    * Gets the rotation axis value for driving. unmodified.
-   *
    * @return The rotation axis value.
    */ 
   public double driveRotAxisRaw() {
@@ -127,12 +126,11 @@ public class HMIStation {
    * @return The rotation axis value.
    */ 
   public double intakeArmAxisRaw() {
-    return coDriverController.getRawAxis(4);
+    return coDriverController.getRawAxis(5);
   }
   // Driver Trigger Axes
   /**
    * Checks if the performance mode A is active.
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean shooterInCoDrvr() {
@@ -141,7 +139,6 @@ public class HMIStation {
 
   /**
    * Checks if the performance mode B is active.
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean shooterSourcePos() {

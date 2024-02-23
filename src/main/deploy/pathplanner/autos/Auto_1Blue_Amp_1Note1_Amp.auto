@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.39,
-      "y": 7.12
+      "x": 0.43,
+      "y": 7.02
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_1Blue_Amp_Part1"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part1"
           }
         },
         {
@@ -32,7 +32,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_1Blue_Amp_Part2"
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move_To_Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreAmp"
           }
         }
       ]

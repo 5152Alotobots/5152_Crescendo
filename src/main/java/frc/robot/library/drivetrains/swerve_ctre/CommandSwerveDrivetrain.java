@@ -1,7 +1,5 @@
 package frc.robot.library.drivetrains.swerve_ctre;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -27,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Auto;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 
+import java.util.function.Supplier;
+
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
  * so it can be used in command-based projects easily.
@@ -46,6 +46,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putNumber("PoseY", this.m_odometry.getEstimatedPosition().getY());
         field.setRobotPose(this.m_odometry.getEstimatedPosition());
         SmartDashboard.putData("Field", field);
+
+        boolean lclFlipPath = false;
+        if(DriverStation.getAlliance().isPresent()){
+            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
+                lclFlipPath = true;              
+            }
+        }
+        SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
+
     }
 
 
@@ -124,8 +133,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         m_flipPath = false;
         if(DriverStation.getAlliance().isPresent()){
             if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                m_flipPath = true;
+                m_flipPath = true;              
             }
+        SmartDashboard.putBoolean("ConfigPP_flipPath", m_flipPath);
         }
 
         AutoBuilder.configureHolonomic(

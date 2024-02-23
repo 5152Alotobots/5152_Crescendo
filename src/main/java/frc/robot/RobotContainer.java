@@ -11,6 +11,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,11 +26,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.commands.Cmd_ScoreAmp;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
+import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDn;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
+import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -93,13 +98,7 @@ public class RobotContainer {
             drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
-            /*
-            drive = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
+                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
 
@@ -131,16 +130,12 @@ public class RobotContainer {
             // ---- Driver Station ----
             driverStationSubSys = new DriverStation();
 
-            // Configure the button bindings
-            configureButtonBindingsGhettoBot(mecanumDriveSubSys, intakeSubSys, shooterSubSys, driverStationSubSys);
-
+            configureButtonBindingsGhettoBot(mecanumDriveSubSys, driverStationSubSys);
             break;
-
         // ##### CRESCENDO_ROBOT_2024 #####
         default:
 
             // ---- Drive Subsystem ----
-            // swerve_ctre
             drivetrain = frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024.DriveTrain;
             
             drive = new SwerveRequest.FieldCentric()
@@ -154,10 +149,7 @@ public class RobotContainer {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
             */
 
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
-            
-            // Auto
-            autoChooser = drivetrain.getAutoChooser();
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
@@ -174,8 +166,27 @@ public class RobotContainer {
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
+            // ---- Auto ----
+            // Register Named Commands for PathPlanner
+            NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote());
+            NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
+            NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
+            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
+            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp());
+            // Auto Chooser
+            autoChooser = drivetrain.getAutoChooser();
+
             // Configure the button bindings
-            configureButtonBindingsCrescendoRobot2024(drivetrain, drive, logger, hmiStation, climberSubSys, sliderSubSys);
+            configureButtonBindingsCrescendoRobot2024(
+                drivetrain,
+                drive,
+                logger,
+                hmiStation,
+                intakeSubSys,
+                sliderSubSys,
+                shooterSubSys,
+                climberSubSys);
+                
             break;
     }
     
@@ -204,37 +215,18 @@ public class RobotContainer {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
         drivetrain.registerTelemetry(logger::telemeterize);
-  }
+      
+        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    }
 
   private void configureButtonBindingsGhettoBot(
     SubSys_MecanumDrive mecanumDriveSubSys,
-    SubSys_Intake intakeSubSys,
-    SubSys_Shooter shooterSubSys,
     DriverStation driverStationSubSys){
         mecanumDriveSubSys.setDefaultCommand(new Cmd_SubSys_MecanumDrive_JoystickDefault(
             mecanumDriveSubSys,
             driverStationSubSys::driveFwdAxisRaw,
             driverStationSubSys::driveStrAxisRaw,
             driverStationSubSys::driveRotAxisRaw));
-
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-            intakeSubSys, 
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-
-        driverStationSubSys.highConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, 1, null));
-        driverStationSubSys.midConeDelivery.whileTrue(new Cmd_SubSys_Intake_Default(intakeSubSys, -1, null));
-        
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-            shooterSubSys, 
-            0,
-            0,
-            driverStationSubSys::coFwdAxisRaw));
-        
-        driverStationSubSys.highSafePos.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, 1, null));
-        driverStationSubSys.groundPickupButton.whileTrue(new Cmd_SubSys_Shooter_Default(shooterSubSys, 0, -1, null));    
-
-        // sliderSubSys.setDefaultCommand(new Cmd_SubSys_Slider_Default());
   }
 
   /**
@@ -251,8 +243,10 @@ public class RobotContainer {
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
     HMIStation hmiStation,
-    SubSys_Climber climberSubSys,
-    SubSys_Slider sliderSubSys) {
+    SubSys_Intake intakeSubSys,
+    SubSys_Slider sliderSubSys,
+    SubSys_Shooter shooterSubSys,
+    SubSys_Climber climberSubSys) {
 
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -269,8 +263,10 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
     
-        hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-        hmiStation.climberDn.whileTrue(new climberSetVoltDn(climberSubSys));
+    climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
+        hmiStation.climberUp, 
+        hmiStation.climberDn, 
+        climberSubSys));
     
         hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
