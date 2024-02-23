@@ -5,7 +5,6 @@
 package frc.robot.crescendo.subsystems.slider;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,18 +22,11 @@ public class SubSys_Slider extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public final DoubleSolenoid extend =
-    new DoubleSolenoid(2, PneumaticsModuleType.REVPH, 0, 1);
-
-    public void retract() {
-    extend.set(Value.kReverse);
+  public void sliderExtendCmd() {
+    slider_DoubleSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void extend() {
-    extend.set(Value.kForward);
-  }
-
-  public Value getHandState() {
-    return extend.get();
+  public void sliderRetractCmd() {
+    slider_DoubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 }
