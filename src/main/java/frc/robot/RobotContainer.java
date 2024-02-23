@@ -255,6 +255,12 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
     
+     intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+            intakeSubSys, 
+            hmiStation::intakeArmAxisRaw,
+            hmiStation.intakeIn,
+            hmiStation.intakeOut));
+
     climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
         hmiStation.climberUp, 
         hmiStation.climberDn, 
