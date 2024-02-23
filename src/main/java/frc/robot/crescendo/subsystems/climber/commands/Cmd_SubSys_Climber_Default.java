@@ -4,15 +4,26 @@
 
 package frc.robot.crescendo.subsystems.climber.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 
-public class climberSetVoltDn extends Command {
+public class Cmd_SubSys_Climber_Default extends Command {
   /** Creates a new climberSetVolt. */
   private final SubSys_Climber m_climberSubSys;
+  private final boolean m_climberUp;
+  private final boolean m_climberDn;
 
-  public climberSetVoltDn(SubSys_Climber climberSubSys) {
+  public Cmd_SubSys_Climber_Default(
+    BooleanSupplier climberUp, 
+    BooleanSupplier climberDn, 
+    SubSys_Climber climberSubSys) {
+ 
     m_climberSubSys = climberSubSys;
+    m_climberUp = climberUp.getAsBoolean();
+    m_climberDn = climberDn.getAsBoolean();
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climberSubSys);
   }
@@ -24,7 +35,13 @@ public class climberSetVoltDn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climberSubSys.setVoltCmdDn();
+    if(m_climberUp){
+      m_climberSubSys.setVoltCmd(5);
+    }else if(m_climberDn){
+      m_climberSubSys.setVoltCmd(-5);
+    }else{
+      m_climberSubSys.setVoltCmd(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

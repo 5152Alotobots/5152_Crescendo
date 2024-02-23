@@ -78,11 +78,11 @@ public class Cmd_SubSys_DriveTrain_JoysticDefault extends CommandBase {
   @Override
   public void execute() {
     if (perfModeAActive.getAsBoolean()) {
-      this.maxSpd = Robot.Calibrations.DriveTrain.PerformanceMode_A.DriveTrainMaxSpd;
-      this.maxRotSpd = Robot.Calibrations.DriveTrain.PerformanceMode_A.DriveTrainMaxRotSpd;
+      this.maxSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxSpd;
+      this.maxRotSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxRotSpd;
     } else if (perfModeBActive.getAsBoolean()) {
-      this.maxSpd = Robot.Calibrations.DriveTrain.PerformanceMode_B.DriveTrainMaxSpd;
-      this.maxRotSpd = Robot.Calibrations.DriveTrain.PerformanceMode_B.DriveTrainMaxRotSpd;
+      this.maxSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxSpd;
+      this.maxRotSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxRotSpd;
     } else {
       this.maxSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd;
       this.maxRotSpd = Robot.Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd;
