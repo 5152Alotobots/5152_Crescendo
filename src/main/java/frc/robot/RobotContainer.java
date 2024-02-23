@@ -10,7 +10,6 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,7 +37,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNo
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Transfer;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
@@ -47,6 +45,11 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 
+enum RobotSelection {
+    CRESCENDO,
+    CHARGEDUP,
+    GHETTOBOT
+}
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -55,11 +58,8 @@ import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
  */
 public class RobotContainer {
 
-  // Structure to switch between robots  
-  private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
-  private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
-  private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot 
+    // Structure to switch between robots
+    private static final RobotSelection ROBOT = RobotSelection.CRESCENDO;
 
   public final SendableChooser<Command> autoChooser;
 
@@ -94,7 +94,7 @@ public class RobotContainer {
     // Switch Robots
        switch (ROBOT) {
            // ##### CHARGEDUP_ROBOT_2023 #####
-           case CHARGEDUP_ROBOT_2023:
+           case CHARGEDUP:
         
             // ---- Drive Subsystem ----
             // swerve_ctre
@@ -118,7 +118,7 @@ public class RobotContainer {
             break;
     
         // ##### GHETTOBOT #####
-        case GHETTOBOT:
+           case GHETTOBOT:
 
             // ---- Drive Subsystem ----
             mecanumDriveSubSys = new SubSys_MecanumDrive();
@@ -252,29 +252,26 @@ public class RobotContainer {
               .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
         ));
 
-    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    //joystick.b().whileTrue(drivetrain
-    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
     // reset the field-centric heading on left bumper press
-    hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+      hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
     if (Utils.isSimulation()) {
         drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
 
     // -- Intake --
-    subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(subSysIntake, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
+      subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+              subSysIntake,
+              hmiStation::intakeArmAxisRaw,
+              hmiStation.intakeIn,
+              hmiStation.intakeOut));
 
     // -- Shooter --
-    subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(
-        subSysShooter,
-            hmiStation::shooterRotateAxisRaw
-    ));
+      subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(subSysShooter, hmiStation::shooterArmAxisRaw));
+      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(subSysShooter));
+      hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
+      hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
 
-      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_ShootTemp(subSysShooter));
-      hmiStation.shooterIn.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
-      hmiStation.shooterOut.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
       // -- Climber --
       hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
       hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));

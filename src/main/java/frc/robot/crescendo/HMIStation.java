@@ -4,7 +4,6 @@
 
 package frc.robot.crescendo;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -19,7 +18,7 @@ public class HMIStation {
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
-  public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
+  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 1);
   //public final JoystickButton blankDriverBButton = new JoystickButton(driverController, 2);
   //public final JoystickButton blankDriverXButton = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
@@ -31,6 +30,9 @@ public class HMIStation {
   //public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
   public final POVButton climberDn = new POVButton(driverController, 180);
   public final POVButton shooterSlowButton = new POVButton(driverController, 270);
+
+   // --- Shooter ---
+
 
   // Driver Axes
   /**
@@ -93,10 +95,10 @@ public class HMIStation {
   private final XboxController coDriverController = new XboxController(1);
 
   // Co-Driver Buttons
-  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
+  public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 1);
   public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
   public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
+   public final JoystickButton testButton = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
 

@@ -8,13 +8,13 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 /**
  * Shoots at a given angle, velocity, and position
  */
-public class Cmd_SubSys_Shooter_ShootTemp extends Command {
+public class Cmd_SubSys_Shooter_Shoot extends Command {
     SubSys_Shooter subSysShooter;
     boolean finished = false;
 
     Timer timer = new Timer();
 
-    public Cmd_SubSys_Shooter_ShootTemp(
+    public Cmd_SubSys_Shooter_Shoot(
             SubSys_Shooter subSysShooter) {
         this.subSysShooter = subSysShooter;
         addRequirements(subSysShooter);

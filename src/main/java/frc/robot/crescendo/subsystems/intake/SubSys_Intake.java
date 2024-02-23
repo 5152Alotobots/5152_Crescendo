@@ -1,12 +1,8 @@
 package frc.robot.crescendo.subsystems.intake;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -20,7 +16,7 @@ import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.library.driverstation.JoystickUtilities;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
-import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.SLOW_OUTTAKE_SPEED;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.TRANSFER_SPEED;
 
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
@@ -30,7 +26,7 @@ public class SubSys_Intake extends SubsystemBase {
     private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, MotorType.kBrushless);
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
-    // private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
+    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
 
     public SubSys_Intake () {
         
@@ -130,7 +126,7 @@ public class SubSys_Intake extends SubsystemBase {
                 if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
                 break;
             case TRANSFER:
-                speed = SLOW_OUTTAKE_SPEED;
+                speed = TRANSFER_SPEED;
                 break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
