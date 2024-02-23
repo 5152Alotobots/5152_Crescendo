@@ -4,34 +4,23 @@
 
 package frc.robot.crescendo.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Cmd_ScoreSpeakerCenter extends Command {
-  /** Creates a new Score Speaker Command. 
-   * This command will Start at the defined pose and aim, spin up and shoot
-   * 1. Aim, Spin Up and Drive to shooting spot
-   * 2. Shoot
-   * 3. Stow Shooter and back away to defined pose
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class Cmd_ScoreSpeakerCenter extends SequentialCommandGroup {
+  /** Creates a new Cmd_Shoot Speaker Center. 
+   * This Command will start from the defined pose in front of the Amp, aim drive forward, score the note and back off.
+   * 1. Aim the Shooter for the Speaker
+   * 2. Drive forward
+   * 3. Shoot the Note
+   * 4. Drive backward
+   * 5. Stow the Shooter
   */
   public Cmd_ScoreSpeakerCenter() {
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands();
   }
 }

@@ -31,8 +31,7 @@ import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltDown;
-import frc.robot.crescendo.subsystems.climber.commands.climberSetVoltUp;
+import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
@@ -194,12 +193,15 @@ public class RobotContainer {
     Telemetry logger,
     HMIStation hmiStation){
 
+        // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
-        ));
+            drivetrain.applyRequest(() -> 
+                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+            )
+        );
+        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -238,44 +240,38 @@ public class RobotContainer {
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys) {
 
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> 
-            drive.withVelocityX(hmiStation.driveFwdAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive forward with negative Y (forward)
-              .withVelocityY(hmiStation.driveStrAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd) // Drive left with negative X (left)
-              .withRotationalRate(hmiStation.driveRotAxisRaw() * Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd) // Drive counterclockwise with negative X (left)
-        )
-    );
+        // ---- Drive Subsystem ----        
+        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() -> 
+                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+            )
+        );
+        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
-    intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-        intakeSubSys, 
-        hmiStation::intakeArmAxisRaw,
-        hmiStation.intakeIn,
-        hmiStation.intakeOut));
-        
-    // reset the field-centric heading on left bumper press
-    hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    if (Utils.isSimulation()) {
-        drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
+        if (Utils.isSimulation()) {
+            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        }
+        drivetrain.registerTelemetry(logger::telemeterize);
     
-    hmiStation.climberUp.whileTrue(new climberSetVoltUp(climberSubSys));
-    hmiStation.climberDn.whileTrue(new climberSetVoltDown(climberSubSys));
+    climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
+        hmiStation.climberUp, 
+        hmiStation.climberDn, 
+        climberSubSys));
+    
+        hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
+        hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
+    }
 
-    // -- Intake --
-    intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(intakeSubSys, hmiStation::intakeArmAxisRaw, hmiStation.intakeIn::getAsBoolean , hmiStation.intakeOut::getAsBoolean));
 
-    hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::extend));
-    hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::retract));
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
+    /**
+    * Use this to pass the autonomous command to the main {@link Robot} class.
+    *
+    * @return the command to run in autonomous
+    */
+    public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
 }
+

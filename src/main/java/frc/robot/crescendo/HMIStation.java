@@ -4,16 +4,22 @@
 
 package frc.robot.crescendo;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.Robot.Calibrations;
+import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
 
  /**
  * The DriverStation class represents the available inputs to the robot, providing access to controllers
  * and defining buttons for various commands.
  */
 public class HMIStation {
+
+  SlewRateLimiter driveSpdFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxAccel);
+  SlewRateLimiter driveRotFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxRotAccel);
 
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
@@ -65,7 +71,7 @@ public class HMIStation {
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
-    return driverController.getRawAxis(0);
+    return -1*driverController.getRawAxis(0);
   }
 
   /**
@@ -133,6 +139,33 @@ public class HMIStation {
 
   // Button Box
 
+  /**
+     * 
+     * @return
+     */
+    public double getDriveXYPerfMode(){
+        double xySpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd;
+        if(turtleModeButton.getAsBoolean()){
+            xySpeed = Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxSpd;
+        }else if(turboModeButton.getAsBoolean()){
+            xySpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxSpd;
+        }
+        return driveSpdFilter.calculate(xySpeed);
+    }
+
+     /**
+     * 
+     * @return
+     */
+    public double getDriveRotPerfMode(){
+        double rotSpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd;
+        if(turtleModeButton.getAsBoolean()){
+            rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxRotSpd;
+        }else if(turboModeButton.getAsBoolean()){
+            rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxRotSpd;
+        }
+        return driveRotFilter.calculate(rotSpeed);
+    }
   
   // ---- Alliance Color
   public void alliancePosition(){

@@ -30,39 +30,38 @@ public final class Constants {
         public static final class PerformanceMode_Default {
           // Default Performance Mode Speeds
           //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
-          public static double DriveTrainMaxSpd = 1.5; // m/s
-          //public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
-          public static double DriveTrainMaxRotSpd = 1.5 * Math.PI; // rot/s
-          //public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
-        }
-
-        public static final class PerformanceMode_A {
-          // Performance Mode A Speeds (Slow)
-          public static double DriveTrainMaxPctOutput = 0.25; // 0-1
           public static double DriveTrainMaxSpd = 2.0; // m/s
+          public static double DriveTrainMaxAccel = 2.0; // m/s^2
+          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
+          public static double DriveTrainMaxRotSpd = 0.75 * 2*Math.PI; // rad/s
+          public static double DriveTrainMaxRotAccel = 0.75 * 2*Math.PI; // rad/s^2
+        }
+
+        public static final class PerformanceMode_Turtle {
+          // Performance Mode A Speeds (Slow)
+          //public static double DriveTrainMaxPctOutput = 0.25; // 0-1
+          public static double DriveTrainMaxSpd = 1.0; // m/s
           public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          public static double DriveTrainMaxRotPctOutput = 0.6; // 0-1
-          public static double DriveTrainMaxRotSpd = 100 * Math.PI / 180; // rad/s
-          public static double DriveTrainMaxRotAccel = 100 * Math.PI / 180; // rad/s^2
+          //public static double DriveTrainMaxRotPctOutput = 0.6; // 0-1
+          public static double DriveTrainMaxRotSpd = 0.5 * 2*Math.PI; // rad/s
+          public static double DriveTrainMaxRotAccel = 0.15 * 2*Math.PI; // rad/s^2
         }
 
-        public static final class PerformanceMode_B {
+        public static final class PerformanceMode_Turbo {
           // Performance Mode B Speeds (Fast)
-          public static double DriveTrainMaxPctOutput = 0.75; // 0-1
-          public static double DriveTrainMaxSpd = 5; // m/s
+          //public static double DriveTrainMaxPctOutput = 0.75; // 0-1
+          public static double DriveTrainMaxSpd = 10.0; // m/s
           public static double DriveTrainMaxAccel = 1.00; // m/s^2
-          public static double DriveTrainMaxRotPctOutput = 0.2; // 0-1
-          public static double DriveTrainMaxRotSpd = 360 * Math.PI / 180; // rad/s
-          public static double DriveTrainMaxRotAccel = 360 * Math.PI / 180; // rad/s^2
+          //public static double DriveTrainMaxRotPctOutput = 0.2; // 0-1
+          public static double DriveTrainMaxRotSpd = 1.0 * 2*Math.PI; // rad/s
+          public static double DriveTrainMaxRotAccel = 0.75 * 2*Math.PI; // rad/s^2
         }
-
         public static final class DriveTrainTrajSettings {
           // PathPlanner Speeds
-          public static double DriveTrainMaxPctOutput = 0.50; // 0-1
+          //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
           public static double DriveTrainMaxSpd = 4.0; // m/s
           public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
+          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
           public static double DriveTrainMaxRotSpd = 140 * Math.PI / 180; // rad/s
           public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
         }
