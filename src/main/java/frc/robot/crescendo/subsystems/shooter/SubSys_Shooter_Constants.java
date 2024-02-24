@@ -14,7 +14,7 @@ public class SubSys_Shooter_Constants {
 
     public static final class ShooterWheels{
 
-        public static final double OpenLoopRampRate = 2; // seconds
+        public static final double OpenLoopRampRate = 0.5; // seconds
 
         public static final class PID {
             public static final double Pgain = 0.0;
@@ -25,7 +25,7 @@ public class SubSys_Shooter_Constants {
             public static final double MaxOutput = 1;
             public static final double MinOutput = -1;
             public static final double MaxRPM = 5700;
-            public static final double ClosedLoopRampRate = 2; // seconds
+            public static final double ClosedLoopRampRate = 0.5; // seconds
         }
 
         public static final class SpeedSetPoints{

@@ -88,8 +88,8 @@ public class RobotContainer {
     final Telemetry logger;
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
-    final SubSys_Shooter shooterSubSys;
     final SubSys_Slider sliderSubSys;
+    final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
 
     // Switch Robots
@@ -126,12 +126,6 @@ public class RobotContainer {
             // Null 
             autoChooser = null;
 
-            // ---- Intake Subsystem ----
-            intakeSubSys = new SubSys_Intake();
-
-            // ---- Shooter Subsystem ----
-            shooterSubSys = new SubSys_Shooter();
-
             // ---- Driver Station ----
             driverStationSubSys = new DriverStation();
 
@@ -158,11 +152,17 @@ public class RobotContainer {
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
+
+            // ---- Intake Subsystem ----
             intakeSubSys = new SubSys_Intake();
-            shooterSubSys = new SubSys_Shooter();
 
             // ---- Slider Subsystem ----
             sliderSubSys = new SubSys_Slider();
+
+            // ---- Shooter Subsystem ----
+            shooterSubSys = new SubSys_Shooter();
+
+            // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
             
             // ---- Auto ----
@@ -188,9 +188,7 @@ public class RobotContainer {
                 
             break;
     }
-    
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    
   }
   
 
@@ -269,9 +267,9 @@ public class RobotContainer {
             hmiStation.intakeIn,
             hmiStation.intakeOut));
    
-        hmiStation.intakePickupNote
-            .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
-            .onFalse(new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
+        //hmiStation.intakePickupNote
+        //    .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
+        //    .onFalse(new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
             
 
         // ---- Slider Subsystem ----
@@ -285,7 +283,6 @@ public class RobotContainer {
         //hmiStation.shooterInCoDrvr.whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.IN)));
         //hmiStation.shooterIn().whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.OUT)));
         
-
         // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
             hmiStation.climberUp, 

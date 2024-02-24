@@ -36,58 +36,57 @@ public class SubSys_Climber extends SubsystemBase {
 
     public SubSys_Climber() {
 
-  // ---- Configure climber Left Motor
-        
-  // Setup Configuration
-  TalonFXConfiguration climberLeftMtrConfiguration = new TalonFXConfiguration();
-  climberLeftMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-  climberLeftMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-  climberLeftMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-  climberLeftMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
-  climberLeftMtrConfiguration.Slot0.kP = 0.5;
-  climberLeftMtrConfiguration.Slot0.kI = 0;
-  climberLeftMtrConfiguration.Slot0.kD = 0;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMaxHeight;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
-  climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMinHeight;
+        // ---- Configure climber Left Motor
+          
+        // Setup Configuration
+        TalonFXConfiguration climberLeftMtrConfiguration = new TalonFXConfiguration();
+        climberLeftMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        climberLeftMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        climberLeftMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        climberLeftMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
+        climberLeftMtrConfiguration.Slot0.kP = 0.5;
+        climberLeftMtrConfiguration.Slot0.kI = 0;
+        climberLeftMtrConfiguration.Slot0.kD = 0;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMaxHeight;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+        climberLeftMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberLeftMinHeight;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         climberLeftPid = new PositionVoltage(0).withSlot(0);
-        
+          
         TalonFXConfigurator climberLeftMtrConfigurator = climberLeftMtr.getConfigurator();
         climberLeftMtrConfigurator.apply(climberLeftMtrConfiguration);
 
 
-  // Configure climber Left Motor
-  TalonFXConfiguration climberRightMtrConfiguration = new TalonFXConfiguration();
-  climberRightMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-  climberRightMtrConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-  climberRightMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-  climberRightMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
-  climberRightMtrConfiguration.Slot0.kP = 0.5;
-  climberRightMtrConfiguration.Slot0.kI = 0;
-  climberRightMtrConfiguration.Slot0.kD = 0;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMaxHeight;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
-  climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMinHeight;
-        //climberLeftMtrConfiguration.Feedback.RotorToSensorRatio = 1;
+        // Configure climber Left Motor
+        TalonFXConfiguration climberRightMtrConfiguration = new TalonFXConfiguration();
+        climberRightMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        climberRightMtrConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        climberRightMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        climberRightMtrConfiguration.Feedback.SensorToMechanismRatio = SubSys_Climber_Constants.climberSensorToMechanismRatio;
+        climberRightMtrConfiguration.Slot0.kP = 0.5;
+        climberRightMtrConfiguration.Slot0.kI = 0;
+        climberRightMtrConfiguration.Slot0.kD = 0;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMaxHeight;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+        climberRightMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = SubSys_Climber_Constants.climberRightMinHeight;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         climberRightPid = new PositionVoltage(0).withSlot(0);
 
         TalonFXConfigurator climberRightMtrConfigurator = climberRightMtr.getConfigurator();
-        climberRightMtrConfigurator.apply(climberRightMtrConfiguration);  
-  }
+              climberRightMtrConfigurator.apply(climberRightMtrConfiguration);  
+    }
 
   @Override
   public void periodic() {
