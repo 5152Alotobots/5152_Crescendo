@@ -218,8 +218,8 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     public void ejectNote(){
-        intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
     }
+        intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
 
     public void transferNote(){
         intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
@@ -229,44 +229,38 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtr.set(spdCmd);
     }
 
-    public boolean getIntakeArmAtFwdLimit(){
-        boolean atLimit = false;
-        var forwardLimit = intakeArmMtr.getForwardLimit();
-        
-        if (forwardLimit.getValue() == ForwardLimitValue.ClosedToGround) {
-            atLimit = true;
-        }
-        return atLimit;
-    }
-
-    public boolean getIntakeArmAtRevLimit(){
-        boolean atLimit = false;
-        var reverseLimit = intakeArmMtr.getReverseLimit();
-        
-        if (reverseLimit.getValue() == ReverseLimitValue.ClosedToGround) {
-            atLimit = true;
-        }
-        return atLimit;
-    }
-
     public double getIntakeArmPos(){
         return intakeArmMtr.getPosition().getValueAsDouble();
     }
-
     public boolean setIntakeArmPosCmd(double posCmd){
         boolean atPos = false;
         double error = posCmd-getIntakeArmPos();
         if(error > 0.015){
             intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
+
             atPos = false;
         }else if(error < 0.015){
             intakeArmMtr.set(-1*IntakeArm.IntakeArmPosCmdSpd);
             atPos = false;
-        }
         else {
+        }
             intakeArmMtr.set(0.0);
             atPos = true;
         }
         return atPos;
+    }
+
+    /**
+     * @return true if the intake is at the upper limit
+     */
+    public boolean atUpperLimit() {
+        return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
+    }
+
+    /**
+     * @return true if the intake is at the lower limit
+     */
+    public boolean atLowerLimit() {
+        return intakeArmMtr.getReverseLimit().getValue().equals(ReverseLimitValue.ClosedToGround);
     }
 }
