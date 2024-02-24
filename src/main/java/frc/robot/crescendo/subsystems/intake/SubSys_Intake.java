@@ -9,11 +9,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRoller;
 import frc.robot.library.driverstation.JoystickUtilities;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
@@ -31,6 +35,12 @@ public class SubSys_Intake extends SubsystemBase {
 
     public SubSys_Intake () {
         
+        intakeRollerMtr.enableVoltageCompensation(12);
+        intakeRollerMtr.setInverted(false);
+        intakeRollerMtr.setIdleMode(IdleMode.kBrake);
+        intakeRollerMtr.setOpenLoopRampRate(1);
+        intakeRollerMtr.setClosedLoopRampRate(0.5);
+
         // Configure Intake Arm Motor
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -41,6 +51,15 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kI = 0;
         intakeArmMtrConfiguration.Slot0.kD = 0;
         intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = .005291;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = IntakeArm.FwdLimitSwitchPos;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = IntakeArm.RevLimitSwitchPos;
+
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
@@ -52,6 +71,7 @@ public class SubSys_Intake extends SubsystemBase {
 
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
         intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
+
     }
     
     @Override
@@ -64,6 +84,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
         SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+
+        SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
     }
 
     /**
@@ -152,5 +174,67 @@ public class SubSys_Intake extends SubsystemBase {
      * */
     public boolean getIntakeOccupied() {
         return !intakeRollerIR.get();
+    }
+
+
+    public void setIntakeRollerSpd(double spdCmd){
+        intakeRollerMtr.set(spdCmd);
+    }
+
+    public void intakeNote(){
+        if (getIntakeOccupied()){
+            intakeRollerMtr.set(0);
+        } else {
+            intakeRollerMtr.set(IntakeRoller.intakeNoteSpeed);
+        }
+    }
+
+    public void ejectNote(){
+        intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
+    }
+
+    public void setIntakeArmSpd(double spdCmd){
+        intakeArmMtr.set(spdCmd);
+    }
+
+    public boolean getIntakeArmAtFwdLimit(){
+        boolean atLimit = false;
+        var forwardLimit = intakeArmMtr.getForwardLimit();
+        
+        if (forwardLimit.getValue() == ForwardLimitValue.ClosedToGround) {
+            atLimit = true;
+        }
+        return atLimit;
+    }
+
+    public boolean getIntakeArmAtRevLimit(){
+        boolean atLimit = false;
+        var reverseLimit = intakeArmMtr.getReverseLimit();
+        
+        if (reverseLimit.getValue() == ReverseLimitValue.ClosedToGround) {
+            atLimit = true;
+        }
+        return atLimit;
+    }
+
+    public double getIntakeArmPos(){
+        return intakeArmMtr.getPosition().getValueAsDouble();
+    }
+
+    public boolean setIntakeArmPosCmd(double posCmd){
+        boolean atPos = false;
+        double error = posCmd-getIntakeArmPos();
+        if(error > 0.015){
+            intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
+            atPos = false;
+        }else if(error < 0.015){
+            intakeArmMtr.set(-1*IntakeArm.IntakeArmPosCmdSpd);
+            atPos = false;
+        }
+        else {
+            intakeArmMtr.set(0.0);
+            atPos = true;
+        }
+        return atPos;
     }
 }

@@ -33,9 +33,11 @@ import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_IntakePosCmd;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -160,7 +162,7 @@ public class RobotContainer {
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
-            NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote());
+            NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote(intakeSubSys));
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
@@ -255,19 +257,27 @@ public class RobotContainer {
         }
         drivetrain.registerTelemetry(logger::telemeterize);
     
-     intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+        // ---- Intake Subsystem ----
+        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
             intakeSubSys, 
             hmiStation::intakeArmAxisRaw,
             hmiStation.intakeIn,
             hmiStation.intakeOut));
+   
+        hmiStation.intakePickupNote
+            .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
+            .onFalse(new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
+            
 
-    climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
-        hmiStation.climberUp, 
-        hmiStation.climberDn, 
-        climberSubSys));
-    
+        // ---- Slider Subsystem ----
         hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
+
+        // ---- Climber Subsystem
+        climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
+            hmiStation.climberUp, 
+            hmiStation.climberDn, 
+            climberSubSys));
     }
 
 

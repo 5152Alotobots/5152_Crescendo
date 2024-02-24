@@ -37,8 +37,9 @@ public class HMIStation {
 
   // public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
   public final JoystickButton shooterOut = new JoystickButton(coDriverController, 1);
+  public final JoystickButton intakePickupNote = new JoystickButton(coDriverController, 2);
   public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
-  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
+  // public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   // public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
   // public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);

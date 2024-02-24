@@ -4,36 +4,22 @@
 
 package frc.robot.crescendo.subsystems.intake.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 
-public class Cmd_SubSys_Intake_PickUpNote extends Command {
-  /** Creates a new Cmd_PickUpNote. 
-   * This Command will drop the Intake Arm, intake a note and lift the arm to ready to transfer position.
-   * 1. Move Intake Arm to Pickup Position
-   * 2. Turn on Intake Roller until the IR sensor detects the note or a timeout has occurred.
-   * 3. Move Intake Arm to transfer position.
-  */
-
-
-  public Cmd_SubSys_Intake_PickUpNote() {
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class Cmd_SubSys_Intake_PickUpNote extends SequentialCommandGroup {
+  /** Creates a new Cmd_SubSys_Intake_PickUpNote. */
+  public Cmd_SubSys_Intake_PickUpNote(SubSys_Intake intakeSubSys) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
+      new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
+      new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
+      new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos));
   }
 }
