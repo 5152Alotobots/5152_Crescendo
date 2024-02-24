@@ -136,20 +136,25 @@ public class SubSys_Intake extends SubsystemBase {
         }
         intakeRollerMtr.set(speed);
     }
-    
-    /**
-     * Set the degree of the arm rotation
-     * @param degree The degree to rotate to
-     */
-    // public void setShooterArmDegree(double degree) {
-    //     SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
-    //     intakeArmMtr.setControl(new PositionVoltage(degree / 360.0).withSlot(0));
-    // }
 
     /**
      * @return true if the intake is occupied with a note
      * */
     public boolean getIntakeOccupied() {
         return !intakeRollerIR.get();
+    }
+
+    /**
+     * @return true if the intake is at the upper limit
+     */
+    public boolean atUpperLimit() {
+        return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
+    }
+
+    /**
+     * @return true if the intake is at the lower limit
+     */
+    public boolean atLowerLimit() {
+        return intakeArmMtr.getReverseLimit().getValue().equals(ReverseLimitValue.ClosedToGround);
     }
 }
