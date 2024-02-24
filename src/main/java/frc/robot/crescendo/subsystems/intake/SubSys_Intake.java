@@ -63,15 +63,15 @@ public class SubSys_Intake extends SubsystemBase {
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        // intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
+        intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         intakeArmMtrConfiguration.Slot0.kP = 0.5;
         intakeArmMtrConfiguration.Slot0.kI = 0;
         intakeArmMtrConfiguration.Slot0.kD = 0;
-        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = .005291;
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
-        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+        intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = IntakeArm.FwdLimitSwitchPos;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
@@ -95,18 +95,20 @@ public class SubSys_Intake extends SubsystemBase {
     @Override
     public void periodic() {
         // Intake Roller Motor
-        SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
-        SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
+        //SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
+        //SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
 
-        SmartDashboard.putString("Intake/Arm Forward Value", intakeArmMtr.getForwardLimit().toString());
-        SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
-        SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
-        SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
-// SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
-        SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
-
+        //SmartDashboard.putString("Intake/Arm Forward Value", intakeArmMtr.getForwardLimit().toString());
+        //SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
+        //SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
+        //SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+        // SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
+        //SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakeArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
     }
 
@@ -118,19 +120,19 @@ public class SubSys_Intake extends SubsystemBase {
         ReverseLimitValue reverseLimitValue = intakeArmMtr.getReverseLimit().getValue();
         
         if (forwardLimitValue == ForwardLimitValue.ClosedToGround) {
-            SmartDashboard.putBoolean("Intake/ForwardLimitMode", true);
-            SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
-            SmartDashboard.putBoolean("Intake/NoLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/ForwardLimitMode", true);
+            //SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/NoLimitMode", false);
             liftIntakeArmSpeed(intakeArmSpeed);
         } else if (reverseLimitValue == ReverseLimitValue.ClosedToGround) {
-            SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
-            SmartDashboard.putBoolean("Intake/ReverseLimitMode", true);
-            SmartDashboard.putBoolean("Intake/NoLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/ReverseLimitMode", true);
+            //SmartDashboard.putBoolean("Intake/NoLimitMode", false);
             lowerIntakeArmSpeed(intakeArmSpeed);
         } else if (forwardLimitValue == ForwardLimitValue.Open && reverseLimitValue == ReverseLimitValue.Open) {
-            SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
-            SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
-            SmartDashboard.putBoolean("Intake/NoLimitMode", true);
+            //SmartDashboard.putBoolean("Intake/ForwardLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
+            //SmartDashboard.putBoolean("Intake/NoLimitMode", true);
             setIntakeArmSpeed(intakeArmSpeed);
         }
     }
@@ -156,8 +158,8 @@ public class SubSys_Intake extends SubsystemBase {
      * @param speed Speed from -1 - 1 (unscaled)
      */
     public void setIntakeArmSpeed(double speed) {
-        SmartDashboard.putNumber("Intake/Input Scaled", JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.2));
-        intakeArmMtr.set(JoystickUtilities.joyDeadBndSqrdScaled(speed, 0.25, 0.2));
+        SmartDashboard.putNumber("Intake/Input Scaled", JoystickUtilities.joyDeadBndScaled(speed, 0.25, 0.4));
+        intakeArmMtr.set(JoystickUtilities.joyDeadBndSqrdScaled(speed, 0.25, 0.6));
     }
 
     /**

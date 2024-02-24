@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
+import frc.robot.Constants.Robot.Calibrations.DriveTrain;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
 
  /**
@@ -18,9 +19,12 @@ import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default
  * and defining buttons for various commands.
  */
 public class HMIStation {
+  
+  SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
+  SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
 
-  SlewRateLimiter driveSpdFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxAccel);
-  SlewRateLimiter driveRotFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxRotAccel);
+  SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveXYSpdPerfModeSwFilterRate);
+  SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveRotSpdPerfModeSwFilterRate);
 
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
@@ -46,7 +50,8 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified. 
    */
   public double driveFwdAxisRaw() {
-    return -1*driverController.getRawAxis(1);
+    //return -1*driverController.getRawAxis(1);
+    return driveXSpdFilter.calculate(-1*driverController.getRawAxis(1));
   }
 
   /**
@@ -55,7 +60,8 @@ public class HMIStation {
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
-    return -1*driverController.getRawAxis(0);
+    //return -1*driverController.getRawAxis(0);
+    return driveYSpdFilter.calculate(-1*driverController.getRawAxis(0));
   }
 
   /**
@@ -111,7 +117,7 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified. 
    */
   public double shooterArmAxisRaw() {
-    return coDriverController.getRawAxis(1);
+    return -1*coDriverController.getRawAxis(5);
   }
   /**
    * Gets the rotation axis value for driving. unmodified.
@@ -119,7 +125,7 @@ public class HMIStation {
    * @return The rotation axis value.
    */ 
   public double intakeArmAxisRaw() {
-    return coDriverController.getRawAxis(5);
+    return coDriverController.getRawAxis(1);
   }
   // Driver Trigger Axes
   /**
@@ -154,7 +160,7 @@ public class HMIStation {
         }else if(turboModeButton.getAsBoolean()){
             xySpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxSpd;
         }
-        return driveSpdFilter.calculate(xySpeed);
+        return driveSpdPerfModeSwFilter.calculate(xySpeed);
     }
 
      /**
@@ -168,7 +174,7 @@ public class HMIStation {
         }else if(turboModeButton.getAsBoolean()){
             rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxRotSpd;
         }
-        return driveRotFilter.calculate(rotSpeed);
+        return driveRotPerfModeSwFilter.calculate(rotSpeed);
     }
   
   // ---- Alliance Color

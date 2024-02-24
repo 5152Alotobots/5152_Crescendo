@@ -248,14 +248,17 @@ public class SubSys_Shooter extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
-        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
-        SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
+        //SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
+        //SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
+        //SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
         /* --- PID --- */
-        SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
-        SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
+        //SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
+        //SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
         /* --- SENSORS --- */
-        SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
-
+        //SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
+        SmartDashboard.putNumber("ShooterArmEncoderAbsolutePos", shooterArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("ShooterArmEncoderPos", shooterArmCANCoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("ShooterArmMtrPos", shooterArmMtr.getPosition().getValueAsDouble());
+        //SmartDashboard.putNumber("ShooterArmPos", getShooterArmPos());
     }
 }
