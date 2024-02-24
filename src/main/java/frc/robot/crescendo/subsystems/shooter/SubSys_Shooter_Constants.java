@@ -84,10 +84,19 @@ public class SubSys_Shooter_Constants {
         public static final double LAUNCH_TOLERANCE = 1; // +- 1 Meter to launch
         public static final double SHOOT_SPIN_UP_TEMP = 1.5;
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
+        public static final double SHOOTER_ARM_VELOCITY_TOLERANCE = 0.5; // +-0.5 counts as not busy/ready to shoot
     }
 
     public static final class FieldConstants {
         public static final Pose2d SPEAKER_XY = new Pose2d(15.55, 5.45, new Rotation2d(0));
 
+    }
+
+    public static final class PresentArmPositions {
+        public static final double PRESET_TRANSFER = -135;
+    }
+
+    public static final class ControllerOptions {
+        public static final double DEADBAND_PERCENT = 0.1;
     }
 }

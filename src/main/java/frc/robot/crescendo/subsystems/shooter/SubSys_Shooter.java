@@ -150,12 +150,12 @@ public class SubSys_Shooter extends SubsystemBase {
     /**
      * Sets the Intake output
      *
-     * @param intakeDirection The {@link IntakeDirection} to move in
+     * @param shooterIntakeDirection The {@link ShooterIntakeDirection} to move in
      */
-    public void setIntakeOutput(IntakeDirection intakeDirection) {
-        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(intakeDirection));
+    public void setIntakeOutput(ShooterIntakeDirection shooterIntakeDirection) {
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(shooterIntakeDirection));
         double speed = 0;
-        switch (intakeDirection) {
+        switch (shooterIntakeDirection) {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
@@ -249,24 +249,24 @@ public class SubSys_Shooter extends SubsystemBase {
 
 
     /**
-     * @return true if the motors velocity does not equal 0
+     * @return true if the motors velocity does not exceed SHOOTER_ARM_VELOCITY_TOLERANCE
      */
     public boolean shooterArmMtrBusy() {
-        return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
+        return (Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()) <= SHOOTER_ARM_VELOCITY_TOLERANCE);
     }
 
 
     public void shootDumb(Timer timer) {
         setShooterOutput(ShooterDirection.OUT);
         if (timer.get() > SHOOT_SPIN_UP_TEMP) {
-            setIntakeOutput(IntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.IN);
         }
     }
 
     public void shoot() {
         setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
         if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
-            setIntakeOutput(IntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.IN);
         }
     }
 
@@ -275,7 +275,7 @@ public class SubSys_Shooter extends SubsystemBase {
      */
     public void stopAll() {
         setShooterOutput(ShooterDirection.OFF);
-        setIntakeOutput(IntakeDirection.OFF);
+        setIntakeOutput(ShooterIntakeDirection.OFF);
         setShooterArmOutput(0);
     }
 
