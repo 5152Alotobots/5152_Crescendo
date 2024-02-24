@@ -25,7 +25,7 @@ public class HMIStation {
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
-  public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
+  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 1);
   //public final JoystickButton blankDriverBButton = new JoystickButton(driverController, 2);
   //public final JoystickButton blankDriverXButton = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
@@ -69,6 +69,7 @@ public class HMIStation {
   /**
    * Gets the strafe axis value for driving. unmodified.
    *
+   *
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
@@ -87,6 +88,7 @@ public class HMIStation {
   /**
    * Checks if the performance mode A is active.
    *
+   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean shooterIn() {
@@ -95,6 +97,7 @@ public class HMIStation {
 
   /**
    * Checks if the performance mode B is active.
+   *
    *
    * @return True if the mode is active, false otherwise.
    */

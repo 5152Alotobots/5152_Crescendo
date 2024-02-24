@@ -1,7 +1,5 @@
 package frc.robot.crescendo.subsystems.shooter;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -10,6 +8,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
@@ -30,8 +29,8 @@ import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Ma
  * and Intake spinner.
  */
 public class SubSys_Shooter extends SubsystemBase {
-    private final TalonSRX shooterWheelsMtr1 = new TalonSRX(CAN_IDs.ShooterWheelsMtrRight_CAN_ID);
-    private final TalonSRX shooterWheelsMtr2 = new TalonSRX(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID);
+    private final CANSparkMax shooterWheelsMtr1 = new CANSparkMax(CAN_IDs.ShooterWheelsMtrRight_CAN_ID, MotorType.kBrushless);
+    private final CANSparkMax shooterWheelsMtr2 = new CANSparkMax(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID, MotorType.kBrushless);
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
     // private final DigitalInput beamSensor = new DigitalInput(0);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
@@ -41,6 +40,7 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     public SubSys_Shooter () {
 
+        shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
         // Configure Shooter Arm Motor
         TalonFXConfiguration shooterArmMtrConfiguration = new TalonFXConfiguration();
         shooterArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -59,13 +59,17 @@ public class SubSys_Shooter extends SubsystemBase {
 
         // Configure Intake Arm CANcoder
         CANcoderConfiguration shooterArmCaNcoderConfiguration = new CANcoderConfiguration();
-        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        shooterArmCaNcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         shooterArmCaNcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         shooterArmCaNcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Shooter_Constants.ShooterArm.CANcoderMagOffset;
 
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
 
+        // Shooter motors
+        shooterWheelsMtr1.setIdleMode(CANSparkBase.IdleMode.kCoast);
+        shooterWheelsMtr2.setIdleMode(CANSparkBase.IdleMode.kCoast);
+        shooterWheelsMtr2.setInverted(true);
     }
 
     /**
@@ -81,7 +85,7 @@ public class SubSys_Shooter extends SubsystemBase {
                 speed = MAX_INTAKE_SPEED;
                 break;
             case TRANSFER:
-                speed = SLOW_INTAKE_SPEED;
+                speed = TRANSFER_INTAKE_SPEED;
                 break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
@@ -96,7 +100,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true when the intake is occupied
      */
     public boolean getIntakeOccupied() {
-        return !shooterRollerMtr.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+        return shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
     }
 
     // Intake ------
@@ -118,8 +122,8 @@ public class SubSys_Shooter extends SubsystemBase {
             default:
                 break;
         }
-        shooterWheelsMtr1.set(TalonSRXControlMode.PercentOutput, speed);
-        shooterWheelsMtr2.set(TalonSRXControlMode.PercentOutput, speed);
+        shooterWheelsMtr1.set(speed);
+        shooterWheelsMtr2.set(speed);
     }
 
 

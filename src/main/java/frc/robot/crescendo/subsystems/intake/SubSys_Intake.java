@@ -1,7 +1,6 @@
 package frc.robot.crescendo.subsystems.intake;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -21,7 +20,7 @@ import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRolle
 import frc.robot.library.driverstation.JoystickUtilities;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
-import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.SLOW_OUTTAKE_SPEED;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.TRANSFER_SPEED;
 
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
@@ -45,7 +44,7 @@ public class SubSys_Intake extends SubsystemBase {
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
+        // intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         intakeArmMtrConfiguration.Slot0.kP = 0.5;
         intakeArmMtrConfiguration.Slot0.kI = 0;
@@ -149,7 +148,7 @@ public class SubSys_Intake extends SubsystemBase {
                 if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
                 break;
             case TRANSFER:
-                speed = SLOW_OUTTAKE_SPEED;
+                speed = TRANSFER_SPEED;
                 break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;

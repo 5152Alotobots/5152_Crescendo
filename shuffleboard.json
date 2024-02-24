@@ -930,6 +930,86 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "14,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/IntakeArmPos",
+              "_title": "IntakeArmPos",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/IntakeArmRotorPos",
+              "_title": "IntakeArmRotorPos",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterArmPos",
+              "_title": "ShooterArmPos",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ShooterArmRotatorPos",
+              "_title": "ShooterArmRotatorPos",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Intake/Direction Intake",
+              "_title": "Intake/Direction Intake",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,5": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/climberLeftMtrFwdLimit",
+              "_title": "climberLeftMtrFwdLimit",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -958,7 +1038,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "0,2": {
+          "0,0": {
             "size": [
               2,
               2
@@ -971,7 +1051,7 @@
               "_showGlyph": false
             }
           },
-          "0,4": {
+          "0,2": {
             "size": [
               2,
               2
@@ -984,7 +1064,7 @@
               "_showGlyph": false
             }
           },
-          "2,2": {
+          "2,0": {
             "size": [
               2,
               2
@@ -1011,8 +1091,8 @@
               "_children": [
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Intake/ForwardLimitMode",
-                  "_title": "ForwardLimitMode",
+                  "_source0": "network_table:///SmartDashboard/Intake/ReverseLimitMode",
+                  "_title": "ReverseLimitMode",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -1020,8 +1100,8 @@
                 },
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Intake/ReverseLimitMode",
-                  "_title": "ReverseLimitMode",
+                  "_source0": "network_table:///SmartDashboard/Intake/ForwardLimitMode",
+                  "_title": "ForwardLimitMode",
                   "_glyph": 148,
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
@@ -1086,34 +1166,17 @@
               ]
             }
           },
-          "0,0": {
+          "2,2": {
             "size": [
               2,
               2
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Intake/intake",
-              "_title": "intake",
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Intake/Direction Intake",
+              "_title": "Direction Intake",
               "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Intake/outake",
-              "_title": "outake",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_showGlyph": false
             }
           }
         }
