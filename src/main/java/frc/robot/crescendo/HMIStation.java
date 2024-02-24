@@ -25,36 +25,18 @@ public class HMIStation {
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
-  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 1);
-  //public final JoystickButton blankDriverBButton = new JoystickButton(driverController, 2);
-  //public final JoystickButton blankDriverXButton = new JoystickButton(driverController, 3);
+  public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
+  public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
 
-  // CoDriver Controller
-  private final XboxController coDriverController = new XboxController(1);
-
-  // public final JoystickButton shooterIn = new JoystickButton(coDriverController, 4);
-  public final JoystickButton shooterOut = new JoystickButton(coDriverController, 1);
-  public final JoystickButton intakePickupNote = new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
-  // public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  // public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  // public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
-
-  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 5);
-  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 6);
-
+  // Driver POV
   public final POVButton climberUp = new POVButton(driverController, 0);
+  //public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
   public final POVButton climberDn = new POVButton(driverController, 180);
-  public final POVButton rainbowStrobeLEDColorButton = new POVButton(coDriverController, 270);
-
-  private final XboxController auxdriverController = new XboxController(2);
-    
-  public final JoystickButton sliderIn = new JoystickButton(auxdriverController, 2);
-  public final JoystickButton sliderOut = new JoystickButton(auxdriverController, 4);
+  public final POVButton shooterSlowButton = new POVButton(driverController, 270);
 
   // Driver Axes
   /**
@@ -68,7 +50,6 @@ public class HMIStation {
 
   /**
    * Gets the strafe axis value for driving. unmodified.
-   *
    *
    * @return The strafe axis value.
    */ 
@@ -88,7 +69,6 @@ public class HMIStation {
   /**
    * Checks if the performance mode A is active.
    *
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean shooterIn() {
@@ -98,13 +78,31 @@ public class HMIStation {
   /**
    * Checks if the performance mode B is active.
    *
-   *
    * @return True if the mode is active, false otherwise.
    */
   public boolean shooterOut() {
     return (driverController.getRawAxis(3) > 0.3);
   }
+  
+  // **** Co-Driver Controller ****
+  private final XboxController coDriverController = new XboxController(1);
 
+  // Co-Driver Buttons
+  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
+  public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
+  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
+  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
+  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+
+  // Co-Driver POV
+  public final POVButton sliderOut = new POVButton(coDriverController, 0);
+  //public final POVButton blankDriverPOVRightButton = new POVButton(coDriverController, 90);
+  public final POVButton sliderIn = new POVButton(coDriverController, 180);
+  //public final POVButton blankCoDriverPOVLeftButton = new POVButton(coDriverController, 270);
+
+  // Co-Driver Axes
   /**
    * Gets the forward axis value for driving.
    * 
@@ -175,4 +173,8 @@ public class HMIStation {
   public void alliancePosition(){
     DriverStation.getAlliance();
   }
+
+
+
+
 }
