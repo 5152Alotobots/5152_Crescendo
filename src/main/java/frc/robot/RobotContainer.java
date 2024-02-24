@@ -268,7 +268,7 @@ public class RobotContainer {
 
     // -- Shooter --
       subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(subSysShooter, hmiStation::shooterArmAxisRaw));
-      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(subSysShooter));
+      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(subSysShooter, () -> true));
       hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
       hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
 
