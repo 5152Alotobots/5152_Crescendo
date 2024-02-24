@@ -32,7 +32,6 @@ import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootTemp;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_IntakePosCmd;
@@ -43,7 +42,6 @@ import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Defaul
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Transfer;
-import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -279,10 +277,10 @@ public class RobotContainer {
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
 
         // -- Shooter --
-        subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(subSysShooter, hmiStation::shooterArmAxisRaw));
-        hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(subSysShooter));
-        hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
-        hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
+        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxisRaw));
+        hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys));
+        hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(shooterSubSys, intakeSubSys));
+        //hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, 20));
 
         // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
