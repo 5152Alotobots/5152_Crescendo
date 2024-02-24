@@ -3,6 +3,7 @@ package frc.robot.crescendo.subsystems.intake;
 public class SubSys_Intake_Constants {
     public static final class IntakeArm {
         public static final double CANcoderMagOffset = .825195;
+
         public static final double FwdLimitSwitchPos = 0;       // On the Ground
         public static final double RevLimitSwitchPos = 0.3;     // Up in the air
         public static final double IntakeArmPickupPos = 0.0;    // Note Pickup Position
@@ -24,6 +25,21 @@ public class SubSys_Intake_Constants {
         public static final double intakeNoteSpeed = -0.60;      // -1 - +1
         public static final double ejectNoteSpeed = 0.25;       // -1 - +1
         public static final double transferNoteSpeed = 0.25;    // -1 - +1
+
+        public static final double OpenLoopRampRate = 1; // seconds
+
+        public static final class PID {
+            public static final double Pgain = 0.0;
+            public static final double Igain = 0.0;
+            public static final double Dgain = 0.0;
+            public static final double Izone = 0.0;
+            public static final double FFwd = 0.0;
+            public static final double MaxOutput = 1;
+            public static final double MinOutput = -1;
+            public static final double MaxRPM = 5700;
+            public static final double ClosedLoopRampRate = 1; // seconds
+
+        }
     }
 
 

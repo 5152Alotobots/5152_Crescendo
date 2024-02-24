@@ -7,9 +7,11 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,18 +30,34 @@ import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxS
  * and Intake intakeRollerMtr.
  */
 public class SubSys_Intake extends SubsystemBase {
-    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, MotorType.kBrushless);
+    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
+    private final SparkPIDController intakeRollerMtrPID;
+    private final RelativeEncoder intakeRollerMtrEncoder;
+
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
     private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
 
+    private double intakeRollerMtrSetpoint = 0.0;
+
     public SubSys_Intake () {
         
+        intakeRollerMtr.restoreFactoryDefaults();
         intakeRollerMtr.enableVoltageCompensation(12);
         intakeRollerMtr.setInverted(false);
-        intakeRollerMtr.setIdleMode(IdleMode.kBrake);
-        intakeRollerMtr.setOpenLoopRampRate(1);
-        intakeRollerMtr.setClosedLoopRampRate(0.5);
+        intakeRollerMtr.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        intakeRollerMtr.setOpenLoopRampRate(IntakeRoller.OpenLoopRampRate);
+        intakeRollerMtr.setClosedLoopRampRate(IntakeRoller.PID.ClosedLoopRampRate);
+
+        intakeRollerMtrEncoder = intakeRollerMtr.getEncoder();
+
+        intakeRollerMtrPID = intakeRollerMtr.getPIDController();
+        intakeRollerMtrPID.setP(IntakeRoller.PID.Pgain);
+        intakeRollerMtrPID.setI(IntakeRoller.PID.Igain);
+        intakeRollerMtrPID.setD(IntakeRoller.PID.Dgain);
+        intakeRollerMtrPID.setIZone(IntakeRoller.PID.Izone);
+        intakeRollerMtrPID.setFF(IntakeRoller.PID.FFwd);
+        intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput,IntakeRoller.PID.MaxOutput);
 
         // Configure Intake Arm Motor
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
@@ -76,6 +94,10 @@ public class SubSys_Intake extends SubsystemBase {
     
     @Override
     public void periodic() {
+        // Intake Roller Motor
+        SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
+        SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
+
         SmartDashboard.putString("Intake/Arm Forward Value", intakeArmMtr.getForwardLimit().toString());
         SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
@@ -177,8 +199,12 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
 
-    public void setIntakeRollerSpd(double spdCmd){
+    public void setIntakeRollerSpdDutyCycle(double spdCmd){
         intakeRollerMtr.set(spdCmd);
+    }
+
+    public void setIntakeRollerSpdRPM(double spdCmd){
+        intakeRollerMtrPID.setReference(spdCmd, CANSparkMax.ControlType.kVelocity);
     }
 
     public void intakeNote(){
@@ -191,6 +217,10 @@ public class SubSys_Intake extends SubsystemBase {
 
     public void ejectNote(){
         intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
+    }
+
+    public void transferNote(){
+        intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
     }
 
     public void setIntakeArmSpd(double spdCmd){

@@ -1,27 +1,42 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.crescendo.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Cmd_TransferIntake2Shooter extends SequentialCommandGroup {
-  /** Creates Command to Transfer Note from the Shooter to the Shooter 
-   * This Command will start from the defined pose in front of the Amp, aim drive forward, score the note and back off.
-   * 1. Aim the Shooter for the Source
-   * 2. Drive forward
-   * 3. Shooter Intake the note
-   * 4. Shooter Roller position the note
-   * 4. Drive backward
-   * 5. Stow the Shooter
-  */
-  public Cmd_TransferIntake2Shooter() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
-  }
+public class Cmd_TransferIntake2Shooter extends Command {
+    /**
+     * Creates a new FalconTalonFXDriveTalonSR.
+     */
+    private final SubSys_Shooter subSysShooter;
+    private final SubSys_Intake subSysIntake;
+
+    public Cmd_TransferIntake2Shooter(
+            SubSys_Shooter subSysShooter,
+            SubSys_Intake subSysIntake) {
+
+        this.subSysShooter = subSysShooter;
+        this.subSysIntake = subSysIntake;
+        addRequirements(subSysShooter, subSysIntake);
+    }
+
+    @Override
+    public void execute() {
+        subSysShooter.setIntakeOutput(IntakeDirection.TRANSFER);
+        subSysIntake.transferNote();
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        subSysShooter.stopAll();
+        subSysIntake.setIntakeRollerSpdDutyCycle(0.0);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return subSysShooter.getIntakeOccupied();
+    }
 }

@@ -169,7 +169,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
-            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp());
+            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
