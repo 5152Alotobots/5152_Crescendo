@@ -289,12 +289,34 @@ public class RobotContainer {
             hmiStation.climberDn, 
             climberSubSys));
     }
-    /**
-    * Use this to pass the autonomous command to the main {@link Robot} class.
-    *
-    * @return the command to run in autonomous
-    */
-    public Command getAutonomousCommand() {
+
+    // -- Intake --
+      subSysIntake.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+              subSysIntake,
+              hmiStation::intakeArmAxisRaw,
+              hmiStation.intakeIn,
+              hmiStation.intakeOut));
+
+    // -- Shooter --
+      subSysShooter.setDefaultCommand(new Cmd_SubSys_Shooter_Default(subSysShooter, hmiStation::shooterArmAxisRaw));
+      hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(subSysShooter, () -> true));
+      hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(subSysShooter, subSysIntake));
+      hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(subSysShooter, 20));
+
+      // -- Climber --
+      hmiStation.climberUp.whileTrue(new climberSetVoltUp(subSysClimber));
+      hmiStation.climberDn.whileTrue(new climberSetVoltDown(subSysClimber));
+    
+    hmiStation.sliderOut.onTrue(new InstantCommand(subSysSlider::sliderExtendCmd));
+    hmiStation.sliderIn.onTrue(new InstantCommand(subSysSlider::sliderRetractCmd));
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
 }

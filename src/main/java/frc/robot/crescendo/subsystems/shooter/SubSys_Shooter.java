@@ -26,8 +26,10 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWh
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOT_SPIN_UP_TEMP;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Arm.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
 
 
 /**
@@ -35,20 +37,10 @@ import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Ma
  * and Intake spinner.
  */
 public class SubSys_Shooter extends SubsystemBase {
-    
-    // Shooter Wheels   
-    private final CANSparkMax shooterWheelsMtr1 = new CANSparkMax(CAN_IDs.ShooterWheelsMtrRight_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final SparkPIDController shooterWheelsMtr1PID;
-    private final RelativeEncoder shooterWheelsMtr1Encoder;
-    private final CANSparkMax shooterWheelsMtr2 = new CANSparkMax(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final SparkPIDController shooterWheelsMtr2PID;
-    private final RelativeEncoder shooterWheelsMtr2Encoder;
-
-    // Shooter Rollers
-    private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final SparkPIDController shooterRollerMtrPID;
-    private final RelativeEncoder shooterRollerMtrEncoder;
-
+    private final CANSparkMax shooterWheelsMtrRight = new CANSparkMax(CAN_IDs.ShooterWheelsMtrRight_CAN_ID, MotorType.kBrushless);
+    private final CANSparkMax shooterWheelsMtrLeft = new CANSparkMax(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID, MotorType.kBrushless);
+    private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
+    // private final DigitalInput beamSensor = new DigitalInput(0);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
     private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
 
@@ -117,9 +109,9 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         shooterArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = shooterArmCANCoder.getDeviceID();
         shooterArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        shooterArmMtrConfiguration.Slot0.kP = 1.5;
-        shooterArmMtrConfiguration.Slot0.kI = 0.4;
-        shooterArmMtrConfiguration.Slot0.kD = 0;
+        shooterArmMtrConfiguration.Slot0.kP = ARM_P;
+        shooterArmMtrConfiguration.Slot0.kI = ARM_I;
+        shooterArmMtrConfiguration.Slot0.kD = ARM_D;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterArmPid = new PositionVoltage(0).withSlot(0);
@@ -136,7 +128,23 @@ public class SubSys_Shooter extends SubsystemBase {
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
 
+        // Shooter motors
+        // 1
+        shooterWheelsMtrRight.setIdleMode(CANSparkBase.IdleMode.kCoast);
+        shooterWheelsMtrRight.getPIDController().setP(SHOOTER_P);
+        shooterWheelsMtrRight.getPIDController().setI(SHOOTER_I);
+        shooterWheelsMtrRight.getPIDController().setD(SHOOTER_D);
+//        shooterWheelsMtr1.getPIDController().setIZone(SHOOTER_IZONE);
+        shooterWheelsMtrRight.setClosedLoopRampRate(SHOOTER_RAMP_RATE);
 
+        // 2
+        shooterWheelsMtrLeft.setIdleMode(CANSparkBase.IdleMode.kCoast);
+        shooterWheelsMtrLeft.getPIDController().setP(SHOOTER_P);
+        shooterWheelsMtrLeft.getPIDController().setI(SHOOTER_I);
+        shooterWheelsMtrLeft.getPIDController().setD(SHOOTER_D);
+//        shooterWheelsMtr1.getPIDController().setIZone(SHOOTER_IZONE);
+        shooterWheelsMtrLeft.setClosedLoopRampRate(SHOOTER_RAMP_RATE);
+        shooterWheelsMtrLeft.setInverted(true);
     }
 
     /**
@@ -189,10 +197,36 @@ public class SubSys_Shooter extends SubsystemBase {
             default:
                 break;
         }
-        shooterWheelsMtr1.set(speed);
-        shooterWheelsMtr2.set(speed);
+        shooterWheelsMtrRight.set(speed);
+        shooterWheelsMtrLeft.set(speed);
     }
 
+    /**
+     * Sets the target speed of the shooter mechanism in meters per second.
+     *
+     * @param metersPerSecond The desired speed of the shooter mechanism in meters per second.
+     */
+    public void setShooterSpeed(double metersPerSecond) {
+        SmartDashboard.putNumber("Shooter/Shooter Target Speed", metersPerSecond);
+        SparkPIDController pidControllerRight = shooterWheelsMtrRight.getPIDController();
+        SparkPIDController pidControllerLeft = shooterWheelsMtrLeft.getPIDController();
+        double toRpm = metersPerSecond * METERS_TO_RPM_RATIO;
+        pidControllerRight.setReference(toRpm, CANSparkBase.ControlType.kVelocity);
+        pidControllerLeft.setReference(toRpm, CANSparkBase.ControlType.kVelocity);
+    }
+
+    /**
+     * Returns the average velocity of the shooter motors.
+     * It calculates the average velocity from the velocities obtained from the left and right shooter motor encoders.
+     *
+     * @return The average velocity of the shooter motors in M/s by the encoder.
+     */
+    public double getShooterMotorVelocity() {
+        RelativeEncoder leftEncoder = shooterWheelsMtrLeft.getEncoder();
+        RelativeEncoder rightEncoder = shooterWheelsMtrRight.getEncoder();
+        double averageRpm = (leftEncoder.getVelocity() + rightEncoder.getVelocity()) / 2.0;
+        return averageRpm / METERS_TO_RPM_RATIO;
+    }
 
     // Arm ------
 
@@ -230,8 +264,10 @@ public class SubSys_Shooter extends SubsystemBase {
     }
 
     public void shoot() {
-        setShooterOutput(ShooterDirection.OUT);
-        setIntakeOutput(IntakeDirection.IN);
+        setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
+        if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
+            setIntakeOutput(IntakeDirection.IN);
+        }
     }
 
     /**
