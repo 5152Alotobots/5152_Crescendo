@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
@@ -88,12 +88,12 @@ public class SubSys_Shooter extends SubsystemBase {
     /**
      * Sets the Intake output
      *
-     * @param intakeDirection The {@link IntakeDirection} to move in
+     * @param shooterIntakeDirection The {@link ShooterIntakeDirection} to move in
      */
-    public void setIntakeOutput(IntakeDirection intakeDirection) {
-        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(intakeDirection));
+    public void setIntakeOutput(ShooterIntakeDirection shooterIntakeDirection) {
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(shooterIntakeDirection));
         double speed = 0;
-        switch (intakeDirection) {
+        switch (shooterIntakeDirection) {
             case IN:
                 speed = MAX_INTAKE_SPEED;
                 break;
@@ -187,24 +187,24 @@ public class SubSys_Shooter extends SubsystemBase {
 
 
     /**
-     * @return true if the motors velocity does not equal 0
+     * @return true if the motors velocity does not exceed SHOOTER_ARM_VELOCITY_TOLERANCE
      */
     public boolean shooterArmMtrBusy() {
-        return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
+        return (Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()) <= SHOOTER_ARM_VELOCITY_TOLERANCE);
     }
 
 
     public void shootDumb(Timer timer) {
         setShooterOutput(ShooterDirection.OUT);
         if (timer.get() > SHOOT_SPIN_UP_TEMP) {
-            setIntakeOutput(IntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.IN);
         }
     }
 
     public void shoot() {
         setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
         if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
-            setIntakeOutput(IntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.IN);
         }
     }
 
@@ -213,13 +213,13 @@ public class SubSys_Shooter extends SubsystemBase {
      */
     public void stopAll() {
         setShooterOutput(ShooterDirection.OFF);
-        setIntakeOutput(IntakeDirection.OFF);
+        setIntakeOutput(ShooterIntakeDirection.OFF);
         setShooterArmOutput(0);
     }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
-        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(ShooterIntakeDirection.OFF));
         SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
         /* --- PID --- */
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);

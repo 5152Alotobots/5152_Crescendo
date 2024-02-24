@@ -11,13 +11,13 @@ public class DirectionUtils {
      * @param outButton The button representing intake out.
      * @return The intake direction based on the state of the input and output buttons.
      */
-    public static IntakeDirection toIntakeDirection(JoystickButton inButton, JoystickButton outButton) {
+    public static ShooterIntakeDirection toIntakeDirection(JoystickButton inButton, JoystickButton outButton) {
         if (inButton.getAsBoolean() && !outButton.getAsBoolean()) {
-            return IntakeDirection.TRANSFER;
+            return ShooterIntakeDirection.TRANSFER;
         } else if (!inButton.getAsBoolean() && outButton.getAsBoolean()) {
-            return IntakeDirection.OUT;
+            return ShooterIntakeDirection.OUT;
         } else {
-            return IntakeDirection.OFF;
+            return ShooterIntakeDirection.OFF;
         }
     }
 
