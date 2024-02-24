@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -33,6 +34,7 @@ import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Defaul
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_IntakePosCmd;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
@@ -277,10 +279,12 @@ public class RobotContainer {
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
 
         // -- Shooter --
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxisRaw));
+        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxisRaw, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> DirectionUtils.toShooterDirection(hmiStation.shooterIn)));
         hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys));
         hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(shooterSubSys, intakeSubSys));
-        //hmiStation.testButton.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, 20));
+        //hmiStation.shooterInCoDrvr.whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.IN)));
+        //hmiStation.shooterIn().whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.OUT)));
+        
 
         // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
@@ -288,8 +292,6 @@ public class RobotContainer {
             hmiStation.climberDn, 
             climberSubSys));
     }
-
-
     /**
     * Use this to pass the autonomous command to the main {@link Robot} class.
     *

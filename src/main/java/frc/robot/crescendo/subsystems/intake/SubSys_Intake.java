@@ -43,7 +43,7 @@ public class SubSys_Intake extends SubsystemBase {
     public SubSys_Intake () {
         
         intakeRollerMtr.restoreFactoryDefaults();
-        intakeRollerMtr.enableVoltageCompensation(12);
+        intakeRollerMtr.enableVoltageCompensation(10);
         intakeRollerMtr.setInverted(false);
         intakeRollerMtr.setIdleMode(CANSparkMax.IdleMode.kBrake);
         intakeRollerMtr.setOpenLoopRampRate(IntakeRoller.OpenLoopRampRate);

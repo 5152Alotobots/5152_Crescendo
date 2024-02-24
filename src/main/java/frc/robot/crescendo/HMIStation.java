@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
 
@@ -91,7 +92,8 @@ public class HMIStation {
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
   //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final JoystickButton shooterShoot = new JoystickButton(coDriverController, 3);
+  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
+  public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);

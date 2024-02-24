@@ -94,7 +94,7 @@ public class SubSys_Shooter extends SubsystemBase {
         // Shooter Rollers
         shooterRollerMtr.restoreFactoryDefaults();
         shooterRollerMtr.enableVoltageCompensation(12);
-        shooterRollerMtr.setInverted(true);
+        shooterRollerMtr.setInverted(false);
         shooterRollerMtr.setIdleMode(CANSparkMax.IdleMode.kCoast);
         shooterRollerMtr.setOpenLoopRampRate(ShooterRoller.OpenLoopRampRate);
         shooterRollerMtr.setClosedLoopRampRate(ShooterRoller.PID.ClosedLoopRampRate);

@@ -1,6 +1,7 @@
 package frc.robot.crescendo.subsystems.shooter.util;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class DirectionUtils {
 
@@ -25,9 +26,9 @@ public class DirectionUtils {
      * Converts the state of a shoot joystick button to a shooter direction.
      *
      * @param shootButton The button representing shooting.
-     * @return The shooter direction based on the state of the shoot button. (OUT/OFF)
+     * @return The shooter direction based on the state of the shoot button. (IN/OFF)
      */
-    public static ShooterDirection toShooterDirection(JoystickButton shootButton) {
-        return shootButton.getAsBoolean() ? ShooterDirection.OUT : ShooterDirection.OFF;
+    public static ShooterDirection toShooterDirection(Trigger shootButton) {
+        return shootButton.getAsBoolean() ? ShooterDirection.IN : ShooterDirection.OFF;
     }
 }
