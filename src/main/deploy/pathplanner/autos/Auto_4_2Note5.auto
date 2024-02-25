@@ -1,20 +1,26 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.42,
+      "y": 1.99
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "pathName": "=Auto_4_2Note5_Part1"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Auto_Side_Speaker_Leave"
+            "name": "IntakePickupNote"
           }
         }
       ]

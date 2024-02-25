@@ -11,7 +11,9 @@ public class Cmd_SubSys_Intake_PickUpNote extends Command {
    * This Command will drop the Intake Arm, intake a note and lift the arm to ready to transfer position.
    * 1. Move Intake Arm to Pickup Position
    * 2. Turn on Intake Roller until the IR sensor detects the note or a timeout has occurred.
-   * 3. Move Intake Arm to transfer position.
+   * 3. Move towards note. 
+   * 4. Upon IR detection or timeout move backwards to previous position.
+   * 5. Move Intake Arm to transfer position.
   */
 
 

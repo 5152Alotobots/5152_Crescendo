@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.42,
+      "y": 1.99
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "=Auto_4_2Note5_Part1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePickupNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "=Auto_4_2Note5_Part2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "=Auto_4_2Note5_Part3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
