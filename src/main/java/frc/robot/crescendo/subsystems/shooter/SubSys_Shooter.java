@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
@@ -284,9 +285,11 @@ public class SubSys_Shooter extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        //SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
-        //SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(IntakeDirection.OFF));
-        //SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
+        SmartDashboard.putNumber("Intake/Shooter Arm Velocity", Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()));
+        SmartDashboard.putBoolean("Intake/Shooter Arm Busy", !shooterArmMtrBusy());
+        SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
+        SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(ShooterIntakeDirection.OFF));
+        SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
         /* --- PID --- */
         //SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         //SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);

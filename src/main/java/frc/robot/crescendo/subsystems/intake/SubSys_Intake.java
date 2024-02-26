@@ -7,7 +7,8 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -86,8 +87,11 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-        intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
 
+        // CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
+        // intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
+
+        intakeRollerMtr.setIdleMode(CANSparkBase.IdleMode.kBrake);
     }
     
     @Override
