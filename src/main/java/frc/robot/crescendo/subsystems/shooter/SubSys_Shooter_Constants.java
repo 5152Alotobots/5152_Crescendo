@@ -81,7 +81,7 @@ public class SubSys_Shooter_Constants {
         public static final double LAUNCH_TOLERANCE = 1; // +- 1 Meter to launch
         public static final double SHOOT_SPIN_UP_TEMP = 1.5;
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
-        public static final double SHOOTER_ARM_VELOCITY_TOLERANCE = 0.5; // +-0.5 counts as not busy/ready to shoot
+        public static final double SHOOTER_ARM_VELOCITY_TOLERANCE = 0.02; // +-0.5 counts as not busy/ready to shoot
     }
 
     public static final class FieldConstants {

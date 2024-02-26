@@ -170,7 +170,8 @@ public class SubSys_Intake extends SubsystemBase {
         double speed = 0;
         switch (intakeDirection) {
             case IN:
-                if(!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
+                if (!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
+                else speed = 0;
                 break;
             case TRANSFER:
                 speed = TRANSFER_SPEED;
@@ -254,13 +255,13 @@ public class SubSys_Intake extends SubsystemBase {
      * @return true if the intake is at the upper limit
      */
     public boolean atUpperLimit() {
-        return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
+        return intakeArmMtr.getReverseLimit().getValue().equals(ReverseLimitValue.ClosedToGround);
     }
 
     /**
      * @return true if the intake is at the lower limit
      */
     public boolean atLowerLimit() {
-        return intakeArmMtr.getReverseLimit().getValue().equals(ReverseLimitValue.ClosedToGround);
+        return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
     }
 }

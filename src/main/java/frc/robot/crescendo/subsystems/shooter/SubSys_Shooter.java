@@ -252,7 +252,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true if the motors velocity does not exceed SHOOTER_ARM_VELOCITY_TOLERANCE
      */
     public boolean shooterArmMtrBusy() {
-        return (Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()) <= SHOOTER_ARM_VELOCITY_TOLERANCE);
+        return (shooterArmMtr.getVelocity().getValueAsDouble() == 0);
     }
 
 
