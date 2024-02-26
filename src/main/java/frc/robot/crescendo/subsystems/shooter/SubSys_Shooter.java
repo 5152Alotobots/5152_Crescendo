@@ -8,14 +8,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
@@ -38,8 +32,14 @@ import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PI
  */
 public class SubSys_Shooter extends SubsystemBase {
     private final CANSparkMax shooterWheelsMtrRight = new CANSparkMax(CAN_IDs.ShooterWheelsMtrRight_CAN_ID, MotorType.kBrushless);
+    private final RelativeEncoder shooterWheelsMtrRightEncoder;
+    private final SparkPIDController shooterWheelsMtrRightPID;
     private final CANSparkMax shooterWheelsMtrLeft = new CANSparkMax(CAN_IDs.ShooterWheelsMtrLeft_CAN_ID, MotorType.kBrushless);
+    private final RelativeEncoder shooterWheelsMtrLeftEncoder;
+    private final SparkPIDController shooterWheelsMtrLeftPID;
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
+    private final RelativeEncoder shooterRollerMtrEncoder;
+    private final SparkPIDController shooterRollerMtrPID;
     // private final DigitalInput beamSensor = new DigitalInput(0);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
     private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
@@ -49,39 +49,39 @@ public class SubSys_Shooter extends SubsystemBase {
     public SubSys_Shooter () {
 
         // Shooter Wheels 
-        shooterWheelsMtr1.restoreFactoryDefaults();
-        shooterWheelsMtr1.enableVoltageCompensation(12);
-        shooterWheelsMtr1.setInverted(false);
-        shooterWheelsMtr1.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        shooterWheelsMtr1.setOpenLoopRampRate(ShooterWheels.OpenLoopRampRate);
-        shooterWheelsMtr1.setClosedLoopRampRate(ShooterWheels.PID.ClosedLoopRampRate);
+        shooterWheelsMtrRight.restoreFactoryDefaults();
+        shooterWheelsMtrRight.enableVoltageCompensation(12);
+        shooterWheelsMtrRight.setInverted(false);
+        shooterWheelsMtrRight.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        shooterWheelsMtrRight.setOpenLoopRampRate(ShooterWheels.OpenLoopRampRate);
+        shooterWheelsMtrRight.setClosedLoopRampRate(ShooterWheels.PID.ClosedLoopRampRate);
 
-        shooterWheelsMtr1Encoder = shooterWheelsMtr1.getEncoder();
+        shooterWheelsMtrRightEncoder = shooterWheelsMtrRight.getEncoder();
 
-        shooterWheelsMtr1PID = shooterWheelsMtr1.getPIDController();
-        shooterWheelsMtr1PID.setP(ShooterWheels.PID.Pgain);
-        shooterWheelsMtr1PID.setI(ShooterWheels.PID.Igain);
-        shooterWheelsMtr1PID.setD(ShooterWheels.PID.Dgain);
-        shooterWheelsMtr1PID.setIZone(ShooterWheels.PID.Izone);
-        shooterWheelsMtr1PID.setFF(ShooterWheels.PID.FFwd);
-        shooterWheelsMtr1PID.setOutputRange(ShooterWheels.PID.MinOutput,ShooterWheels.PID.MaxOutput);
+        shooterWheelsMtrRightPID = shooterWheelsMtrRight.getPIDController();
+        shooterWheelsMtrRightPID.setP(ShooterWheels.PID.Pgain);
+        shooterWheelsMtrRightPID.setI(ShooterWheels.PID.Igain);
+        shooterWheelsMtrRightPID.setD(ShooterWheels.PID.Dgain);
+        shooterWheelsMtrRightPID.setIZone(ShooterWheels.PID.Izone);
+        shooterWheelsMtrRightPID.setFF(ShooterWheels.PID.FFwd);
+        shooterWheelsMtrRightPID.setOutputRange(ShooterWheels.PID.MinOutput, ShooterWheels.PID.MaxOutput);
 
-        shooterWheelsMtr2.restoreFactoryDefaults();
-        shooterWheelsMtr2.enableVoltageCompensation(12);
-        shooterWheelsMtr2.setInverted(true);
-        shooterWheelsMtr2.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        shooterWheelsMtr2.setOpenLoopRampRate(ShooterWheels.OpenLoopRampRate);
-        shooterWheelsMtr2.setClosedLoopRampRate(ShooterWheels.PID.ClosedLoopRampRate);
+        shooterWheelsMtrLeft.restoreFactoryDefaults();
+        shooterWheelsMtrLeft.enableVoltageCompensation(12);
+        shooterWheelsMtrLeft.setInverted(true);
+        shooterWheelsMtrLeft.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        shooterWheelsMtrLeft.setOpenLoopRampRate(ShooterWheels.OpenLoopRampRate);
+        shooterWheelsMtrLeft.setClosedLoopRampRate(ShooterWheels.PID.ClosedLoopRampRate);
 
-        shooterWheelsMtr2Encoder = shooterWheelsMtr2.getEncoder();
+        shooterWheelsMtrLeftEncoder = shooterWheelsMtrLeft.getEncoder();
 
-        shooterWheelsMtr2PID = shooterWheelsMtr2.getPIDController();
-        shooterWheelsMtr2PID.setP(ShooterWheels.PID.Pgain);
-        shooterWheelsMtr2PID.setI(ShooterWheels.PID.Igain);
-        shooterWheelsMtr2PID.setD(ShooterWheels.PID.Dgain);
-        shooterWheelsMtr2PID.setIZone(ShooterWheels.PID.Izone);
-        shooterWheelsMtr2PID.setFF(ShooterWheels.PID.FFwd);
-        shooterWheelsMtr2PID.setOutputRange(ShooterWheels.PID.MinOutput,ShooterWheels.PID.MaxOutput);
+        shooterWheelsMtrLeftPID = shooterWheelsMtrLeft.getPIDController();
+        shooterWheelsMtrLeftPID.setP(ShooterWheels.PID.Pgain);
+        shooterWheelsMtrLeftPID.setI(ShooterWheels.PID.Igain);
+        shooterWheelsMtrLeftPID.setD(ShooterWheels.PID.Dgain);
+        shooterWheelsMtrLeftPID.setIZone(ShooterWheels.PID.Izone);
+        shooterWheelsMtrLeftPID.setFF(ShooterWheels.PID.FFwd);
+        shooterWheelsMtrLeftPID.setOutputRange(ShooterWheels.PID.MinOutput, ShooterWheels.PID.MaxOutput);
       
         // Shooter Rollers
         shooterRollerMtr.restoreFactoryDefaults();
@@ -134,7 +134,7 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRight.getPIDController().setP(SHOOTER_P);
         shooterWheelsMtrRight.getPIDController().setI(SHOOTER_I);
         shooterWheelsMtrRight.getPIDController().setD(SHOOTER_D);
-//        shooterWheelsMtr1.getPIDController().setIZone(SHOOTER_IZONE);
+//        shooterWheelsMtrRight.getPIDController().setIZone(SHOOTER_IZONE);
         shooterWheelsMtrRight.setClosedLoopRampRate(SHOOTER_RAMP_RATE);
 
         // 2
@@ -142,7 +142,7 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrLeft.getPIDController().setP(SHOOTER_P);
         shooterWheelsMtrLeft.getPIDController().setI(SHOOTER_I);
         shooterWheelsMtrLeft.getPIDController().setD(SHOOTER_D);
-//        shooterWheelsMtr1.getPIDController().setIZone(SHOOTER_IZONE);
+//        shooterWheelsMtrRight.getPIDController().setIZone(SHOOTER_IZONE);
         shooterWheelsMtrLeft.setClosedLoopRampRate(SHOOTER_RAMP_RATE);
         shooterWheelsMtrLeft.setInverted(true);
     }
