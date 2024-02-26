@@ -168,11 +168,13 @@ public class RobotContainer {
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
-            NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_Default(intakeSubSys, null, null, null));
-            NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
-            NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
-            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_SubSys_Shooter_Default(shooterSubSys, null, null, null));
-            NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp());
+            /*
+            NamedCommands.registerCommand("IntakePickupNote", new Cmd_(intakeSubSys, null, null, null));
+            NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_());
+            NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_());
+            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_(shooterSubSys, climberSubSys, climberSubSys, climberSubSys));
+            NamedCommands.registerCommand("ScoreAmp", new Cmd_());
+           */
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
