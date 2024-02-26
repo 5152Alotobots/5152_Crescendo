@@ -190,7 +190,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true if the motors velocity does not exceed SHOOTER_ARM_VELOCITY_TOLERANCE
      */
     public boolean shooterArmMtrBusy() {
-        return (Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()) <= SHOOTER_ARM_VELOCITY_TOLERANCE);
+        return (shooterArmMtr.getVelocity().getValueAsDouble() == 0);
     }
 
 
@@ -218,6 +218,8 @@ public class SubSys_Shooter extends SubsystemBase {
     }
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Intake/Shooter Arm Velocity", Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()));
+        SmartDashboard.putBoolean("Intake/Shooter Arm Busy", !shooterArmMtrBusy());
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
         SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(ShooterIntakeDirection.OFF));
         SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
