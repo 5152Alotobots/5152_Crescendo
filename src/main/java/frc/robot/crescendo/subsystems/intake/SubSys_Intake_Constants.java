@@ -26,7 +26,7 @@ public class SubSys_Intake_Constants {
         public static final double ejectNoteSpeed = 0.25;       // -1 - +1
         public static final double transferNoteSpeed = 0.25;    // -1 - +1
 
-        public static final double OpenLoopRampRate = 1; // seconds
+        public static final double OpenLoopRampRate = 0; // seconds
 
         public static final class PID {
             public static final double Pgain = 0.0;
