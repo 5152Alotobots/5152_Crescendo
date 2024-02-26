@@ -9,10 +9,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -219,8 +217,8 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     public void ejectNote(){
-    }
         intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
+    }
 
     public void transferNote(){
         intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
@@ -240,11 +238,10 @@ public class SubSys_Intake extends SubsystemBase {
             intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
 
             atPos = false;
-        }else if(error < 0.015){
-            intakeArmMtr.set(-1*IntakeArm.IntakeArmPosCmdSpd);
+        } else if (error < 0.015) {
+            intakeArmMtr.set(-1 * IntakeArm.IntakeArmPosCmdSpd);
             atPos = false;
-        else {
-        }
+        } else {
             intakeArmMtr.set(0.0);
             atPos = true;
         }

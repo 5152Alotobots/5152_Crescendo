@@ -7,6 +7,9 @@ public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
         public static final double CANcoderMagOffset = .1026;
+
+        public static final double ShooterArmTransferPos = 45;
+        public static final double ShooterArmAmpPos = 45;
     }
 
     public static final class ShooterWheels{

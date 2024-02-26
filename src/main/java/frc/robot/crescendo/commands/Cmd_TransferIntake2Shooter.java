@@ -3,7 +3,7 @@ package frc.robot.crescendo.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
 public class Cmd_TransferIntake2Shooter extends Command {
     /**
@@ -23,7 +23,7 @@ public class Cmd_TransferIntake2Shooter extends Command {
 
     @Override
     public void execute() {
-        subSysShooter.setIntakeOutput(IntakeDirection.TRANSFER);
+        subSysShooter.setIntakeOutput(ShooterIntakeDirection.TRANSFER);
         subSysIntake.transferNote();
     }
 
