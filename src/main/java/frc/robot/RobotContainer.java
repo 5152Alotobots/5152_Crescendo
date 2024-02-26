@@ -170,7 +170,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote(intakeSubSys));
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
-            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter());
+            NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter(drivetrain));
             NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
@@ -253,8 +253,9 @@ public class RobotContainer {
                 .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
-        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
-
+        //hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+        hmiStation.gyroResetButton.onTrue(new Cmd_ScoreSpeakerCenter(drivetrain));
+        
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }

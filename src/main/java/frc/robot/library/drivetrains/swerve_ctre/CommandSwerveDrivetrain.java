@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -29,6 +30,8 @@ import frc.robot.Auto;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 
 import java.util.function.Supplier;
+
+import javax.sql.CommonDataSource;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -120,8 +123,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         //return AutoBuilder.buildAutoChooser(null);
     }
     
-    public Command getPathFinderCommand(Pose2d pose){
-        Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
+    public Command getPath(String pathName){
+        PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+        return AutoBuilder.followPath(path);
+    }
+
+    public Command getPathFinderCommand(Pose2d targetPose){
+        //Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
