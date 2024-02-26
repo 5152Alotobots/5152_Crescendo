@@ -6,21 +6,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = -.89;
+        public static final double CANcoderMagOffset = .1026;
     }
 
     public static final class PID {
         static final class Shooter {
-            public static final double SHOOTER_P = 1.5;
-            public static final double SHOOTER_I = 0.4;
+            public static final double SHOOTER_P = 0;
+            public static final double SHOOTER_I = 0;
             public static final double SHOOTER_D = 0;
             public static final double SHOOTER_IZONE = 1;
             public static final double SHOOTER_RAMP_RATE = 1; // Number of seconds to full speed
         }
 
         static final class Arm {
-            public static final double ARM_P = 1.5;
-            public static final double ARM_I = 0.4;
+            public static final double ARM_P = 40;
+            public static final double ARM_I = 0;
             public static final double ARM_D = 0;
 
         }
