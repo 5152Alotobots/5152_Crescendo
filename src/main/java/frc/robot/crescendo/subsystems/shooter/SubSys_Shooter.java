@@ -240,7 +240,7 @@ public class SubSys_Shooter extends SubsystemBase {
 
     /**
      * Set the degree of the arm rotation
-     * @param degree The degree to rotate to
+     * @param degree The degree to rotate to (negative degrees angles away from intake -90 = straight up)
      */
     public void setShooterArmDegree(double degree) {
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", degree);
