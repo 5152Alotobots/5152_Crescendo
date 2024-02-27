@@ -39,3 +39,4 @@ public class Cmd_PickUpNoteTransfer2Shooter extends SequentialCommandGroup {
       new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
   }
 }
+//We still need to go forward to intake and backward so pathplanner is accurate
