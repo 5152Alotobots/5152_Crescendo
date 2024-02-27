@@ -5,15 +5,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.IntakeDirection;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 public class Cmd_SubSys_Intake_IntakeControl extends Command {
   /** Creates a new FalconTalonFXDriveTalonSR. */
   private final SubSys_Intake intakeSubSys;
   private final IntakeDirection intakeDirection;
   private final Timer timer = new Timer();
- 
+
   public Cmd_SubSys_Intake_IntakeControl(SubSys_Intake intakeSubSys, IntakeDirection intakeDirection) {
     this.intakeSubSys = intakeSubSys;
     this.intakeDirection = intakeDirection;

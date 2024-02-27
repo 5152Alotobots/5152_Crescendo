@@ -13,6 +13,10 @@ public class Cmd_SubSys_IntakePosCmd extends Command {
   private final double posCmd;
   private boolean atPos = false;
 
+  /**
+   * @deprecated Use {@link Cmd_SubSys_Intake_RotateToDegree}
+   */
+  @Deprecated
   public Cmd_SubSys_IntakePosCmd(SubSys_Intake intakeSubSys, double posCmd) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intakeSubSys = intakeSubSys;

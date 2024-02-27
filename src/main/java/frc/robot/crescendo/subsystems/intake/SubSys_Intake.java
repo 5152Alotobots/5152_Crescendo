@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -17,6 +18,7 @@ import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRoller;
 import frc.robot.library.driverstation.JoystickUtilities;
 
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm.Arm.*;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.TRANSFER_SPEED;
 
@@ -35,6 +37,7 @@ public class SubSys_Intake extends SubsystemBase {
 
     private double intakeRollerMtrSetpoint = 0.0;
 
+    final PositionVoltage intakeArmPid;
     public SubSys_Intake () {
         
         intakeRollerMtr.restoreFactoryDefaults();
@@ -72,7 +75,12 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = IntakeArm.RevLimitSwitchPos;
+        intakeArmMtrConfiguration.Slot0.kP = ARM_P;
+        intakeArmMtrConfiguration.Slot0.kI = ARM_I;
+        intakeArmMtrConfiguration.Slot0.kD = ARM_D;
 
+        // create a position closed-loop request, voltage output, slot 0 configs
+        intakeArmPid = new PositionVoltage(0).withSlot(0);
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
         
@@ -208,6 +216,10 @@ public class SubSys_Intake extends SubsystemBase {
         intakeRollerMtrPID.setReference(spdCmd, CANSparkMax.ControlType.kVelocity);
     }
 
+    /**
+     * @deprecated Use setIntakeDirection instead
+     */
+    @Deprecated
     public void intakeNote(){
         if (getIntakeOccupied()){
             intakeRollerMtr.set(0);
@@ -216,10 +228,18 @@ public class SubSys_Intake extends SubsystemBase {
         }
     }
 
+    /**
+     * @deprecated Use setIntakeDirection instead
+     */
+    @Deprecated
     public void ejectNote(){
         intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
     }
 
+    /**
+     * @deprecated Use setIntakeDirection instead
+     */
+    @Deprecated
     public void transferNote(){
         intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
     }
@@ -228,15 +248,20 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtr.set(spdCmd);
     }
 
+
     public double getIntakeArmPos(){
         return intakeArmMtr.getPosition().getValueAsDouble();
     }
+
+    /**
+     * @deprecated Use {@link SubSys_Intake } setIntakeArmDegree instead
+     */
+    @Deprecated
     public boolean setIntakeArmPosCmd(double posCmd){
         boolean atPos = false;
         double error = posCmd-getIntakeArmPos();
         if(error > 0.015){
             intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
-
             atPos = false;
         } else if (error < 0.015) {
             intakeArmMtr.set(-1 * IntakeArm.IntakeArmPosCmdSpd);
@@ -246,6 +271,23 @@ public class SubSys_Intake extends SubsystemBase {
             atPos = true;
         }
         return atPos;
+    }
+
+    /**
+     * Set the degree of the intake arm rotation
+     *
+     * @param degree The degree to rotate to (negative degrees angles away from intake -90 = straight up)
+     */
+    public void setIntakeArmDegree(double degree) {
+        SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
+        intakeArmMtr.setControl(intakeArmPid.withPosition(degree / 360.0));
+    }
+
+    /**
+     * @return true if the motors velocity does not equal zero
+     */
+    public boolean intakeArmMtrBusy() {
+        return (intakeArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
     /**

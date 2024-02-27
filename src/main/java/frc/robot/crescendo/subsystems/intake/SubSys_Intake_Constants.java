@@ -10,6 +10,12 @@ public class SubSys_Intake_Constants {
         public static final double IntakeArmStowPos = 0.25;     // Stow Position
         public static final double IntakeArmTransferPos = 0.25; // Transfer Position
         public static final double IntakeArmPosCmdSpd = 0.15;   // -1 - +1
+
+        static final class Arm {
+            public static final double ARM_P = 10;
+            public static final double ARM_I = 0;
+            public static final double ARM_D = 0;
+        }
     }
 
     public static final class MaxSpeeds {
@@ -40,7 +46,14 @@ public class SubSys_Intake_Constants {
             public static final double ClosedLoopRampRate = 1; // seconds
 
         }
+
+
     }
 
+    public static final class PresetIntakePositions {
+        public static final double INTAKE_PRESET_TRANSFER = -90;
+        public static final double INTAKE_PRESET_PICKUP = 0;
+        public static final double INTAKE_PRESET_STOW = -90;
+    }
 
 }

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
-import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
@@ -250,10 +249,10 @@ public class SubSys_Shooter extends SubsystemBase {
 
 
     /**
-     * @return true if the motors velocity does not exceed SHOOTER_ARM_VELOCITY_TOLERANCE
+     * @return true if the motors velocity is not zero
      */
     public boolean shooterArmMtrBusy() {
-        return (shooterArmMtr.getVelocity().getValueAsDouble() == 0);
+        return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
     }
 
 

@@ -93,7 +93,7 @@ public class SubSys_Shooter_Constants {
     }
 
     public static final class PresentArmPositions {
-        public static final double PRESET_TRANSFER = -135;
+        public static final double ARM_PRESET_TRANSFER = -135;
     }
 
     public static final class ControllerOptions {
