@@ -157,14 +157,16 @@ public class SubSys_Shooter extends SubsystemBase {
         double speed = 0;
         switch (shooterIntakeDirection) {
             case IN:
-                speed = MAX_INTAKE_SPEED;
+                if (!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
                 break;
             case TRANSFER:
-                speed = TRANSFER_INTAKE_SPEED;
+                if (!getIntakeOccupied()) speed = TRANSFER_INTAKE_SPEED;
                 break;
             case OUT:
                 speed = -MAX_INTAKE_SPEED;
                 break;
+            case SHOOT:
+                speed = MAX_INTAKE_SPEED;
             default:
                 break;
         }
@@ -259,14 +261,14 @@ public class SubSys_Shooter extends SubsystemBase {
     public void shootDumb(Timer timer) {
         setShooterOutput(ShooterDirection.OUT);
         if (timer.get() > SHOOT_SPIN_UP_TEMP) {
-            setIntakeOutput(ShooterIntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.SHOOT);
         }
     }
 
     public void shoot() {
         setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
         if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
-            setIntakeOutput(ShooterIntakeDirection.IN);
+            setIntakeOutput(ShooterIntakeDirection.SHOOT);
         }
     }
 
@@ -285,7 +287,7 @@ public class SubSys_Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake/Shooter Arm Velocity", Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()));
-        SmartDashboard.putBoolean("Intake/Shooter Arm Busy", !shooterArmMtrBusy());
+        SmartDashboard.putBoolean("Shooter/Shooter Arm Busy", shooterArmMtrBusy());
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
         SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(ShooterIntakeDirection.OFF));
         SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
@@ -293,7 +295,7 @@ public class SubSys_Shooter extends SubsystemBase {
         //SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         //SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
         /* --- SENSORS --- */
-        //SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
+        SmartDashboard.putBoolean("Shooter/Shooter Intake Sensor", getIntakeOccupied());
         SmartDashboard.putNumber("ShooterArmEncoderAbsolutePos", shooterArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("ShooterArmEncoderPos", shooterArmCANCoder.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("ShooterArmMtrPos", shooterArmMtr.getPosition().getValueAsDouble());

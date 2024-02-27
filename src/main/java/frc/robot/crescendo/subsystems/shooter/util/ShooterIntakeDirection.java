@@ -4,5 +4,5 @@ public enum ShooterIntakeDirection {
     IN,
     TRANSFER,
     OFF,
-    OUT
+    SHOOT, OUT
 }

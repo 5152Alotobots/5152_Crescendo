@@ -107,7 +107,7 @@ public class SubSys_Intake extends SubsystemBase {
         //SmartDashboard.putString("Intake/Arm Forward Value", intakeArmMtr.getForwardLimit().toString());
         //SmartDashboard.putString("Intake/Arm Reverse Value", intakeArmMtr.getReverseLimit().toString());
         //SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
-        //SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+        SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
         // SmartDashboard.putNumber("Intake/Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
         //SmartDashboard.putNumber("Intake/Arm Motor Remote", intakeArmMtr.getPosition().getValueAsDouble());
         //SmartDashboard.putNumber("Intake/Arm Speed", intakeArmMtr.get());
@@ -116,6 +116,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putNumber("IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
+        SmartDashboard.putBoolean("Intake/Intake Arm Motor Busy", intakeArmMtrBusy());
+
     }
 
     /**

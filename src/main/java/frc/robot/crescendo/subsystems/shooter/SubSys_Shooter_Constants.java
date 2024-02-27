@@ -75,7 +75,7 @@ public class SubSys_Shooter_Constants {
         public static final double MAX_SHOOTER_SPEED = 1;
         public static final double MAX_SHOOTER_SPPED_MPS = 6.2;
         public static final double MAX_INTAKE_SPEED = 1;
-        public static final double TRANSFER_INTAKE_SPEED = 0.5;
+        public static final double TRANSFER_INTAKE_SPEED = 0.3;
     }
 
     public static final class AutoAim {
