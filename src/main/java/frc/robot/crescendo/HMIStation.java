@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
+import frc.robot.Constants.Robot.Calibrations.DriveTrain;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
 
  /**
@@ -17,17 +19,20 @@ import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default
  * and defining buttons for various commands.
  */
 public class HMIStation {
+  
+  SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
+  SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
 
-  SlewRateLimiter driveSpdFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxAccel);
-  SlewRateLimiter driveRotFilter = new SlewRateLimiter(PerformanceMode_Default.DriveTrainMaxRotAccel);
+  SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveXYSpdPerfModeSwFilterRate);
+  SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveRotSpdPerfModeSwFilterRate);
 
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
   public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  //public final JoystickButton blankDriverBButton = new JoystickButton(driverController, 2);
-  //public final JoystickButton blankDriverXButton = new JoystickButton(driverController, 3);
+  public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
@@ -45,7 +50,8 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified. 
    */
   public double driveFwdAxisRaw() {
-    return -1*driverController.getRawAxis(1);
+    //return -1*driverController.getRawAxis(1);
+    return driveXSpdFilter.calculate(-1*driverController.getRawAxis(1));
   }
 
   /**
@@ -54,7 +60,8 @@ public class HMIStation {
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
-    return -1*driverController.getRawAxis(0);
+    //return -1*driverController.getRawAxis(0);
+    return driveYSpdFilter.calculate(-1*driverController.getRawAxis(0));
   }
 
   /**
@@ -84,23 +91,15 @@ public class HMIStation {
     return (driverController.getRawAxis(3) > 0.3);
   }
   
-  // *** Old Driver **** //
-  /*
-  public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
-  
-  public final POVButton climberUp = new POVButton(driverController, 0);
-  public final POVButton climberDn = new POVButton(driverController, 180);
-  
-  public final JoystickButton testButton = new JoystickButton(driverController, 3);
-  */
-
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
 
   // Co-Driver Buttons
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
+  public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
@@ -118,7 +117,7 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified. 
    */
   public double shooterArmAxisRaw() {
-    return coDriverController.getRawAxis(1);
+    return -1*coDriverController.getRawAxis(5);
   }
   /**
    * Gets the rotation axis value for driving. unmodified.
@@ -126,7 +125,7 @@ public class HMIStation {
    * @return The rotation axis value.
    */ 
   public double intakeArmAxisRaw() {
-    return coDriverController.getRawAxis(5);
+    return coDriverController.getRawAxis(1);
   }
   // Driver Trigger Axes
   /**
@@ -161,7 +160,7 @@ public class HMIStation {
         }else if(turboModeButton.getAsBoolean()){
             xySpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxSpd;
         }
-        return driveSpdFilter.calculate(xySpeed);
+        return driveSpdPerfModeSwFilter.calculate(xySpeed);
     }
 
      /**
@@ -175,7 +174,7 @@ public class HMIStation {
         }else if(turboModeButton.getAsBoolean()){
             rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxRotSpd;
         }
-        return driveRotFilter.calculate(rotSpeed);
+        return driveRotPerfModeSwFilter.calculate(rotSpeed);
     }
   
   // ---- Alliance Color

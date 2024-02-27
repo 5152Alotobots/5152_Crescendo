@@ -23,7 +23,7 @@ public class Cmd_ScoreSpeakerCenter extends SequentialCommandGroup {
  * @param object 
  * @param shooterSubSys 
   */
-  public Cmd_ScoreSpeakerCenter(SubSys_Shooter shooterSubSys, Object object, Object object2, Object object3) {
+  public Cmd_ScoreSpeakerCenter() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands();
