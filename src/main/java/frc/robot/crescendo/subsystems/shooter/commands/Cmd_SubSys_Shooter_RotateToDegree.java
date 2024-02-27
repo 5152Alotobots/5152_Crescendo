@@ -17,12 +17,12 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
 
     @Override
     public void initialize() {
-        subSysShooter.setShooterArmDegree(degrees);
+
     }
   
     @Override
     public void execute() {
-
+        subSysShooter.setShooterArmDegree(degrees);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
 
     @Override
     public boolean isFinished() {
-        return !subSysShooter.shooterArmMtrBusy();
+        return subSysShooter.shooterArmMtrBusy();
     }
 }

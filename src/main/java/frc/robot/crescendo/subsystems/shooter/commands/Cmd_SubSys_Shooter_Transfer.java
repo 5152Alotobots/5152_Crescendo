@@ -1,9 +1,12 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.crescendo.subsystems.intake.IntakeDirection;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
+
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.PRESET_TRANSFER;
 
 public class Cmd_SubSys_Shooter_Transfer extends Command {
     /**
@@ -23,15 +26,17 @@ public class Cmd_SubSys_Shooter_Transfer extends Command {
 
     @Override
     public void execute() {
-        subSysShooter.setIntakeOutput(IntakeDirection.TRANSFER);
-        subSysIntake.setIntakeDirection(frc.robot.crescendo.subsystems.intake.IntakeDirection.TRANSFER);
+        subSysShooter.setShooterArmDegree(PRESET_TRANSFER);
+        subSysShooter.setIntakeOutput(ShooterIntakeDirection.TRANSFER);
+        subSysIntake.setIntakeArmSpeed(-1); // Move up til limit switch
+        subSysIntake.setIntakeDirection(IntakeDirection.TRANSFER);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         subSysShooter.stopAll();
-        subSysIntake.setIntakeDirection(frc.robot.crescendo.subsystems.intake.IntakeDirection.NONE);
+        subSysIntake.setIntakeDirection(IntakeDirection.NONE);
     }
 
     // Returns true when the command should end.
