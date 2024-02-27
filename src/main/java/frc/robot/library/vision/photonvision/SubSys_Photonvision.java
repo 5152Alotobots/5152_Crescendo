@@ -26,7 +26,6 @@ public class SubSys_Photonvision implements Subsystem {
 
   @Override
   public void periodic() {
-
   }
 
 

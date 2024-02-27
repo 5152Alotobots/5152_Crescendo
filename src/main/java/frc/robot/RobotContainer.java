@@ -39,6 +39,8 @@ import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.library.vision.photonvision.commands.Cmd_SubSys_Photonvision_Default;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_STOW;
 
@@ -54,7 +56,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+    private static final int ROBOT = CHARGEDUP_ROBOT_2023;    // 2024 Robot
 
   public final SendableChooser<Command> autoChooser;
 
@@ -84,6 +86,7 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
+       final SubSys_Photonvision photonvisionSubSys;
 
     // Switch Robots
        switch (ROBOT) {
@@ -106,8 +109,11 @@ public class RobotContainer {
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
 
+            // ---- Vision Subsystem ----
+            photonvisionSubSys = new SubSys_Photonvision("camFront");
+
             // Configure the button bindings
-            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, logger, hmiStation);
+            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, photonvisionSubSys, logger, hmiStation);
             break;
     
         // ##### GHETTOBOT #####
@@ -157,6 +163,9 @@ public class RobotContainer {
 
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
+
+            // ---- Vision Subsystem ----
+            photonvisionSubSys = new SubSys_Photonvision("camFront");
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
@@ -189,6 +198,7 @@ public class RobotContainer {
   private void configureButtonBindingsChargedUpRobot2023(
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
+    SubSys_Photonvision subSysPhotonvision,
     Telemetry logger,
     HMIStation hmiStation){
 
@@ -208,6 +218,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
       
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+      subSysPhotonvision.setDefaultCommand(new Cmd_SubSys_Photonvision_Default(subSysPhotonvision));
     }
 
   private void configureButtonBindingsGhettoBot(
