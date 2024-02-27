@@ -3,7 +3,7 @@ package frc.robot.crescendo.subsystems.climber;
 import edu.wpi.first.math.util.Units;
 
 public class SubSys_Climber_Constants {
-    
+
     // Climber Position Zero is at the top.  Positive motion will pull the hooks down and the robot up.
     // Max Positions
     public static final double climberLeftMaxHeight = Units.inchesToMeters(30);

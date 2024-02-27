@@ -7,7 +7,10 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
     SubSys_Shooter subSysShooter;
     double degrees;
 
-    Cmd_SubSys_Shooter_RotateToDegree(SubSys_Shooter subSysShooter, double degrees) {
+    /**
+     * Rotates the shooter to a degree offset from flat 0 degrees
+     */
+    public Cmd_SubSys_Shooter_RotateToDegree(SubSys_Shooter subSysShooter, double degrees) {
         this.subSysShooter = subSysShooter;
         this.degrees = degrees;
     }
@@ -16,7 +19,7 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
     public void initialize() {
         subSysShooter.setShooterArmDegree(degrees);
     }
-
+  
     @Override
     public void execute() {
 
