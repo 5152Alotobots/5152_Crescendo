@@ -7,7 +7,7 @@ package frc.robot.crescendo.commands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,12 +20,14 @@ public class Cmd_ScoreSpeakerCenter extends SequentialCommandGroup {
    * 3. Shoot the Note
    * 4. Drive backward
    * 5. Stow the Shooter
+ * @param object3 
+ * @param object2 
+ * @param object 
+ * @param shooterSubSys 
   */
-  public Cmd_ScoreSpeakerCenter(CommandSwerveDrivetrain drivetrain) {
+  public Cmd_ScoreSpeakerCenter() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      drivetrain.getPathFinderCommand(new Pose2d(3.55,2.87,new Rotation2d(0))),
-      drivetrain.getPath("alantest"));
+    addCommands();
   }
 }

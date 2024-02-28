@@ -287,7 +287,9 @@ public class RobotContainer {
         // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
             hmiStation.climberUp, 
-            hmiStation.climberDn, 
+            hmiStation.climberDn,
+            hmiStation.climberSupportExtend,
+            hmiStation.climberSupportRetract, 
             climberSubSys));
     }
     /**

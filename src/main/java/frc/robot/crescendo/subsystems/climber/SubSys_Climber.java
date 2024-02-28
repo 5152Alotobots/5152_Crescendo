@@ -17,6 +17,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
@@ -29,6 +31,10 @@ public class SubSys_Climber extends SubsystemBase {
     // PIDs
     final PositionVoltage climberLeftPid;
     final PositionVoltage climberRightPid;
+
+    // Climber Support
+    private final DoubleSolenoid climberSupport_DoubleSolenoid =
+        new DoubleSolenoid(2,PneumaticsModuleType.CTREPCM, 2, 3);
 
     /**
      * Creates a new SubSys_Climber.
@@ -86,6 +92,8 @@ public class SubSys_Climber extends SubsystemBase {
 
         TalonFXConfigurator climberRightMtrConfigurator = climberRightMtr.getConfigurator();
               climberRightMtrConfigurator.apply(climberRightMtrConfiguration);  
+
+        
     }
 
   @Override
@@ -103,7 +111,7 @@ public class SubSys_Climber extends SubsystemBase {
    @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run
-   }
+  }
 
   public void setVoltCmd(double voltCmd){
     final VoltageOut requestVoltOut = new VoltageOut(0);
@@ -116,6 +124,14 @@ public class SubSys_Climber extends SubsystemBase {
         //climberLeftMtr.setControl(requestPosVolt.withPosition(posCmd));
         //climberRightMtr.setControl(requestPosVolt.withPosition(posCmd));
         return false;
+  }
+
+  public void climberSupportExtendCmd() {
+    climberSupport_DoubleSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void climberSupportRetractCmd() {
+    climberSupport_DoubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
 }
