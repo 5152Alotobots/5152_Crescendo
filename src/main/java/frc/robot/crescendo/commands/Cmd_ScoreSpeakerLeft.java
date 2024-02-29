@@ -24,7 +24,7 @@ public class Cmd_ScoreSpeakerLeft extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Shooter_Shoot(subSysShooter)
+      new Cmd_SubSys_Shooter_Shoot(subSysShooter).withTimeout(3.5)
     );
   }
 }
