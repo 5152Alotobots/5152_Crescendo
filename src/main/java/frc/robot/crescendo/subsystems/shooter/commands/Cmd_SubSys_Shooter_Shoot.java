@@ -39,6 +39,6 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return false;
     }
 }
