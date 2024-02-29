@@ -29,7 +29,6 @@ import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Defaul
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegree;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
@@ -40,8 +39,6 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-
-import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_STOW;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -168,6 +165,7 @@ public class RobotContainer {
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
+            NamedCommands.registerCommand("ShooterShoot", new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
             NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote(intakeSubSys, drivetrain));
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft());
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight());
@@ -270,9 +268,9 @@ public class RobotContainer {
             hmiStation.intakeIn,
             hmiStation.intakeOut));
 
-      hmiStation.intakePickupNote
-              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
-              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
+//      hmiStation.intakePickupNote
+//              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
+//              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
             
 
         // ---- Slider Subsystem ----
