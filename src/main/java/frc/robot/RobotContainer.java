@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
+import frc.robot.crescendo.Boundary;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.Cmd_ScoreAmp;
 import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
@@ -63,6 +64,7 @@ public class RobotContainer {
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
   private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
 
+  public final Boundary boundaryCalc = new Boundary();
   public final SendableChooser<Command> autoChooser;
 
   // The robot's subsystems and commands are defined here...
