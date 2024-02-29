@@ -25,7 +25,7 @@ public class Cmd_ScoreAmp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, SubSys_Shooter_Constants.ShooterArm.ShooterArmAmpPos)
+            new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> SubSys_Shooter_Constants.ShooterArm.ShooterArmAmpPos)
     );
   }
 }

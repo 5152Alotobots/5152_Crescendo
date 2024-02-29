@@ -24,6 +24,7 @@ import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Au
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Arm.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm.SoftwareLimits.*;
 
 
 /**
@@ -112,6 +113,10 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterArmMtrConfiguration.Slot0.kP = ARM_P;
         shooterArmMtrConfiguration.Slot0.kI = ARM_I;
         shooterArmMtrConfiguration.Slot0.kD = ARM_D;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = SHOOTER_LIMIT_FORWARD;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = SHOOTER_LIMIT_REVERSE;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = SHOOTER_LIMIT_ENABLE;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = SHOOTER_LIMIT_ENABLE;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterArmPid = new PositionVoltage(0).withSlot(0);
@@ -243,10 +248,12 @@ public class SubSys_Shooter extends SubsystemBase {
     /**
      * Set the degree of the arm rotation
      * @param degree The degree to rotate to (negative degrees angles away from intake -90 = straight up)
+     *               Limited between -180 (forward full) and 0 (back full)
      */
     public void setShooterArmDegree(double degree) {
         SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", degree);
-        shooterArmMtr.setControl(shooterArmPid.withPosition(degree / 360.0));
+        double limitAdjusted = MathUtil.clamp(degree / 360.0, -180, 0); // Limit to motor limits
+        shooterArmMtr.setControl(shooterArmPid.withPosition(limitAdjusted));
     }
 
 
@@ -255,6 +262,13 @@ public class SubSys_Shooter extends SubsystemBase {
      */
     public boolean shooterArmMtrBusy() {
         return (shooterArmMtr.getVelocity().getValueAsDouble() != 0);
+    }
+
+    /**
+     * @return true if the motor is within position tolerance
+     */
+    public boolean shooterArmMtrAtSetpoint() {
+        return (Math.abs((shooterArmMtr.getPosition().getValueAsDouble() - shooterArmMtr.getClosedLoopReference().getValueAsDouble())) <= SHOOTER_ARM_POSITION_TOLERANCE);
     }
 
 
@@ -291,6 +305,8 @@ public class SubSys_Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
         SmartDashboard.putString("Shooter/Shooter Intake Speed", String.valueOf(ShooterIntakeDirection.OFF));
         SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
+        SmartDashboard.putNumber("Shooter/Shooter PID Target", shooterArmMtr.getClosedLoopReference().getValueAsDouble());
+        SmartDashboard.putBoolean("Shooter/Shooter At Target", shooterArmMtrAtSetpoint());
         /* --- PID --- */
         //SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         //SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);

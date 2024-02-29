@@ -6,10 +6,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = 0.397;
+        public static final double CANcoderMagOffset = -0.895;
 
         public static final double ShooterArmTransferPos = 45;
         public static final double ShooterArmAmpPos = 45;
+
+        public static final class SoftwareLimits {
+
+            public static final double SHOOTER_LIMIT_FORWARD = 0; // Towards intake
+            public static final double SHOOTER_LIMIT_REVERSE = -0.5; // Towards climber
+            public static final boolean SHOOTER_LIMIT_ENABLE = true;
+        }
     }
 
     public static final class ShooterWheels{
@@ -84,7 +91,7 @@ public class SubSys_Shooter_Constants {
         public static final double LAUNCH_TOLERANCE = 1; // +- 1 Meter to launch
         public static final double SHOOT_SPIN_UP_TEMP = 1.5;
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
-        public static final double SHOOTER_ARM_VELOCITY_TOLERANCE = 0.02; // +-0.5 counts as not busy/ready to shoot
+        public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.02; // +-X counts as at position
     }
 
     public static final class FieldConstants {
