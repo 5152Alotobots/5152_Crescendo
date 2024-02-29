@@ -12,9 +12,9 @@ public class SubSys_Intake_Constants {
         public static final double IntakeArmPosCmdSpd = 0.15;   // -1 - +1
 
         static final class Arm {
-            public static final double ARM_P = 49;
-            public static final double ARM_I = 0;
-            public static final double ARM_D = 0;
+            public static final double ARM_P = 12;
+            public static final double ARM_I = 11;
+            public static final double ARM_D = 1;
         }
     }
 
@@ -51,9 +51,16 @@ public class SubSys_Intake_Constants {
     }
 
     public static final class PresetIntakePositions {
-        public static final double INTAKE_PRESET_TRANSFER = -100;
+        public static final double INTAKE_PRESET_TRANSFER = -150;
         public static final double INTAKE_PRESET_PICKUP = 0;
         public static final double INTAKE_PRESET_STOW = -100;
+        public static final double INTAKE_ARM_POSITION_TOLERANCE = 0.01; // +-X counts as at position
+    }
+
+    public static final class Limit {
+        public static final double ARM_LIMIT_FORWARD = 0;
+        public static final double ARM_LIMIT_REVERSE = -0.43;
+        public static final boolean ARM_LIMIT_ENABLE = true;
     }
 
 }

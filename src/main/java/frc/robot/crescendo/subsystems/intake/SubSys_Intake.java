@@ -9,7 +9,9 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.*;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
@@ -19,8 +21,10 @@ import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRolle
 import frc.robot.library.driverstation.JoystickUtilities;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm.Arm.*;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.Limit.*;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.TRANSFER_SPEED;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_ARM_POSITION_TOLERANCE;
 
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
@@ -34,7 +38,7 @@ public class SubSys_Intake extends SubsystemBase {
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
     private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
-
+    private final Timer timer = new Timer();
     private double intakeRollerMtrSetpoint = 0.0;
 
     final PositionVoltage intakeArmPid;
@@ -78,7 +82,10 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kP = ARM_P;
         intakeArmMtrConfiguration.Slot0.kI = ARM_I;
         intakeArmMtrConfiguration.Slot0.kD = ARM_D;
-
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ARM_LIMIT_FORWARD;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ARM_LIMIT_REVERSE;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = ARM_LIMIT_ENABLE;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = ARM_LIMIT_ENABLE;
         // create a position closed-loop request, voltage output, slot 0 configs
         intakeArmPid = new PositionVoltage(0).withSlot(0);
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
@@ -117,6 +124,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
         SmartDashboard.putBoolean("Intake/Intake Arm Motor Busy", intakeArmMtrBusy());
+        SmartDashboard.putBoolean("Intake/Intake Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
+        SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
 
     }
 
@@ -282,7 +291,15 @@ public class SubSys_Intake extends SubsystemBase {
      */
     public void setIntakeArmDegree(double degree) {
         SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
-        intakeArmMtr.setControl(intakeArmPid.withPosition(degree / 360.0));
+        double limitAdjusted = MathUtil.clamp(degree / 360.0, ARM_LIMIT_REVERSE * 360, ARM_LIMIT_FORWARD * 360); // Limit to motor limits
+        intakeArmMtr.setControl(intakeArmPid.withPosition(limitAdjusted));
+    }
+
+    /**
+     * @return true if the motor is within position tolerance
+     */
+    public boolean intakeArmMtrAtSetpoint() {
+        return (Math.abs((intakeArmMtr.getPosition().getValueAsDouble() - intakeArmMtr.getClosedLoopReference().getValueAsDouble())) <= INTAKE_ARM_POSITION_TOLERANCE);
     }
 
     /**
