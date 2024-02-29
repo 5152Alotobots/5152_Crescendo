@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = 0.0; // -.89;
+        public static final double CANcoderMagOffset = -0.9; // -.89;
 
         public static final double ShooterArmTransferPos = 45;  // Transfer Position Degrees
         public static final double ShooterArmAmpPos = 45;       // Amp Scoring Position Degrees
