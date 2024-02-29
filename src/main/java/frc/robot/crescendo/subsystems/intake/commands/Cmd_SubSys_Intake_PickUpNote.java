@@ -20,8 +20,8 @@ public class Cmd_SubSys_Intake_PickUpNote extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_PICKUP),
+            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_PICKUP),
             new Cmd_SubSys_Intake_IntakeNote(intakeSubSys, subSysDrive),
-            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
+            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_STOW));
   }
 }

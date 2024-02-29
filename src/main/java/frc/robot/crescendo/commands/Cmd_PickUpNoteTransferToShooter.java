@@ -35,12 +35,12 @@ public class Cmd_PickUpNoteTransferToShooter extends SequentialCommandGroup {
       new ParallelCommandGroup(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_TRANSFER),
         new SequentialCommandGroup(
-                new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_PICKUP),
+                new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_PICKUP),
                 new Cmd_SubSys_Intake_IntakeNote(intakeSubSys, driveSubSys),
-                new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_TRANSFER))
+                new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER))
       ),
             new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys),
-            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW)
+            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER)
     );
   }
 }

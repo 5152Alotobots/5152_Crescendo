@@ -31,7 +31,6 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -270,7 +269,7 @@ public class RobotContainer {
             hmiStation.intakeOut));
 
       // TEMP TEST
-      hmiStation.intakePickupNote.whileTrue(new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> -90));
+      hmiStation.intakePickupNote.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain));
 //      hmiStation.intakePickupNote
 //              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
 //              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
