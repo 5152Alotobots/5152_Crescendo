@@ -154,6 +154,16 @@ public class SubSys_Intake extends SubsystemBase {
         }
     }
 
+
+    /**
+     * 
+     * @return true if open false if closed
+     */
+    public boolean getForwardLimit() {
+        ForwardLimitValue forwardLimitValue = intakeArmMtr.getForwardLimit().getValue();
+        return forwardLimitValue == ForwardLimitValue.Open;
+    }
+
     /**
      * Calls setIntakeArmSpeed with a Math.min to make sure the value is not negitive
      * @param speed Speed from -1 - 1 (unscaled, anything positive will be ignored)
