@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
@@ -111,7 +113,7 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterRollerMtrPID.setOutputRange(ShooterRoller.PID.MinOutput,ShooterRoller.PID.MaxOutput);
         
 
-        // Configure Shooter Arm Motor
+        // ***** Configure Shooter Arm Motor *****
         TalonFXConfiguration shooterArmMtrConfiguration = new TalonFXConfiguration();
         shooterArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         shooterArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -121,6 +123,12 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterArmMtrConfiguration.Slot0.kI = 0.4;
         shooterArmMtrConfiguration.Slot0.kD = 0;
 
+        // Limits
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ShooterArm.FwdSWLimitPos;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        shooterArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ShooterArm.RevSWLimitPos;
+        
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterArmPid = new PositionVoltage(0).withSlot(0);
 
@@ -246,6 +254,7 @@ public class SubSys_Shooter extends SubsystemBase {
     public boolean setShootSpd(double spdCmd){
         return true;
     }
+
     @Override
     public void periodic() {
         //SmartDashboard.putNumber("Shooter/Shooter Arm Speed", shooterArmMtr.get());
@@ -259,6 +268,50 @@ public class SubSys_Shooter extends SubsystemBase {
         SmartDashboard.putNumber("ShooterArmEncoderAbsolutePos", shooterArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("ShooterArmEncoderPos", shooterArmCANCoder.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("ShooterArmMtrPos", shooterArmMtr.getPosition().getValueAsDouble());
-        //SmartDashboard.putNumber("ShooterArmPos", getShooterArmPos());
+        
+        SmartDashboard.putNumber("ShooterArmPos", getShooterArmPos());
+        SmartDashboard.putNumber("ShooterArmPosDeg", getShooterArmPosDeg());
+    }
+
+    // New Shooter Methods
+
+    public double getShooterArmPos(){
+        return shooterArmMtr.getPosition().getValueAsDouble();
+    }
+
+    public double getShooterArmPosDeg(){
+        return getShooterArmPos()*360;
+    }
+
+    public void setShooterArmDutyCycleCmd(double dcCmd){
+        shooterArmMtr.set(dcCmd);
+    }
+
+    public boolean setShooterArmPosCmd(double posCmdRev){
+        // Position in Revolutions
+        boolean atPos = false;
+        double error = posCmdRev-getShooterArmPos();
+        if (error > 0.05){
+            setShooterArmDutyCycleCmd(ShooterArm.ShooterArmPosCmdFastDutyCycle);
+            atPos = false;
+        } else if(error > 0.015){
+            setShooterArmDutyCycleCmd(ShooterArm.ShooterArmPosCmdSlowDutyCycle);
+            atPos = false;
+        } else if(error < -0.05){
+            setShooterArmDutyCycleCmd(-1*ShooterArm.ShooterArmPosCmdFastDutyCycle);
+            atPos = false;
+        }else if(error < -0.015){
+            setShooterArmDutyCycleCmd(-1*ShooterArm.ShooterArmPosCmdSlowDutyCycle);
+            atPos = false;
+        }else {
+            setShooterArmDutyCycleCmd(0.0);
+            atPos = true;
+        }
+        return atPos;
+    }
+
+    public boolean setShooterArmPosCmdDeg(double posCmdDeg){
+        // Position in Degrees
+        return setShooterArmPosCmd(posCmdDeg/360);
     }
 }

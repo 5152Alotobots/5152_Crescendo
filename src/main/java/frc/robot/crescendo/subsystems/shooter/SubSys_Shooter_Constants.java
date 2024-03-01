@@ -8,8 +8,14 @@ public class SubSys_Shooter_Constants {
     public static final class ShooterArm {
         public static final double CANcoderMagOffset = -0.9; // -.89;
 
+        public static final double FwdSWLimitPos = -0.25;   // Revs Straight Up
+        public static final double RevSWLimitPos = -0.65;   // Revs Downward
+
         public static final double ShooterArmTransferPos = 45;  // Transfer Position Degrees
         public static final double ShooterArmAmpPos = 45;       // Amp Scoring Position Degrees
+
+        public static final double ShooterArmPosCmdFastDutyCycle = 0.7; // 0-1
+        public static final double ShooterArmPosCmdSlowDutyCycle = 0.2; // 0-1
     }
 
     public static final class ShooterWheels{
