@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
+import frc.robot.library.driverstation.JoystickUtilities;
 
  /**
  * The DriverStation class represents the available inputs to the robot, providing access to controllers
@@ -118,6 +119,10 @@ public class HMIStation {
    */
   public double shooterArmAxisRaw() {
     return -1*coDriverController.getRawAxis(5);
+  }
+
+  public double shooterArmAxis(){
+    return JoystickUtilities.joyDeadBndScaled(shooterArmAxisRaw(), .5, 1);
   }
   /**
    * Gets the rotation axis value for driving. unmodified.

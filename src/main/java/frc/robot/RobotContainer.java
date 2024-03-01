@@ -41,6 +41,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_DefaultShoot;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Transfer;
@@ -277,8 +278,8 @@ public class RobotContainer {
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
 
         // -- Shooter --
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxisRaw, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> DirectionUtils.toShooterDirection(hmiStation.shooterIn)));
-        hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys));
+        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> DirectionUtils.toShooterDirection(hmiStation.shooterIn)));
+        hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_DefaultShoot(shooterSubSys, hmiStation::shooterArmAxisRaw));
         hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(shooterSubSys, intakeSubSys));
         //hmiStation.shooterInCoDrvr.whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.IN)));
         //hmiStation.shooterIn().whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.OUT)));

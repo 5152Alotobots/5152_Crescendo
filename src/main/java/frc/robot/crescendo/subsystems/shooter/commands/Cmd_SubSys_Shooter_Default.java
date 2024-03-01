@@ -31,7 +31,7 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   @Override
   public void execute() {
     // Arm Rotation
-    subSysShooter.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), .5, 1));
+    subSysShooter.setShooterArmOutput(shooterArmSpeed.getAsDouble());
     subSysShooter.setIntakeOutput(intakeDirection.get());
     subSysShooter.setShooterOutput(shooterDirection.get());
 
