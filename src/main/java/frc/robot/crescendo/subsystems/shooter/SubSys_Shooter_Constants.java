@@ -39,7 +39,7 @@ public class SubSys_Shooter_Constants {
 
     public static final class ShooterRoller{
 
-        public static final double OpenLoopRampRate = 1; // seconds
+        public static final double OpenLoopRampRate = 0.25; // seconds
 
         public static final class PID {
             public static final double Pgain = 0.0;
