@@ -14,7 +14,7 @@ public class SubSys_Shooter_Constants {
         public static final class SoftwareLimits {
 
             public static final double SHOOTER_LIMIT_FORWARD = 0; // Towards intake
-            public static final double SHOOTER_LIMIT_REVERSE = -0.5; // Towards climber
+            public static final double SHOOTER_LIMIT_REVERSE = -0.8; // Towards climber
             public static final boolean SHOOTER_LIMIT_ENABLE = true;
         }
     }
