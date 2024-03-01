@@ -1,8 +1,11 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.library.driverstation.JoystickUtilities;
 
 
 /**
@@ -10,13 +13,19 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
  */
 public class Cmd_SubSys_Shooter_Shoot extends Command {
     SubSys_Shooter subSysShooter;
+    DoubleSupplier shooterArmSpeed;
+    
     boolean finished = false;
 
     Timer timer = new Timer();
 
     public Cmd_SubSys_Shooter_Shoot(
-            SubSys_Shooter subSysShooter) {
+            SubSys_Shooter subSysShooter,
+            DoubleSupplier shooterArmSpeed) {
+
         this.subSysShooter = subSysShooter;
+        this.shooterArmSpeed = shooterArmSpeed;
+
         addRequirements(subSysShooter);
     }
 
@@ -29,6 +38,8 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
     @Override
     public void execute() {
         subSysShooter.shootDumb(timer);
+        // Arm Rotation
+        subSysShooter.setShooterArmOutput(JoystickUtilities.joyDeadBndScaled(shooterArmSpeed.getAsDouble(), .5, 1));
     }
 
     @Override

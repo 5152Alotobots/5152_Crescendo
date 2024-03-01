@@ -73,23 +73,15 @@ public class HMIStation {
   }
   
   // Driver Trigger Axes
-  /**
-   * Checks if the performance mode A is active.
-   *
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterIn() {
+  public boolean shooterInTriggerAxis() {
     return (driverController.getRawAxis(2) > 0.3);
   }
+  public final Trigger shooterIn = new Trigger(() -> shooterInTriggerAxis());
 
-  /**
-   * Checks if the performance mode B is active.
-   *
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterOut() {
+  public boolean shooterShootTriggerAxis() {
     return (driverController.getRawAxis(3) > 0.3);
   }
+  public final Trigger shooterShoot = new Trigger(() -> shooterShootTriggerAxis());
   
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
@@ -98,8 +90,6 @@ public class HMIStation {
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
   //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
-  public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
@@ -127,22 +117,18 @@ public class HMIStation {
   public double intakeArmAxisRaw() {
     return coDriverController.getRawAxis(1);
   }
-  // Driver Trigger Axes
-  /**
-   * Checks if the performance mode A is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterInCoDrvr() {
+  
+  // CoDriver Trigger Axes
+  public boolean shooterInCoDrvrTriggerAxis() {
     return (coDriverController.getRawAxis(3) > 0.3);
   }
+  public final Trigger shooterInCoDrvr = new Trigger(() -> shooterInCoDrvrTriggerAxis());
 
-  /**
-   * Checks if the performance mode B is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterSourcePos() {
+  public boolean shooterArmSourcePosTriggerAxis() {
     return (driverController.getRawAxis(2) > 0.3);
   }
+  public final Trigger shooterArmSourcePos = new Trigger(() -> shooterArmSourcePosTriggerAxis());
+  
   
   // Aux Driver Controller
   //private final XboxController auxdriverController = new XboxController(2);
