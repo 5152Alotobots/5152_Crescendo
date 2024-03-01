@@ -279,7 +279,7 @@ public class SubSys_Intake extends SubsystemBase {
 
     public boolean setIntakeArmPosCmdDeg(double posCmdDeg){
         // Position in Degrees
-        return setIntakeArmPosCmd(posCmdDeg*360);
+        return setIntakeArmPosCmd(posCmdDeg/360);
     }
 
     // ***** Intake Rollers *****
