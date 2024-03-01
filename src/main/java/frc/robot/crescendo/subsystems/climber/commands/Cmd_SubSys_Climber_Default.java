@@ -13,15 +13,21 @@ public class Cmd_SubSys_Climber_Default extends Command {
   private final SubSys_Climber climberSubSys;
   private final BooleanSupplier climberUp;
   private final BooleanSupplier climberDn;
+  private final BooleanSupplier climberSupportExtend;
+  private final BooleanSupplier climberSupportRetract;
 
   public Cmd_SubSys_Climber_Default(
     BooleanSupplier climberUp, 
-    BooleanSupplier climberDn, 
+    BooleanSupplier climberDn,
+    BooleanSupplier climberSupportExtend,
+    BooleanSupplier climberSupportRetract, 
     SubSys_Climber climberSubSys) {
  
     this.climberSubSys = climberSubSys;
     this.climberUp = climberUp;
     this.climberDn = climberDn;
+    this.climberSupportExtend = climberSupportExtend;
+    this.climberSupportRetract = climberSupportRetract;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climberSubSys);
@@ -34,12 +40,20 @@ public class Cmd_SubSys_Climber_Default extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+    // Climber
     if(climberUp.getAsBoolean()){
       climberSubSys.setVoltCmd(5);
     }else if(climberDn.getAsBoolean()){
       climberSubSys.setVoltCmd(-5);
     }else{
       climberSubSys.setVoltCmd(0);
+    }
+    // Climber Support
+    if(climberSupportExtend.getAsBoolean()){
+      climberSubSys.climberSupportExtendCmd();
+    } else if(climberSupportRetract.getAsBoolean()){
+      climberSubSys.climberSupportRetractCmd();
     }
   }
 

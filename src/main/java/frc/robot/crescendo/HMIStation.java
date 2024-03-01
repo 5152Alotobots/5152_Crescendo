@@ -106,9 +106,9 @@ public class HMIStation {
 
   // Co-Driver POV
   public final POVButton sliderOut = new POVButton(coDriverController, 0);
-  //public final POVButton blankDriverPOVRightButton = new POVButton(coDriverController, 90);
+  public final POVButton climberSupportExtend = new POVButton(coDriverController, 90);
   public final POVButton sliderIn = new POVButton(coDriverController, 180);
-  //public final POVButton blankCoDriverPOVLeftButton = new POVButton(coDriverController, 270);
+  public final POVButton climberSupportRetract = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
   /**
