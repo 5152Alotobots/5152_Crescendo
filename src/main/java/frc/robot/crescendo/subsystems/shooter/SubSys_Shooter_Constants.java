@@ -8,9 +8,6 @@ public class SubSys_Shooter_Constants {
     public static final class ShooterArm {
         public static final double CANcoderMagOffset = -0.895;
 
-        public static final double ShooterArmTransferPos = 45;
-        public static final double ShooterArmAmpPos = 45;
-
         public static final class SoftwareLimits {
 
             public static final double SHOOTER_LIMIT_FORWARD = 0; // Towards intake
@@ -77,12 +74,13 @@ public class SubSys_Shooter_Constants {
 
         }
     }
-    public static final class MaxSpeeds {
+    public static final class Speeds {
         public static final double MAX_ARM_ROTATION_SPEED = 0.15;
         public static final double MAX_SHOOTER_SPEED = 1;
         public static final double MAX_SHOOTER_SPPED_MPS = 6.2;
         public static final double MAX_INTAKE_SPEED = 1;
         public static final double TRANSFER_INTAKE_SPEED = 0.3;
+        public static final double SHOOTER_AMP_SPEED = 0.3;
     }
 
     public static final class AutoAim {
@@ -101,6 +99,7 @@ public class SubSys_Shooter_Constants {
 
     public static final class PresentArmPositions {
         public static final double ARM_PRESET_TRANSFER = -130;
+        public static final double ARM_PRESET_AMP = -210;
     }
 
     public static final class ControllerOptions {

@@ -67,9 +67,6 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        intakeArmMtrConfiguration.Slot0.kP = 0.5;
-        intakeArmMtrConfiguration.Slot0.kI = 0;
-        intakeArmMtrConfiguration.Slot0.kD = 0;
         intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
@@ -98,9 +95,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmCANcoderConfiguration.MagnetSensor.MagnetOffset = SubSys_Intake_Constants.IntakeArm.CANcoderMagOffset;
 
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-
-        // CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
-        // intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
+        intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
 
         intakeRollerMtr.setIdleMode(CANSparkBase.IdleMode.kBrake);
     }

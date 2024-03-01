@@ -6,8 +6,11 @@ package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_ShootAtSpeed;
+
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.SHOOTER_AMP_SPEED;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -25,7 +28,8 @@ public class Cmd_ScoreAmp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-            new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> SubSys_Shooter_Constants.ShooterArm.ShooterArmAmpPos)
+            new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP),
+            new Cmd_SubSys_Shooter_ShootAtSpeed(shooterSubSys, () -> SHOOTER_AMP_SPEED)
     );
   }
 }

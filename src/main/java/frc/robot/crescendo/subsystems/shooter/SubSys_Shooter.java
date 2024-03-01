@@ -21,7 +21,7 @@ import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Arm.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm.SoftwareLimits.*;
@@ -133,6 +133,7 @@ public class SubSys_Shooter extends SubsystemBase {
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
 
+        // TODO: Check for duplicates
         // Shooter motors
         // 1
         shooterWheelsMtrRight.setIdleMode(CANSparkBase.IdleMode.kCoast);
@@ -279,9 +280,23 @@ public class SubSys_Shooter extends SubsystemBase {
         }
     }
 
+    public void shootDumbAtSpeed(Timer timer, double speed) {
+        setShooterSpeed(speed);
+        if (timer.get() > SHOOT_SPIN_UP_TEMP) {
+            setIntakeOutput(ShooterIntakeDirection.SHOOT);
+        }
+    }
+
     public void shoot() {
         setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
         if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
+            setIntakeOutput(ShooterIntakeDirection.SHOOT);
+        }
+    }
+
+    public void shootAtSpeed(double mps) {
+        setShooterSpeed(mps);
+        if (getShooterMotorVelocity() >= mps - SHOOTER_VELOCITY_TOLERANCE) {
             setIntakeOutput(ShooterIntakeDirection.SHOOT);
         }
     }
