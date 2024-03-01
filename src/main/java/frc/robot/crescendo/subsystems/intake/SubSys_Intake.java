@@ -59,7 +59,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeRollerMtrPID.setFF(IntakeRoller.PID.FFwd);
         intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput,IntakeRoller.PID.MaxOutput);
 
-        // Configure Intake Arm Motor
+        // ***** Configure Intake Arm Motor *****
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -69,6 +69,8 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kI = 0;
         intakeArmMtrConfiguration.Slot0.kD = 0;
         intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
+        
+        // Hardware Limit Switches
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -77,6 +79,11 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = IntakeArm.RevLimitSwitchPos;
+        // Software Limits
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = IntakeArm.FwdSWLimitPos;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = IntakeArm.RevSWLimitPos;
 
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
@@ -108,8 +115,8 @@ public class SubSys_Intake extends SubsystemBase {
         //SmartDashboard.putNumber("Intake/Arm Can Coder Abs", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
+        SmartDashboard.putNumber("IntakeArmPosRevs", getIntakeArmPos());
+        SmartDashboard.putNumber("IntakeArmPosDeg", getIntakeArmPosDeg());
     }
 
     /**
@@ -201,32 +208,12 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
 
-    public void setIntakeRollerSpdDutyCycle(double spdCmd){
-        intakeRollerMtr.set(spdCmd);
-    }
+    //public void setIntakeRollerSpdDutyCycle(double spdCmd){
+    //    intakeRollerMtr.set(spdCmd);
+    //}
 
     public void setIntakeRollerSpdRPM(double spdCmd){
         intakeRollerMtrPID.setReference(spdCmd, CANSparkMax.ControlType.kVelocity);
-    }
-
-    public void intakeNote(){
-        if (getIntakeOccupied()){
-            intakeRollerMtr.set(0);
-        } else {
-            intakeRollerMtr.set(IntakeRoller.intakeNoteSpeed);
-        }
-    }
-
-    public void ejectNote(){
-        intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
-    }
-
-    public void transferNote(){
-        intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
-    }
-
-    public void setIntakeArmSpd(double spdCmd){
-        intakeArmMtr.set(spdCmd);
     }
 
     public boolean getIntakeArmAtFwdLimit(){
@@ -249,24 +236,71 @@ public class SubSys_Intake extends SubsystemBase {
         return atLimit;
     }
 
+    // New Methods
+    // ***** Intake Arm *****
     public double getIntakeArmPos(){
         return intakeArmMtr.getPosition().getValueAsDouble();
     }
 
-    public boolean setIntakeArmPosCmd(double posCmd){
+    public double getIntakeArmPosDeg(){
+        return getIntakeArmPos()*360;
+    }
+
+    public void setIntakeArmDutyCycleCmd(double dcCmd){
+        intakeArmMtr.set(dcCmd);
+    }
+
+    //public void setIntakeArmSpdCmd(double spdCmd){
+    //    intakeArmMtr.set(spdCmd);
+    //}
+
+    public boolean setIntakeArmPosCmd(double posCmdRev){
+        // Position in Revolutions
         boolean atPos = false;
-        double error = posCmd-getIntakeArmPos();
-        if(error > 0.015){
-            intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
+        double error = posCmdRev-getIntakeArmPos();
+        if (error > 0.05){
+            setIntakeArmDutyCycleCmd(IntakeArm.IntakeArmPosCmdFastDutyCycle);
             atPos = false;
-        }else if(error < 0.015){
-            intakeArmMtr.set(-1*IntakeArm.IntakeArmPosCmdSpd);
+        } else if(error > 0.015){
+            setIntakeArmDutyCycleCmd(IntakeArm.IntakeArmPosCmdSlowDutyCycle);
             atPos = false;
-        }
-        else {
-            intakeArmMtr.set(0.0);
+        } else if(error < -0.05){
+            setIntakeArmDutyCycleCmd(-1*IntakeArm.IntakeArmPosCmdFastDutyCycle);
+            atPos = false;
+        }else if(error < -0.015){
+            setIntakeArmDutyCycleCmd(-1*IntakeArm.IntakeArmPosCmdSlowDutyCycle);
+            atPos = false;
+        }else {
+            setIntakeArmDutyCycleCmd(0.0);
             atPos = true;
         }
         return atPos;
     }
+
+    public boolean setIntakeArmPosCmdDeg(double posCmdDeg){
+        // Position in Degrees
+        return setIntakeArmPosCmd(posCmdDeg*360);
+    }
+
+    // ***** Intake Rollers *****
+    public void setIntakeRollerDutyCycleCmd(double dcCmd){
+        intakeRollerMtr.set(dcCmd);
+    }
+
+    public void intakeNote(){
+        if (getIntakeOccupied()){
+            setIntakeRollerDutyCycleCmd(0);
+        } else {
+            setIntakeRollerDutyCycleCmd(IntakeRoller.intakeNoteDutyCycle);
+        }
+    }
+
+    public void ejectNote(){
+        intakeRollerMtr.set(IntakeRoller.ejectNoteDutyCycle);
+    }
+
+    public void transferNote(){
+        intakeRollerMtr.set(IntakeRoller.transferNoteDutyCycle);
+    }
+
 }

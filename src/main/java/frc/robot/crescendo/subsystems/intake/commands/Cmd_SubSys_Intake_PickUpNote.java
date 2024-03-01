@@ -18,8 +18,8 @@ public class Cmd_SubSys_Intake_PickUpNote extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
+      new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
       new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
-      new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos));
+      new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos));
   }
 }

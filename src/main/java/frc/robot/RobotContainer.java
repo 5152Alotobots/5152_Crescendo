@@ -36,9 +36,10 @@ import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_IntakePosCmd;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_ArmPosCmd;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_SimpleDefault;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
@@ -261,17 +262,22 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     
         // ---- Intake Subsystem ----
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_SimpleDefault(
             intakeSubSys, 
             hmiStation::intakeArmAxisRaw,
             hmiStation.intakeIn,
             hmiStation.intakeOut));
-   
-        //hmiStation.intakePickupNote
-        //    .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
-        //    .onFalse(new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
-            
 
+        //intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
+        //    intakeSubSys, 
+        //    hmiStation::intakeArmAxisRaw,
+        //    hmiStation.intakeIn,
+        //    hmiStation.intakeOut));
+   
+        hmiStation.intakePickupNote
+            .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
+            .onFalse(new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
+            
         // ---- Slider Subsystem ----
         hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
         hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));

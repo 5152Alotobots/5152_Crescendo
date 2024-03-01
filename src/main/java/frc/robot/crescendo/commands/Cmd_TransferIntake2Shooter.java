@@ -31,7 +31,7 @@ public class Cmd_TransferIntake2Shooter extends Command {
     @Override
     public void end(boolean interrupted) {
         subSysShooter.stopAll();
-        subSysIntake.setIntakeRollerSpdDutyCycle(0.0);
+        subSysIntake.setIntakeRollerDutyCycleCmd(0.0);
     }
 
     // Returns true when the command should end.

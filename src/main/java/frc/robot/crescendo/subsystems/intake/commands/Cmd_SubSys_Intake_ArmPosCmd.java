@@ -7,16 +7,16 @@ package frc.robot.crescendo.subsystems.intake.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 
-public class Cmd_SubSys_IntakePosCmd extends Command {
+public class Cmd_SubSys_Intake_ArmPosCmd extends Command {
   /** Creates a new Cmd_SubSys_IntakePosCmd. */
   private final SubSys_Intake intakeSubSys;
   private final double posCmd;
   private boolean atPos = false;
 
-  public Cmd_SubSys_IntakePosCmd(SubSys_Intake intakeSubSys, double posCmd) {
+  public Cmd_SubSys_Intake_ArmPosCmd(SubSys_Intake intakeSubSys, double posCmd) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intakeSubSys = intakeSubSys;
-    this.posCmd = posCmd;
+    this.posCmd = posCmd;   // Revolutions
     addRequirements(intakeSubSys);
   }
 
@@ -35,7 +35,7 @@ public class Cmd_SubSys_IntakePosCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeArmSpd(0.0);
+    intakeSubSys.setIntakeArmDutyCycleCmd(0.0);
   }
 
   // Returns true when the command should end.

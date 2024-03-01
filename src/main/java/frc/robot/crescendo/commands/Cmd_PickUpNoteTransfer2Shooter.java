@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_IntakePosCmd;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_ArmPosCmd;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_IntakeNote;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants;
@@ -32,11 +32,10 @@ public class Cmd_PickUpNoteTransfer2Shooter extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, ShooterArm.ShooterArmTransferPos),
         new SequentialCommandGroup(
-          new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
+          new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
           new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
-          new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos))),
-      new Cmd_TransferIntake2Shooter(shooterSubSys, intakeSubSys),
-      new Cmd_SubSys_IntakePosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
+          new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos))),
+      new Cmd_TransferIntake2Shooter(shooterSubSys, intakeSubSys));
   }
 }
 //We still need to go forward to intake and backward so pathplanner is accurate

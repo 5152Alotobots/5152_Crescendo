@@ -6,6 +6,7 @@ package frc.robot.crescendo.subsystems.intake.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 
 public class Cmd_SubSys_Intake_IntakeNote extends Command {
   /** Creates a new Cmd_SubSys_Intake_IntakeNote. */
@@ -28,12 +29,14 @@ public class Cmd_SubSys_Intake_IntakeNote extends Command {
   @Override
   public void execute() {
     intakeSubSys.intakeNote();
+    intakeSubSys.setIntakeArmPosCmd(IntakeArm.IntakeArmPickupPos);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeRollerSpdDutyCycle(0.0);
+    intakeSubSys.setIntakeRollerDutyCycleCmd(0.0);
+    intakeSubSys.setIntakeArmDutyCycleCmd(0.0);
   }
 
   // Returns true when the command should end.
