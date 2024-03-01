@@ -12,13 +12,11 @@ import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 public class Cmd_SubSys_Intake_IntakeNote extends Command {
   /** Creates a new Cmd_SubSys_Intake_IntakeNote. */
   private final SubSys_Intake intakeSubSys;
-  private final CommandSwerveDrivetrain swerveSubSys;
 
-  public Cmd_SubSys_Intake_IntakeNote(SubSys_Intake intakeSubSys, CommandSwerveDrivetrain swerveSubSys) {
+  public Cmd_SubSys_Intake_IntakeNote(SubSys_Intake intakeSubSys) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intakeSubSys = intakeSubSys;
-    this.swerveSubSys = swerveSubSys;
-    addRequirements(intakeSubSys, swerveSubSys);
+    addRequirements(intakeSubSys);
   }
 
   // Called when the command is initially scheduled.
