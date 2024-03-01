@@ -6,7 +6,7 @@ package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_SpeakerRightShoot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,7 +24,7 @@ public class Cmd_ScoreSpeakerRight extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Shooter_Shoot(subSysShooter).withTimeout(3.5)
+      new Cmd_SubSys_Shooter_SpeakerRightShoot(subSysShooter).withTimeout(5)
     );
   }
 }

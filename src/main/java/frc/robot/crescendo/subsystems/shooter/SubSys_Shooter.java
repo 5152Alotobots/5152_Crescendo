@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
@@ -275,6 +276,7 @@ public class SubSys_Shooter extends SubsystemBase {
 
     // New Shooter Methods
 
+    // ***** Shooter Arm *****
     public double getShooterArmPos(){
         return shooterArmMtr.getPosition().getValueAsDouble();
     }
@@ -314,4 +316,50 @@ public class SubSys_Shooter extends SubsystemBase {
         // Position in Degrees
         return setShooterArmPosCmd(posCmdDeg/360);
     }
+
+    // ***** Shooter Rollers *****
+    
+    public void setShooterRollerDutyCycleCmd(double dcCmd){
+        shooterRollerMtr.set(dcCmd);
+    }
+
+    public void transferNote(){
+        if (getIntakeOccupied()){
+            setShooterRollerDutyCycleCmd(0);
+        } else {
+            setShooterRollerDutyCycleCmd(ShooterRoller.TransferNoteDutyCycle);
+        }
+    }
+
+    public void ejectNoteRollers(){
+        setShooterRollerDutyCycleCmd(ShooterRoller.EjectNoteDutyCycle);
+    }
+
+    public void shootNoteRollers(){
+        setShooterRollerDutyCycleCmd(ShooterRoller.ShootNoteDutyCycle);
+    }
+
+    public void sourceIntakeNoteRollers(){
+        setShooterRollerDutyCycleCmd(ShooterRoller.SourceIntakeNoteDutyCycle);
+    }
+
+    // Shooter Wheels
+
+    public void setShooterWheelsDutyCycleCmd(double dcCmd){
+        shooterWheelsMtr1.set(dcCmd);
+        shooterWheelsMtr2.set(dcCmd);
+    }
+
+    public void shootSpeakerShooterWheels(){
+        setShooterWheelsDutyCycleCmd(ShooterWheels.ShootSpeakerDutyCycleCmd);
+    }
+
+    public void shootAmpShooterWheels(){
+        setShooterWheelsDutyCycleCmd(ShooterWheels.ShootAmpDutyCycleCmd);
+    }
+
+    public void intakeNoteShooterWheels(){
+        setShooterWheelsDutyCycleCmd(ShooterWheels.IntakeNoteDutyCycleCmd);
+    }
+ 
 }

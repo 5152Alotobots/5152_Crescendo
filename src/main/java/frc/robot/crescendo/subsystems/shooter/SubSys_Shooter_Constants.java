@@ -11,8 +11,13 @@ public class SubSys_Shooter_Constants {
         public static final double FwdSWLimitPos = -0.25;   // Revs Straight Up
         public static final double RevSWLimitPos = -0.65;   // Revs Downward
 
-        public static final double ShooterArmTransferPos = 45;  // Transfer Position Degrees
-        public static final double ShooterArmAmpPos = 45;       // Amp Scoring Position Degrees
+        public static final double ShooterArmTransferPos = -0.325;  // Revs Transfer Position
+        
+        public static final double ShooterArmAmpPos = -0.6;         // Revs Amp Scoring Position
+
+        public static final double ShooterArmSpeakerLeftPos = -0.325; // Revs Speaker Left Scoring Position
+        public static final double ShooterArmSpeakerCenterPos = -0.325; // Revs Speaker Center Scoring Position
+        public static final double ShooterArmSpeakerRightPos = -0.325; // Revs Speaker Right Scoring Position
 
         public static final double ShooterArmPosCmdFastDutyCycle = 0.7; // 0-1
         public static final double ShooterArmPosCmdSlowDutyCycle = 0.2; // 0-1
@@ -21,6 +26,10 @@ public class SubSys_Shooter_Constants {
     public static final class ShooterWheels{
 
         public static final double OpenLoopRampRate = 0.5; // seconds
+
+        public static final double ShootSpeakerDutyCycleCmd = 1; // -1 - 1
+        public static final double ShootAmpDutyCycleCmd = 0.75; // -1 - 1
+        public static final double IntakeNoteDutyCycleCmd = -0.7; // -1 - 1
 
         public static final class PID {
             public static final double Pgain = 0.0;
@@ -33,15 +42,16 @@ public class SubSys_Shooter_Constants {
             public static final double MaxRPM = 5700;
             public static final double ClosedLoopRampRate = 0.5; // seconds
         }
-
-        public static final class SpeedSetPoints{
-
-        }
     }
 
     public static final class ShooterRoller{
 
-        public static final double OpenLoopRampRate = 1; // seconds
+        public static final double OpenLoopRampRate = 0.25; // seconds
+        public static final double TransferNoteDutyCycle = -0.5;  // -1 - 1
+        public static final double EjectNoteDutyCycle = 0.5;  // -1 - 1
+        public static final double ShootNoteDutyCycle = -1.0;  // -1 - 1
+        public static final double SourceIntakeNoteDutyCycle = 0.25;  // -1 - 1
+        
 
         public static final class PID {
             public static final double Pgain = 0.0;
