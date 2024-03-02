@@ -31,7 +31,7 @@ public class HMIStation {
 
   // Driver Buttons
   public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  // public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
   public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
@@ -96,8 +96,9 @@ public class HMIStation {
 
   // Co-Driver Buttons
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  // public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
+  public final JoystickButton pickupNoteTransferToShooter = new JoystickButton(coDriverController, 2);
+  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
   public final Trigger shooterShoot = new Trigger(() -> shooterOut());
   public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
