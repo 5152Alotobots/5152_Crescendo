@@ -9,6 +9,8 @@ import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOTER_WAIT_AFTER_SHOOT;
+
 public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
     SubSys_Shooter subSysShooter;
     BooleanSupplier releaseTrigger;
@@ -29,7 +31,7 @@ public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
 
     @Override
     public void initialize() {
-        // timer.reset();
+        timer.reset();
     }
 
     @Override
@@ -38,18 +40,18 @@ public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
         subSysShooter.setShooterOutput(ShooterDirection.AMP_OUT);
         if (releaseTrigger.getAsBoolean()) {
             subSysShooter.setIntakeOutput(ShooterIntakeDirection.IN);
-            // timer.start();
+            timer.start();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         subSysShooter.stopAll();
-        // timer.stop();
+        timer.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return !subSysShooter.getIntakeOccupied(); // && timer.get() > 0.5;
+        return !subSysShooter.getIntakeOccupied() && timer.get() > SHOOTER_WAIT_AFTER_SHOOT;
     }
 }

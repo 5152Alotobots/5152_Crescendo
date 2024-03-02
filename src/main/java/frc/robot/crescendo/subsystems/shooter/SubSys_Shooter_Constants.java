@@ -90,6 +90,7 @@ public class SubSys_Shooter_Constants {
         public static final double SHOOT_SPIN_UP_TEMP = 1.5;
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
         public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.01; // +-X counts as at position
+        public static final double SHOOTER_WAIT_AFTER_SHOOT = 0.5; // X seconds
     }
 
     public static final class FieldConstants {
