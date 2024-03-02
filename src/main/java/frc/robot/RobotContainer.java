@@ -31,6 +31,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNo
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.*;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
@@ -282,17 +283,22 @@ public class RobotContainer {
 
         // -- Shooter --
       // Default
-      shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> DirectionUtils.toShooterDirection(hmiStation.shooterSpeakerPos)));
+      shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> ShooterDirection.OFF));
 
       // Positions
-      hmiStation.shooterSpeakerPos.toggleOnTrue(
+      hmiStation.shooterSpeakerPos.whileTrue(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
                       .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-      ).or(
-              hmiStation.shooterAmpPos.toggleOnTrue(
-                      new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
-                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-              ));
+      );
+    //.or(
+    //         //   hmiStation.shooterAmpPos.whileTrue(
+    //         //           new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
+    //         //                   .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
+    //         //   )).or(
+    //             hmiStation.shooterShoot.whileTrue(
+    //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
+    //             )
+    //           );
 
       // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
