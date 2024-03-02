@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.2337167531477924,
-      "y": 5.56
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -27,6 +21,12 @@
           "type": "path",
           "data": {
             "pathName": "Auto_Side_Speaker_Leave_Part1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePickupNote"
           }
         }
       ]
