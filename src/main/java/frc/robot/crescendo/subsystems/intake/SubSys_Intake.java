@@ -106,10 +106,10 @@ public class SubSys_Intake extends SubsystemBase {
         //SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
         //SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
 
-        SmartDashboard.putBoolean("Arm Forward Limit Value", intakeArmMtr.getFault_ForwardHardLimit().getValue());
-        SmartDashboard.putBoolean("Arm Reverse Limit Value", intakeArmMtr.getFault_ReverseHardLimit().getValue());
-        SmartDashboard.putBoolean("Arm Forward Software Limit Value", intakeArmMtr.getFault_ForwardSoftLimit().getValue());
-        SmartDashboard.putBoolean("Arm Reverse Software Limit Value", intakeArmMtr.getFault_ReverseSoftLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Forward Limit Value", intakeArmMtr.getFault_ForwardHardLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Reverse Limit Value", intakeArmMtr.getFault_ReverseHardLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Forward Software Limit Value", intakeArmMtr.getFault_ForwardSoftLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Reverse Software Limit Value", intakeArmMtr.getFault_ReverseSoftLimit().getValue());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
         SmartDashboard.putNumber("IntakeArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
@@ -119,7 +119,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/Intake Arm Motor Busy", intakeArmMtrBusy());
         SmartDashboard.putBoolean("Intake/Intake Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
         SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
-
+        SmartDashboard.putNumber("Intake/forwardLimitValue", intakeArmMtr.getForwardLimit().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/reverseLimitValue", intakeArmMtr.getReverseLimit().getValueAsDouble());
     }
 
     /**

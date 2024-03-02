@@ -173,6 +173,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter(shooterSubSys));
             NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
             NamedCommands.registerCommand("PickupNoteAndTransfer", new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+            
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
@@ -287,11 +288,11 @@ public class RobotContainer {
       // Positions
       hmiStation.shooterSpeakerPos.toggleOnTrue(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
-                      .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation::shooterOut, hmiStation::shooterArmAxis))
+                      .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
       ).or(
               hmiStation.shooterAmpPos.toggleOnTrue(
                       new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
-                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation::shooterOut, hmiStation::shooterArmAxis))
+                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
               ));
 
       // ---- Climber Subsystem
