@@ -11,10 +11,12 @@ import com.ctre.phoenix6.signals.*;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
+import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
@@ -41,7 +43,7 @@ public class SubSys_Shooter extends SubsystemBase {
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
     private final RelativeEncoder shooterRollerMtrEncoder;
     private final SparkPIDController shooterRollerMtrPID;
-    // private final DigitalInput beamSensor = new DigitalInput(0);
+     private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
     private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
 
@@ -183,8 +185,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true when the intake is occupied
      */
     public boolean getIntakeOccupied() {
-        //return shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
-        return false;
+        return !shooterRollerIR.get();
     }
 
     // Intake ------
