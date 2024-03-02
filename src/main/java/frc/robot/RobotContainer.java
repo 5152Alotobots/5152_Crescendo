@@ -270,8 +270,7 @@ public class RobotContainer {
             hmiStation.intakeIn,
             hmiStation.intakeOut));
 
-      // TEMP TEST
-     hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+     
 //      hmiStation.intakePickupNote
 //              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
 //              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
@@ -302,6 +301,10 @@ public class RobotContainer {
             hmiStation.climberSupportExtend,
             hmiStation.climberSupportRetract, 
             climberSubSys));
+
+      // Robot Level
+      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+      
     }
 
     /**
