@@ -269,7 +269,7 @@ public class RobotContainer {
             hmiStation.intakeOut));
 
       // TEMP TEST
-     hmiStation.intakePickupNote.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+     hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
 //      hmiStation.intakePickupNote
 //              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
 //              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
