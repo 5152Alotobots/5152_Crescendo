@@ -78,7 +78,7 @@ public class HMIStation {
    *
    * @return True if the mode is active, false otherwise.
    */
-  public boolean shooterIn() {
+  public boolean shooterSpeakerPos() {
     return (driverController.getRawAxis(2) > 0.3);
   }
 
@@ -96,11 +96,10 @@ public class HMIStation {
 
   // Co-Driver Buttons
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  // public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
   public final JoystickButton pickupNoteTransferToShooter = new JoystickButton(coDriverController, 2);
-  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final Trigger shooterSpeakerPos = new Trigger(() -> shooterSpeakerPos());
   public final Trigger shooterShoot = new Trigger(() -> shooterOut());
-  public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
