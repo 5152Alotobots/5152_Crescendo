@@ -36,6 +36,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickupNoteAndTransfer"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Auto_1Blue_Amp_1Note1_Amp_Part3"
