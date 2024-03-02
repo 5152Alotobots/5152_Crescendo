@@ -78,9 +78,7 @@ public class HMIStation {
    *
    * @return True if the mode is active, false otherwise.
    */
-  public boolean shooterSpeakerPos() {
-    return (driverController.getRawAxis(2) > 0.3);
-  }
+  
 
   /**
    * Checks if the performance mode B is active.
@@ -90,6 +88,7 @@ public class HMIStation {
   public boolean shooterOut() {
     return (driverController.getRawAxis(3) > 0.3);
   }
+  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
   
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
@@ -98,8 +97,8 @@ public class HMIStation {
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   public final JoystickButton pickupNoteTransferToShooter = new JoystickButton(coDriverController, 2);
   public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final Trigger shooterSpeakerPos = new Trigger(() -> shooterSpeakerPos());
-  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
+  
+
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
@@ -132,22 +131,12 @@ public class HMIStation {
   public double intakeArmAxisRaw() {
     return coDriverController.getRawAxis(1);
   }
-  // Driver Trigger Axes
-  /**
-   * Checks if the performance mode A is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterInCoDrvr() {
-    return (coDriverController.getRawAxis(3) > 0.3);
+  // Co Driver Trigger Axes
+ 
+  public boolean shooterSpeakerPos() {
+    return (coDriverController.getRawAxis(2) > 0.3);
   }
-
-  /**
-   * Checks if the performance mode B is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterSourcePos() {
-    return (driverController.getRawAxis(2) > 0.3);
-  }
+  public final Trigger shooterSpeakerPos = new Trigger(() -> shooterSpeakerPos());
   
   // Aux Driver Controller
   //private final XboxController auxdriverController = new XboxController(2);
