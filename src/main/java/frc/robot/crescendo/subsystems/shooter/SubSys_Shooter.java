@@ -202,6 +202,9 @@ public class SubSys_Shooter extends SubsystemBase {
             case OUT:
                 speed = MAX_SHOOTER_SPEED;
                 break;
+            case AMP_OUT:
+                speed = SHOOTER_AMP_SPEED;
+                break;
             default:
                 break;
         }

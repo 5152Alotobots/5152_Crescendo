@@ -97,7 +97,7 @@ public class HMIStation {
   // Co-Driver Buttons
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
   public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
+  public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
   public final Trigger shooterShoot = new Trigger(() -> shooterOut());
   public final Trigger shooterIn = new Trigger(() -> shooterIn());
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);

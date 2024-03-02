@@ -100,6 +100,7 @@ public class SubSys_Shooter_Constants {
     public static final class PresentArmPositions {
         public static final double ARM_PRESET_TRANSFER = -130;
         public static final double ARM_PRESET_AMP = -210;
+        public static final double ARM_PRESET_SPEAKER = -115;
     }
 
     public static final class ControllerOptions {
