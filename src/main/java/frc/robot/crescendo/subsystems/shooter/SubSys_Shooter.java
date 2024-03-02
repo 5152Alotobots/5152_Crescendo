@@ -91,7 +91,7 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterRollerMtr.setIdleMode(CANSparkMax.IdleMode.kCoast);
         shooterRollerMtr.setOpenLoopRampRate(ShooterRoller.OpenLoopRampRate);
         shooterRollerMtr.setClosedLoopRampRate(ShooterRoller.PID.ClosedLoopRampRate);
-        shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
+        // shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
 
         shooterRollerMtrEncoder = shooterRollerMtr.getEncoder();
 
@@ -183,7 +183,8 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return true when the intake is occupied
      */
     public boolean getIntakeOccupied() {
-        return shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+        //return shooterRollerMtr.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
+        return false;
     }
 
     // Intake ------

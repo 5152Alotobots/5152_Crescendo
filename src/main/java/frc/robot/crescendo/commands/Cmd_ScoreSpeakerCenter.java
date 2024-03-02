@@ -24,6 +24,6 @@ public class Cmd_ScoreSpeakerCenter extends SequentialCommandGroup {
   public Cmd_ScoreSpeakerCenter(SubSys_Shooter shooterSubSys) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false).withTimeout(3));
+    addCommands(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false).withTimeout(8));
   }
 }

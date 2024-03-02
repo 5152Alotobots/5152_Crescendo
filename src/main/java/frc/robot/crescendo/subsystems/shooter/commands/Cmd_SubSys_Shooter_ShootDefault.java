@@ -55,6 +55,7 @@ public class Cmd_SubSys_Shooter_ShootDefault extends Command {
 
     @Override
     public boolean isFinished() {
-        return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
+        return false;
+        // return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
     }
 }
