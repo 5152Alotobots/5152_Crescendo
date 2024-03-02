@@ -289,12 +289,12 @@ public class RobotContainer {
       hmiStation.shooterSpeakerPos.whileTrue(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
                       .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-      );
-    //.or(
-    //         //   hmiStation.shooterAmpPos.whileTrue(
-    //         //           new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
-    //         //                   .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-    //         //   )).or(
+      ).or(
+              hmiStation.shooterAmpPos.whileTrue(
+                      new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
+                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
+              ));
+            //   .or(
     //             hmiStation.shooterShoot.whileTrue(
     //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
     //             )

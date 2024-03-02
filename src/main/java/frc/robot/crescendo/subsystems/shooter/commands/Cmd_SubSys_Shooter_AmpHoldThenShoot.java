@@ -39,7 +39,7 @@ public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
         subSysShooter.setShooterArmOutput(shooterArmSpeed.getAsDouble());
         subSysShooter.setShooterOutput(ShooterDirection.AMP_OUT);
         if (releaseTrigger.getAsBoolean()) {
-            subSysShooter.setIntakeOutput(ShooterIntakeDirection.IN);
+            subSysShooter.setIntakeOutput(ShooterIntakeDirection.SHOOT);
             timer.start();
         }
     }
