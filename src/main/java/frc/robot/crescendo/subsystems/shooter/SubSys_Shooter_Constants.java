@@ -11,7 +11,7 @@ public class SubSys_Shooter_Constants {
         public static final class SoftwareLimits {
 
             public static final double SHOOTER_LIMIT_FORWARD = 0; // Towards intake
-            public static final double SHOOTER_LIMIT_REVERSE = -0.8; // Towards climber
+            public static final double SHOOTER_LIMIT_REVERSE = -0.583; // Towards climber
             public static final boolean SHOOTER_LIMIT_ENABLE = true;
         }
     }
@@ -75,7 +75,7 @@ public class SubSys_Shooter_Constants {
         }
     }
     public static final class Speeds {
-        public static final double MAX_ARM_ROTATION_SPEED = 0.15;
+        public static final double MAX_ARM_ROTATION_SPEED = 0.30;
         public static final double MAX_SHOOTER_SPEED = 1;
         public static final double MAX_SHOOTER_SPPED_MPS = 6.2;
         public static final double MAX_INTAKE_SPEED = 1;
@@ -90,6 +90,7 @@ public class SubSys_Shooter_Constants {
         public static final double SHOOT_SPIN_UP_TEMP = 1.0; // Wait before launch
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
         public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.01; // +-X counts as at position
+        public static final double SHOOTER_WAIT_AFTER_SHOOT = 0.5; // X seconds
     }
 
     public static final class FieldConstants {
@@ -99,7 +100,8 @@ public class SubSys_Shooter_Constants {
 
     public static final class PresentArmPositions {
         public static final double ARM_PRESET_TRANSFER = -130;
-        public static final double ARM_PRESET_AMP = -210;
+        public static final double ARM_PRESET_AMP = -205;
+        public static final double ARM_PRESET_SPEAKER = -125;
     }
 
     public static final class ControllerOptions {
