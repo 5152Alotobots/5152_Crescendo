@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
           }
         },
         {
@@ -22,34 +35,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "PickupNoteAndTransfer"
+                  "pathName": "3piece.5"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part1"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "2piecepart1.5"
-                      }
-                    }
-                  ]
+                  "name": "PickupNoteAndTransfer"
                 }
               }
             ]
@@ -58,13 +52,26 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto_2Blue_Speaker_1NotePosition2_Speaker_Part2"
+            "pathName": "3piece.7"
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ScoreSpeakerCenter"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
           }
         },
         {
@@ -78,28 +85,9 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "3piecept1"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "3piecept2"
-                      }
-                    }
-                  ]
+                  "pathName": "3piecept1"
                 }
               }
             ]
