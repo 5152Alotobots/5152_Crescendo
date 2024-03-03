@@ -28,7 +28,7 @@ import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Defaul
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegree;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.*;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
@@ -176,7 +176,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter(shooterSubSys));
             NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
             NamedCommands.registerCommand("PickupNoteAndTransfer", new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
-            NamedCommands.registerCommand("IntakeDown", new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_PICKUP));
+            NamedCommands.registerCommand("IntakeDown", new Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch(intakeSubSys, () -> INTAKE_PRESET_PICKUP));
             
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
