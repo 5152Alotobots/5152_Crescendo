@@ -27,11 +27,13 @@ import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxS
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_ARM_POSITION_TOLERANCE;
 
 /**
- * Handles outputs and inputs from the intake, including rotation motors and limit switches,
+ * Handles outputs and inputs from the intake, including rotation motors and
+ * limit switches,
  * and Intake intakeRollerMtr.
  */
 public class SubSys_Intake extends SubsystemBase {
-    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
+    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID,
+            CANSparkLowLevel.MotorType.kBrushless);
     private final SparkPIDController intakeRollerMtrPID;
     private final RelativeEncoder intakeRollerMtrEncoder;
 
@@ -42,8 +44,9 @@ public class SubSys_Intake extends SubsystemBase {
     private double intakeRollerMtrSetpoint = 0.0;
 
     final PositionVoltage intakeArmPid;
-    public SubSys_Intake () {
-        
+
+    public SubSys_Intake() {
+
         intakeRollerMtr.restoreFactoryDefaults();
         intakeRollerMtr.enableVoltageCompensation(10);
         intakeRollerMtr.setInverted(false);
@@ -59,7 +62,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeRollerMtrPID.setD(IntakeRoller.PID.Dgain);
         intakeRollerMtrPID.setIZone(IntakeRoller.PID.Izone);
         intakeRollerMtrPID.setFF(IntakeRoller.PID.FFwd);
-        intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput,IntakeRoller.PID.MaxOutput);
+        intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput, IntakeRoller.PID.MaxOutput);
 
         // Configure Intake Arm Motor
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
@@ -83,11 +86,12 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ARM_LIMIT_REVERSE;
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = ARM_LIMIT_ENABLE;
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = ARM_LIMIT_ENABLE;
+        
         // create a position closed-loop request, voltage output, slot 0 configs
         intakeArmPid = new PositionVoltage(0).withSlot(0);
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
-        
+
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
         intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
@@ -99,23 +103,19 @@ public class SubSys_Intake extends SubsystemBase {
 
         intakeRollerMtr.setIdleMode(CANSparkBase.IdleMode.kBrake);
     }
-    
+
     @Override
     public void periodic() {
-        // Intake Roller Motor
-        //SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
-        //SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
-
         SmartDashboard.putBoolean("Intake/Arm Forward Limit Value", intakeArmMtr.getFault_ForwardHardLimit().getValue());
-        SmartDashboard.putBoolean("Intake/Arm Reverse Limit Value", intakeArmMtr.getFault_ReverseHardLimit().getValue());
-        SmartDashboard.putBoolean("Intake/Arm Forward Software Limit Value", intakeArmMtr.getFault_ForwardSoftLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Reverse Limit Value",intakeArmMtr.getFault_ReverseHardLimit().getValue());
+        SmartDashboard.putBoolean("Intake/Arm Forward Software Limit Value",intakeArmMtr.getFault_ForwardSoftLimit().getValue());
         SmartDashboard.putBoolean("Intake/Arm Reverse Software Limit Value", intakeArmMtr.getFault_ReverseSoftLimit().getValue());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
-        SmartDashboard.putNumber("IntakeArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
+        SmartDashboard.putNumber("Intake/IntakeArmEncoderAbsolutePos",intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/IntakeArmPos", getIntakeArmPos());
         SmartDashboard.putBoolean("Intake/Intake Arm Motor Busy", intakeArmMtrBusy());
         SmartDashboard.putBoolean("Intake/Intake Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
         SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
@@ -129,7 +129,7 @@ public class SubSys_Intake extends SubsystemBase {
     public void setIntakeArmSpeedWithLimits(double intakeArmSpeed) {
         ForwardLimitValue forwardLimitValue = intakeArmMtr.getForwardLimit().getValue();
         ReverseLimitValue reverseLimitValue = intakeArmMtr.getReverseLimit().getValue();
-        
+
         if (forwardLimitValue == ForwardLimitValue.ClosedToGround) {
             SmartDashboard.putBoolean("Intake/ForwardLimitMode", true);
             SmartDashboard.putBoolean("Intake/ReverseLimitMode", false);
@@ -148,7 +148,6 @@ public class SubSys_Intake extends SubsystemBase {
         }
     }
 
-
     /**
      * 
      * @return true if open false if closed
@@ -159,15 +158,19 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     /**
-     * Calls setIntakeArmSpeed with a Math.min to make sure the value is not negitive
+     * Calls setIntakeArmSpeed with a Math.min to make sure the value is not
+     * negitive
+     * 
      * @param speed Speed from -1 - 1 (unscaled, anything positive will be ignored)
      */
-    public void lowerIntakeArmSpeed(double speed) { 
+    public void lowerIntakeArmSpeed(double speed) {
         setIntakeArmSpeed(Math.max(0, speed));
     }
 
     /**
-     * Calls setIntakeArmSpeed with a Math.max to make sure the value is not negitive
+     * Calls setIntakeArmSpeed with a Math.max to make sure the value is not
+     * negitive
+     * 
      * @param speed Speed from -1 - 1 (unscaled, anything negative will be ignored)
      */
     public void liftIntakeArmSpeed(double speed) {
@@ -176,6 +179,7 @@ public class SubSys_Intake extends SubsystemBase {
 
     /**
      * Takes a speed scales (Applies deadband as well) it and sends it to the motor
+     * 
      * @param speed Speed from -1 - 1 (unscaled)
      */
     public void setIntakeArmSpeed(double speed) {
@@ -184,15 +188,18 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     /**
-     * @param intakeDirection {@link IntakeDirection} - The speed to run the intake at
+     * @param intakeDirection {@link IntakeDirection} - The speed to run the intake
+     *                        at
      */
     public void setIntakeDirection(IntakeDirection intakeDirection) {
         SmartDashboard.putString("Intake/Direction Intake", intakeDirection.toString());
         double speed = 0;
         switch (intakeDirection) {
             case IN:
-                if (!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
-                else speed = 0;
+                if (!getIntakeOccupied())
+                    speed = MAX_INTAKE_SPEED;
+                else
+                    speed = 0;
                 break;
             case TRANSFER:
                 speed = TRANSFER_SPEED;
@@ -207,27 +214,17 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
     /**
-     * Set the degree of the arm rotation
-     * @param degree The degree to rotate to
-     */
-    // public void setShooterArmDegree(double degree) {
-    //     SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
-    //     intakeArmMtr.setControl(new PositionVoltage(degree / 360.0).withSlot(0));
-    // }
-
-    /**
      * @return true if the intake is occupied with a note
-     * */
+     */
     public boolean getIntakeOccupied() {
         return !intakeRollerIR.get();
     }
 
-
-    public void setIntakeRollerSpdDutyCycle(double spdCmd){
+    public void setIntakeRollerSpdDutyCycle(double spdCmd) {
         intakeRollerMtr.set(spdCmd);
     }
 
-    public void setIntakeRollerSpdRPM(double spdCmd){
+    public void setIntakeRollerSpdRPM(double spdCmd) {
         intakeRollerMtrPID.setReference(spdCmd, CANSparkMax.ControlType.kVelocity);
     }
 
@@ -235,8 +232,8 @@ public class SubSys_Intake extends SubsystemBase {
      * @deprecated Use setIntakeDirection instead
      */
     @Deprecated
-    public void intakeNote(){
-        if (getIntakeOccupied()){
+    public void intakeNote() {
+        if (getIntakeOccupied()) {
             intakeRollerMtr.set(0);
         } else {
             intakeRollerMtr.set(IntakeRoller.intakeNoteSpeed);
@@ -247,7 +244,7 @@ public class SubSys_Intake extends SubsystemBase {
      * @deprecated Use setIntakeDirection instead
      */
     @Deprecated
-    public void ejectNote(){
+    public void ejectNote() {
         intakeRollerMtr.set(IntakeRoller.ejectNoteSpeed);
     }
 
@@ -255,16 +252,15 @@ public class SubSys_Intake extends SubsystemBase {
      * @deprecated Use setIntakeDirection instead
      */
     @Deprecated
-    public void transferNote(){
+    public void transferNote() {
         intakeRollerMtr.set(IntakeRoller.transferNoteSpeed);
     }
 
-    public void setIntakeArmSpd(double spdCmd){
+    public void setIntakeArmSpd(double spdCmd) {
         intakeArmMtr.set(spdCmd);
     }
 
-
-    public double getIntakeArmPos(){
+    public double getIntakeArmPos() {
         return intakeArmMtr.getPosition().getValueAsDouble();
     }
 
@@ -272,10 +268,10 @@ public class SubSys_Intake extends SubsystemBase {
      * @deprecated Use {@link SubSys_Intake } setIntakeArmDegree instead
      */
     @Deprecated
-    public boolean setIntakeArmPosCmd(double posCmd){
+    public boolean setIntakeArmPosCmd(double posCmd) {
         boolean atPos = false;
-        double error = posCmd-getIntakeArmPos();
-        if(error > 0.015){
+        double error = posCmd - getIntakeArmPos();
+        if (error > 0.015) {
             intakeArmMtr.set(IntakeArm.IntakeArmPosCmdSpd);
             atPos = false;
         } else if (error < 0.015) {
@@ -291,11 +287,12 @@ public class SubSys_Intake extends SubsystemBase {
     /**
      * Set the degree of the intake arm rotation
      *
-     * @param degree The degree to rotate to (negative degrees angles away from intake -90 = straight up)
+     * @param degree The degree to rotate to (negative degrees angles away from
+     *               intake -90 = straight up)
      */
     public void setIntakeArmDegree(double degree) {
         SmartDashboard.putNumber("Intake/Intake Arm Target Position", degree);
-        double limitAdjusted = MathUtil.clamp(degree / 360.0, ARM_LIMIT_REVERSE * 360, ARM_LIMIT_FORWARD * 360); // Limit to motor limits
+        double limitAdjusted = MathUtil.clamp(degree / 360.0, ARM_LIMIT_REVERSE * 360, ARM_LIMIT_FORWARD * 360); // Limit
         intakeArmMtr.setControl(intakeArmPid.withPosition(limitAdjusted));
     }
 
@@ -303,7 +300,8 @@ public class SubSys_Intake extends SubsystemBase {
      * @return true if the motor is within position tolerance
      */
     public boolean intakeArmMtrAtSetpoint() {
-        return (Math.abs((intakeArmMtr.getPosition().getValueAsDouble() - intakeArmMtr.getClosedLoopReference().getValueAsDouble())) <= INTAKE_ARM_POSITION_TOLERANCE);
+        return (Math.abs((intakeArmMtr.getPosition().getValueAsDouble()
+                - intakeArmMtr.getClosedLoopReference().getValueAsDouble())) <= INTAKE_ARM_POSITION_TOLERANCE);
     }
 
     /**

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 

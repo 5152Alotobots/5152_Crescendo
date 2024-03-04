@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
+import frc.robot.crescendo.HMIStation.CoDriverController;
+import frc.robot.crescendo.HMIStation.DriverController;
 import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
@@ -104,14 +106,11 @@ public class RobotContainer {
             // Auto
             autoChooser = drivetrain.getAutoChooser();
 
-            // ---- Human Machine Interface Station ----
-            hmiStation = new HMIStation();
-
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
 
             // Configure the button bindings
-            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, photonvisionSubSys, logger, hmiStation);
+            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, photonvisionSubSys, logger);
             break;
     
         // ##### GHETTOBOT #####
@@ -199,25 +198,24 @@ public class RobotContainer {
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
     SubSys_Photonvision subSysPhotonvision,
-    Telemetry logger,
-    HMIStation hmiStation){
+    Telemetry logger){
 
         // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
-                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
-                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
-                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(DriverController.driveFwdAxisRaw() * DriverController.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(DriverController.driveStrAxisRaw() * DriverController.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(DriverController.driveRotAxisRaw() * DriverController.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
-        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+        DriverController.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
         drivetrain.registerTelemetry(logger::telemeterize);
       
-        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        DriverController.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     }
 
   private void configureButtonBindingsGhettoBot(
@@ -252,12 +250,12 @@ public class RobotContainer {
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
-                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
-                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
-                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(DriverController.driveFwdAxisRaw() * DriverController.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(DriverController.driveStrAxisRaw() * DriverController.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(DriverController.driveRotAxisRaw() * DriverController.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
-        hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+        DriverController.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -267,50 +265,35 @@ public class RobotContainer {
         // ---- Intake Subsystem ----
         intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
             intakeSubSys, 
-            hmiStation::intakeArmAxisRaw,
-            hmiStation.intakeIn,
-            hmiStation.intakeOut));
-
-     
-//      hmiStation.intakePickupNote
-//              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
-//              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
-            
+            CoDriverController::intakeArmAxisRaw,
+            CoDriverController.intakeIn,
+            CoDriverController.intakeOut));
 
         // ---- Slider Subsystem ----
 //        hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
 //        hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
 
-        // -- Shooter --
-      // Default
-      shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> ShooterDirection.OFF));
+      shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, CoDriverController::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(DriverController.shooterRollerIn, CoDriverController.shooterRollerOutSlow), () -> ShooterDirection.OFF));
 
       // Positions
-      hmiStation.shooterSpeakerPos.whileTrue(
-              new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
-                      .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-      ).or(
-              hmiStation.shooterAmpPos.whileTrue(
-                      new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
-                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-              ));
-            //   .or(
-    //             hmiStation.shooterShoot.whileTrue(
-    //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
-    //             )
-    //           );
+      CoDriverController.shooterSpeakerPos.whileTrue(
+            new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
+                .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, DriverController.shooterShoot, CoDriverController::shooterArmAxis))
+      ).or(CoDriverController.shooterAmpPos.whileTrue(
+            new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
+                .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, DriverController.shooterShoot, CoDriverController::shooterArmAxis))
+      ));
 
       // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
-            hmiStation.climberUp, 
-            hmiStation.climberDn,
-            hmiStation.climberSupportExtend,
-            hmiStation.climberSupportRetract, 
+            DriverController.climberUp, 
+            DriverController.climberDn,
+            CoDriverController.climberSupportExtend,
+            CoDriverController.climberSupportRetract, 
             climberSubSys));
 
       // Robot Level
-      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
-      
+      CoDriverController.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
     }
 
     /**
@@ -321,5 +304,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-
 }
