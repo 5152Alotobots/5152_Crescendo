@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.23,
-      "y": 5.54
+      "x": 0.9292510892714109,
+      "y": 6.541783083566167
     },
-    "rotation": 0
+    "rotation": 43.025065989118
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3piece.5"
+                  "pathName": "playoffpt1"
                 }
               },
               {
@@ -52,51 +52,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3piece.7"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ScoreSpeakerCenter"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeDown"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "PickupNoteAndTransfer"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3piecept1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3piecept3"
+            "pathName": "playoffpt2"
           }
         },
         {
