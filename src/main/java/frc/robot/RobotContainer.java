@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
-import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.HMIStation.CoDriverController;
 import frc.robot.crescendo.HMIStation.DriverController;
 import frc.robot.crescendo.commands.*;
@@ -83,7 +82,6 @@ public class RobotContainer {
     //final SwerveRequest.RobotCentric drive;
     final SwerveRequest.FieldCentric drive;
     final Telemetry logger;
-    final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
@@ -148,9 +146,6 @@ public class RobotContainer {
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
 
-            // ---- Human Machine Interface Station ----
-            hmiStation = new HMIStation();
-
             // ---- Intake Subsystem ----
             intakeSubSys = new SubSys_Intake();
 
@@ -185,7 +180,6 @@ public class RobotContainer {
                 drivetrain,
                 drive,
                 logger,
-                hmiStation,
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
@@ -244,7 +238,6 @@ public class RobotContainer {
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
     Telemetry logger,
-    HMIStation hmiStation,
     SubSys_Intake intakeSubSys,
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,

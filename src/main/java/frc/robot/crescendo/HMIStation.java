@@ -21,6 +21,7 @@ import frc.robot.library.driverstation.JoystickUtilities;
  */
  public class HMIStation {
   public static class DriverController {
+    private DriverController () {}
     // **** Rate Limits for Drive ****
     static SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(
         DriveTrain.DriveTrainMaxAcceleration,
@@ -113,6 +114,7 @@ import frc.robot.library.driverstation.JoystickUtilities;
   }
 
   public static class CoDriverController {
+    private CoDriverController() {}
     // **** Co-Driver Controller ****
     private static final XboxController coDriverController = new XboxController(1);
 
@@ -167,6 +169,7 @@ import frc.robot.library.driverstation.JoystickUtilities;
   }
 
   public static class AuxDriverController {
+    private AuxDriverController() {}
     // Aux Driver Controller
     private static final XboxController auxdriverController = new XboxController(2);
   }
