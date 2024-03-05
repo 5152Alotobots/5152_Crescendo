@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -102,25 +103,16 @@ public class SubSys_Intake extends SubsystemBase {
     
     @Override
     public void periodic() {
-        // Intake Roller Motor
-        //SmartDashboard.putNumber("IntakeRollerVelSetPoint", intakeRollerMtrSetpoint);
-        //SmartDashboard.putNumber("IntakeRollerVel", intakeRollerMtrEncoder.getVelocity());
-
-        SmartDashboard.putBoolean("Intake/Arm Forward Limit Value", intakeArmMtr.getFault_ForwardHardLimit().getValue());
-        SmartDashboard.putBoolean("Intake/Arm Reverse Limit Value", intakeArmMtr.getFault_ReverseHardLimit().getValue());
-        SmartDashboard.putBoolean("Intake/Arm Forward Software Limit Value", intakeArmMtr.getFault_ForwardSoftLimit().getValue());
-        SmartDashboard.putBoolean("Intake/Arm Reverse Software Limit Value", intakeArmMtr.getFault_ReverseSoftLimit().getValue());
         SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
         SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
-        SmartDashboard.putNumber("IntakeArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmMtrPos", intakeArmMtr.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("IntakeArmPos", getIntakeArmPos());
-        SmartDashboard.putBoolean("Intake/Intake Arm Motor Busy", intakeArmMtrBusy());
-        SmartDashboard.putBoolean("Intake/Intake Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
+        SmartDashboard.putNumber("Intake/ArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/ArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Intake/ArmPos", getIntakeArmPos());
+        SmartDashboard.putBoolean("Intake/Arm Motor Busy", intakeArmMtrBusy());
+        SmartDashboard.putBoolean("Intake/Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
         SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/forwardLimitValue", intakeArmMtr.getForwardLimit().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/reverseLimitValue", intakeArmMtr.getReverseLimit().getValueAsDouble());
+        SmartDashboard.putBoolean("Intake/ForwardLimitValue", (intakeArmMtr.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround));
+        SmartDashboard.putBoolean("Intake/ReverseLimitValue", (intakeArmMtr.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround));
     }
 
     /**
