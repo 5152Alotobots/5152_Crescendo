@@ -25,16 +25,16 @@ import frc.robot.library.motorcontrollers.talonfx.TalonFX_Conversions;
 
 public class SubSys_Arm extends SubsystemBase {
 
-  private TalonFX Arm_ShoulderMotor = new TalonFX(Constants.CAN_IDs.ArmShoulderMtr_CAN_ID);
+  private TalonFX Arm_ShoulderMotor = new TalonFX(6969);
   private TalonFX Arm_ShoulderFollowerMotor =
-      new TalonFX(Constants.CAN_IDs.ArmShoulderFollowerMtr_CAN_ID);
+      new TalonFX(6969);
 
-  private CANCoder Arm_ShoulderEncoder = new CANCoder(Constants.CAN_IDs.ArmShoulderCANCoder_CAN_ID);
+  private CANCoder Arm_ShoulderEncoder = new CANCoder(6969);
 
-  private TalonFX Arm_ExtensionMotor = new TalonFX(Constants.CAN_IDs.ArmExtensionMtr_CAN_ID);
+  private TalonFX Arm_ExtensionMotor = new TalonFX(6969);
 
   private CANCoder Arm_ExtensionEncoder =
-      new CANCoder(Constants.CAN_IDs.ArmExtensionCANCoder_CAN_ID);
+      new CANCoder(6969);
 
   private Boolean outsideBounds;
 

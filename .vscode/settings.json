@@ -25,5 +25,33 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "cSpell.words": [
+    "Autoset",
+    "auxdriver",
+    "Brushless",
+    "CHARGEDUP",
+    "chrp",
+    "ctre",
+    "CTREPCM",
+    "deadband",
+    "Dgain",
+    "drivetrains",
+    "GHETTOBOT",
+    "Holonomic",
+    "Igain",
+    "Izone",
+    "Mecanum",
+    "Mechanum",
+    "Odometry",
+    "pathfinding",
+    "Pgain",
+    "Photonvision",
+    "REVPH",
+    "setpoint",
+    "telemeterize",
+    "Testbench",
+    "wpilibj",
+    "YAGSL"
+  ]
 }
