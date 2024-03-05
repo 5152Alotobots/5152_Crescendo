@@ -21,7 +21,7 @@ public class SubSys_PigeonGyro extends SubsystemBase {
   private double gyroOffsetDegrees;
 
   public SubSys_PigeonGyro() {
-    this.pigeon2Gyro = new Pigeon2(Constants.CAN_IDs.Pigeon2_ID);
+    this.pigeon2Gyro = new Pigeon2(Constants.CAN_IDs.Pigeon2_ID, "canivore");
     this.gyroOffsetDegrees = 0.0;
     // m_Pigeon2Gyro.setYaw(0);
   }

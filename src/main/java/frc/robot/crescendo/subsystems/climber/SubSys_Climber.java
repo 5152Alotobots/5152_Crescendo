@@ -25,8 +25,8 @@ import frc.robot.Constants.CAN_IDs;
 
 public class SubSys_Climber extends SubsystemBase {
 
-    private final TalonFX climberLeftMtr = new TalonFX(CAN_IDs.ClimberLeftMtr_CAN_ID);
-    private final TalonFX climberRightMtr = new TalonFX(CAN_IDs.ClimberRightMtr_CAN_ID);
+    private final TalonFX climberLeftMtr = new TalonFX(CAN_IDs.ClimberLeftMtr_CAN_ID, "canivore");
+    private final TalonFX climberRightMtr = new TalonFX(CAN_IDs.ClimberRightMtr_CAN_ID, "canivore");
 
     // PIDs
     final PositionVoltage climberLeftPid;

@@ -44,8 +44,8 @@ public class SubSys_Shooter extends SubsystemBase {
     private final RelativeEncoder shooterRollerMtrEncoder;
     private final SparkPIDController shooterRollerMtrPID;
      private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
-    private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
-    private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
+    private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID, "canivore");
+    private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID, "canivore");
 
     // PIDs
     final PositionVoltage shooterArmPid;

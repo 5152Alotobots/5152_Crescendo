@@ -36,8 +36,8 @@ public class SubSys_Intake extends SubsystemBase {
     private final RelativeEncoder intakeRollerMtrEncoder;
 
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
-    private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
-    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
+    private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID, "canivore");
+    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID, "canivore");
     private final Timer timer = new Timer();
     private double intakeRollerMtrSetpoint = 0.0;
 
