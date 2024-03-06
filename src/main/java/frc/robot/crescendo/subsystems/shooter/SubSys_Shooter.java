@@ -71,7 +71,7 @@ public class SubSys_Shooter extends SubsystemBase {
         /* --- RIGHT --- */
         TalonFXConfiguration shooterWheelsMtrRightConfiguration = new TalonFXConfiguration();
         shooterWheelsMtrRightConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        shooterWheelsMtrRightConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        shooterWheelsMtrRightConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         shooterWheelsMtrRightConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         shooterWheelsMtrRightConfiguration.Slot0.kP = SHOOTER_P;
         shooterWheelsMtrRightConfiguration.Slot0.kI = SHOOTER_I;
