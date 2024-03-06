@@ -12,8 +12,10 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
-import com.revrobotics.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,15 +24,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Arm.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm.SoftwareLimits.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.*;
 
 
 /**
@@ -50,6 +51,8 @@ public class SubSys_Shooter extends SubsystemBase {
 
     // PIDs
     final PositionVoltage shooterArmPid;
+    final VelocityVoltage shooterWheelsMtrLeftPID;
+    final VelocityVoltage shooterWheelsMtrRightPID;
     public SubSys_Shooter () {
         shooterRollerMtr.restoreFactoryDefaults();
         shooterRollerMtr.enableVoltageCompensation(12);
@@ -243,14 +246,14 @@ public class SubSys_Shooter extends SubsystemBase {
 
     public void shoot() {
         setShooterSpeed(MAX_SHOOTER_SPPED_MPS);
-        if (getShooterMotorVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
+        if (getShooterWheelsVelocity() >= MAX_SHOOTER_SPPED_MPS - SHOOTER_VELOCITY_TOLERANCE) {
             setIntakeOutput(ShooterIntakeDirection.SHOOT);
         }
     }
 
     public void shootAtSpeed(double mps) {
         setShooterSpeed(mps);
-        if (getShooterMotorVelocity() >= mps - SHOOTER_VELOCITY_TOLERANCE) {
+        if (getShooterWheelsVelocity() >= mps - SHOOTER_VELOCITY_TOLERANCE) {
             setIntakeOutput(ShooterIntakeDirection.SHOOT);
         }
     }
@@ -264,9 +267,6 @@ public class SubSys_Shooter extends SubsystemBase {
         setShooterArmOutput(0);
     }
 
-    public boolean setShootSpd(double spdCmd){
-        return true;
-    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake/Shooter Arm Velocity", Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()));
@@ -276,6 +276,7 @@ public class SubSys_Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter/Shooter Speed", 0);
         SmartDashboard.putNumber("Shooter/Shooter PID Target", shooterArmMtr.getClosedLoopReference().getValueAsDouble());
         SmartDashboard.putBoolean("Shooter/Shooter At Target", shooterArmMtrAtSetpoint());
+        SmartDashboard.putNumber("Shooter/Shooter Wheels Velocity", getShooterWheelsVelocity());
         /* --- PID --- */
         //SmartDashboard.putNumber("Shooter/Shooter Arm Target Position", 0);
         //SmartDashboard.putNumber("Shooter/Shooter Arm Current Position", shooterArmPid.Position);
