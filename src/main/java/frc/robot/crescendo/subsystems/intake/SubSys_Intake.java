@@ -183,7 +183,7 @@ public class SubSys_Intake extends SubsystemBase {
         double speed = 0;
         switch (intakeDirection) {
             case IN:
-                if (!getIntakeOccupied()) speed = MAX_INTAKE_SPEED;
+                if (!getIntakeOccupied())speed = MAX_INTAKE_SPEED;
                 else speed = 0;
                 break;
             case TRANSFER:
