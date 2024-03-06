@@ -9,7 +9,6 @@ public class SubSys_Photonvision_Constants {
   // FORWARD: +, RIGHT: +, UP: + (USED FOR APRILTAGS)
   public static final Transform3d cameraOffset =
       new Transform3d(
-              new Translation3d(0.175, -0.03, 0.54),
-              new Rotation3d(0, 0, 0));
-
+              new Translation3d(-0.406, -0.152, 0.172),
+              new Rotation3d(0, 18, 0));
 }

@@ -23,6 +23,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
+import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -39,6 +40,7 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.library.vision.photonvision.commands.Cmd_SubSys_PhotonVision_DefaultDrivePose;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
@@ -86,6 +88,7 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
+       final SubSys_Bling blingSubSys;
        final SubSys_Photonvision photonvisionSubSys;
 
     // Switch Robots
@@ -164,6 +167,8 @@ public class RobotContainer {
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
 
+            blingSubSys = new SubSys_Bling();
+
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
             
@@ -190,7 +195,8 @@ public class RobotContainer {
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
-                climberSubSys);
+                    climberSubSys,
+                    photonvisionSubSys);
                 
             break;
     }
@@ -250,7 +256,10 @@ public class RobotContainer {
     SubSys_Intake intakeSubSys,
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,
-    SubSys_Climber climberSubSys) {
+    SubSys_Climber climberSubSys,
+    SubSys_Photonvision subSysPhotonvision) {
+
+      subSysPhotonvision.setDefaultCommand(new Cmd_SubSys_PhotonVision_DefaultDrivePose(subSysPhotonvision, drivetrain));
 
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically

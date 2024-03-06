@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.cameraOffset;
 
-public class SubSys_Photonvision implements Subsystem {
+public class SubSys_Photonvision extends SubsystemBase {
 
   private PhotonCamera camera;
 
@@ -45,7 +45,7 @@ public class SubSys_Photonvision implements Subsystem {
       // Get transform pose to camera
       Transform3d fieldToCamera = result.getMultiTagResult().estimatedPose.best;
       // Calculate robot transform
-      Transform3d robotTransform = fieldToCamera.plus(cameraOffset.inverse());
+      Transform3d robotTransform = new Transform3d(fieldToCamera.getX() - cameraOffset.getX(), fieldToCamera.getY() - cameraOffset.getY(), fieldToCamera.getZ(), fieldToCamera.getRotation());
       return Optional.of(new Pair<>(robotTransform, result.getTimestampSeconds()));
     }
     // If not present return empty
