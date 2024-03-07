@@ -11,6 +11,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,7 +25,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
+import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -39,6 +42,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private boolean m_flipPath = false;
 
     private Field2d field = new Field2d();
+
+    private SubSys_Photonvision subSysPhotonvision;
    
     @Override
     public void periodic() {
@@ -55,6 +60,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
         SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
 
+        // Vision estimate
+        if (subSysPhotonvision != null) {
+            Optional<Pair<Pose2d, Double>> estimatedVisionPose2d = subSysPhotonvision.getEstimatedVisionPose2d(this.m_odometry.getEstimatedPosition());
+            estimatedVisionPose2d.ifPresent(pose2dDoublePair -> this.addVisionMeasurement(pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
+        }
+    }
+
+    /**
+     * Sets the SubSys_PhotonVision object to use
+     *
+     * @param subSysPhotonvision The object
+     */
+    public void setPhotonVisionSubSys(SubSys_Photonvision subSysPhotonvision) {
+        this.subSysPhotonvision = subSysPhotonvision;
     }
 
 

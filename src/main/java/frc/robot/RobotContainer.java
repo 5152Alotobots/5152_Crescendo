@@ -40,7 +40,6 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import frc.robot.library.vision.photonvision.commands.Cmd_SubSys_PhotonVision_DefaultDrivePose;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
@@ -259,9 +258,10 @@ public class RobotContainer {
     SubSys_Climber climberSubSys,
     SubSys_Photonvision subSysPhotonvision) {
 
-      subSysPhotonvision.setDefaultCommand(new Cmd_SubSys_PhotonVision_DefaultDrivePose(subSysPhotonvision, drivetrain));
+      // Vision
+      drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
 
-        // ---- Drive Subsystem ----        
+      // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
