@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
+import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRoller;
 import frc.robot.library.driverstation.JoystickUtilities;
 
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animations.NOTE_IN_INTAKE_ANIMATION;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm.Arm.*;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.Limit.*;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
@@ -42,8 +44,12 @@ public class SubSys_Intake extends SubsystemBase {
     private double intakeRollerMtrSetpoint = 0.0;
 
     final PositionVoltage intakeArmPid;
-    public SubSys_Intake () {
-        
+
+    private final SubSys_Bling subSysBling;
+
+    public SubSys_Intake(SubSys_Bling subSysBling) {
+        this.subSysBling = subSysBling;
+
         intakeRollerMtr.restoreFactoryDefaults();
         intakeRollerMtr.enableVoltageCompensation(10);
         intakeRollerMtr.setInverted(false);
@@ -121,6 +127,11 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
         SmartDashboard.putNumber("Intake/forwardLimitValue", intakeArmMtr.getForwardLimit().getValueAsDouble());
         SmartDashboard.putNumber("Intake/reverseLimitValue", intakeArmMtr.getReverseLimit().getValueAsDouble());
+
+        // Test LEDs
+        if (getIntakeOccupied()) {
+            subSysBling.setAnimation(NOTE_IN_INTAKE_ANIMATION);
+        }
     }
 
     /**

@@ -149,13 +149,15 @@ public class RobotContainer {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
             */
 
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+
+            subSysBling = new SubSys_Bling();
 
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
 
             // ---- Intake Subsystem ----
-            intakeSubSys = new SubSys_Intake();
+            intakeSubSys = new SubSys_Intake(subSysBling);
 
             // ---- Slider Subsystem ----
             sliderSubSys = new SubSys_Slider();
@@ -168,8 +170,6 @@ public class RobotContainer {
 
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
-
-            subSysBling = new SubSys_Bling();
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner

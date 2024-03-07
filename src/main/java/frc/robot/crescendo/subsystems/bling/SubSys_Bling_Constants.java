@@ -10,8 +10,8 @@ public class SubSys_Bling_Constants {
     public static final CANdle.LEDStripType LED_TYPE = CANdle.LEDStripType.RGBW;
 
     public static final class Animations {
-        public static final ColorFlowAnimation transferAnimation = new ColorFlowAnimation(255, 145, 0, 0, 1, NUM_LEDS, ColorFlowAnimation.Direction.Forward);
-        public static final StrobeAnimation noteInIntake = new StrobeAnimation(0, 255, 174, 0, 0.4, NUM_LEDS);
-        public static final StrobeAnimation noteInShooter = new StrobeAnimation(0, 179, 255, 0, 0.4, NUM_LEDS);
+        public static final ColorFlowAnimation TRANSFER_ANIMATION = new ColorFlowAnimation(255, 145, 0, 0, 1, NUM_LEDS, ColorFlowAnimation.Direction.Forward);
+        public static final StrobeAnimation NOTE_IN_INTAKE_ANIMATION = new StrobeAnimation(0, 255, 174, 0, 0.4, NUM_LEDS);
+        public static final StrobeAnimation NOTE_IN_SHOOTER_ANIMATION = new StrobeAnimation(0, 179, 255, 0, 0.4, NUM_LEDS);
     }
 }
