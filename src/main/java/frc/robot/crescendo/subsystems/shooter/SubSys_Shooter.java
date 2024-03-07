@@ -1,11 +1,14 @@
 package frc.robot.crescendo.subsystems.shooter;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -14,10 +17,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
@@ -29,6 +36,8 @@ import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PI
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterArm.SoftwareLimits.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.*;
+
+import static edu.wpi.first.units.Units.Volts;
 
 
 /**
@@ -49,6 +58,23 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     final VelocityVoltage shooterWheelsMtrLeftPID;
     final VelocityVoltage shooterWheelsMtrRightPID;
+
+    // SysID
+    private final VoltageOut m_sysidControl = new VoltageOut(0);
+
+    private SysIdRoutine m_SysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,          // Default ramp rate is acceptable
+                Volts.of(4),            // Reduce dynamic voltage to 4 to prevent motor brownout
+                null,           // Default timeout is acceptable
+                                        // Log state with Phoenix SignalLogger class
+                (state)->SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (Measure<Voltage> volts)-> shooterWheelsMtrRight.setControl(m_sysidControl.withOutput(volts.in(Volts))),
+                null,
+                this));
+
     public SubSys_Shooter () {
 
         // Shooter Wheels
@@ -132,6 +158,20 @@ public class SubSys_Shooter extends SubsystemBase {
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
 
+        // SysID
+        /* Speed up signals for better charaterization data */
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
+            shooterWheelsMtrRight.getPosition(),
+            shooterWheelsMtrRight.getVelocity(),
+            shooterWheelsMtrRight.getMotorVoltage());
+
+        /* Optimize out the other signals, since they're not particularly helpful for us */
+        shooterWheelsMtrRight.optimizeBusUtilization();
+        
+        // Set the logger to log to the first flashdrive plugged in
+        SignalLogger.setPath("/media/sda1/");
+        SignalLogger.start();
+        
     }
 
     /**
@@ -291,6 +331,15 @@ public class SubSys_Shooter extends SubsystemBase {
         setIntakeOutput(ShooterIntakeDirection.OFF);
         setShooterArmOutput(0);
     }
+
+    // SysID
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_SysIdRoutine.quasistatic(direction);
+    }
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_SysIdRoutine.dynamic(direction);
+    }
+
 
     @Override
     public void periodic() {

@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -314,6 +317,18 @@ public class RobotContainer {
 
       // Robot Level
       hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+      
+
+      // SysID
+      
+      hmiStation.auxButton1.whileTrue(shooterSubSys.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton2.whileTrue(shooterSubSys.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      hmiStation.auxButton3.whileTrue(shooterSubSys.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton4.whileTrue(shooterSubSys.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+      /* Manually stop logging with left bumper after we're done with the tests */
+      /* This isn't necessary, but is convenient to reduce the size of the hoot file */
+      hmiStation.auxButton5.onTrue(new RunCommand(SignalLogger::stop));
       
     }
 
