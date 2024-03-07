@@ -7,7 +7,7 @@ import com.ctre.phoenix.led.StrobeAnimation;
 public class SubSys_Bling_Constants {
     public static final double MAX_LED_BRIGHTNESS = 1;
     public static final int NUM_LEDS = 50;
-    public static final CANdle.LEDStripType LED_TYPE = CANdle.LEDStripType.BRG;
+    public static final CANdle.LEDStripType LED_TYPE = CANdle.LEDStripType.RGBW;
 
     public static final class Animations {
         public static final ColorFlowAnimation transferAnimation = new ColorFlowAnimation(255, 145, 0, 0, 1, NUM_LEDS, ColorFlowAnimation.Direction.Forward);

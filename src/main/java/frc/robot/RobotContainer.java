@@ -23,6 +23,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
+import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -87,6 +88,7 @@ public class RobotContainer {
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
        final SubSys_Photonvision photonvisionSubSys;
+       final SubSys_Bling subSysBling;
 
     // Switch Robots
        switch (ROBOT) {
@@ -166,6 +168,8 @@ public class RobotContainer {
 
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
+
+            subSysBling = new SubSys_Bling();
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
