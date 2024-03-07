@@ -169,7 +169,7 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRight.optimizeBusUtilization();
         
         // Set the logger to log to the first flashdrive plugged in
-        SignalLogger.setPath("/media/sda1/");
+        //SignalLogger.setPath("/media/sda1/");
         SignalLogger.start();
         
     }
