@@ -181,6 +181,10 @@ public final class Constants {
     }
   }
 
+  public static final class CAN_Buses{
+    public static final String Rio = "rio";
+    public static final String CANivore = "CANivore";
+  }
   public static final class CAN_IDs {
 
     /** **** Start Library Components CAN ID's **** */ 

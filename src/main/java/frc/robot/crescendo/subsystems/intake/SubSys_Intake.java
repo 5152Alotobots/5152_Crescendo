@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CAN_Buses;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
@@ -37,8 +38,8 @@ public class SubSys_Intake extends SubsystemBase {
     private final RelativeEncoder intakeRollerMtrEncoder;
 
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
-    private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
-    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
+    private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID,CAN_Buses.CANivore);
+    private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID,CAN_Buses.CANivore);
     private final Timer timer = new Timer();
     private double intakeRollerMtrSetpoint = 0.0;
 
