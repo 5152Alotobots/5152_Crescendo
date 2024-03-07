@@ -11,10 +11,18 @@ import com.ctre.phoenix6.signals.*;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
@@ -49,6 +57,41 @@ public class SubSys_Shooter extends SubsystemBase {
 
     // PIDs
     final PositionVoltage shooterArmPid;
+
+    // ***** System ID ***** //
+    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+    private final MutableMeasure<Angle> m_angle = mutable(Rotations.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
+
+    // Create a new SysId routine for characterizing the shooter.
+    private final SysIdRoutine m_sysIdRoutine =
+        new SysIdRoutine(
+          // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+          new SysIdRoutine.Config(),
+          new SysIdRoutine.Mechanism(
+              // Tell SysId how to plumb the driving voltage to the motor(s).
+              (Measure<Voltage> volts) -> {
+                m_shooterMotor.setVoltage(volts.in(Volts));
+              },
+              // Tell SysId how to record a frame of data for each motor on the mechanism being
+              // characterized.
+              log -> {
+                // Record a frame for the shooter motor.
+                log.motor("shooter-wheel")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            m_shooterMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                    .angularPosition(m_angle.mut_replace(m_shooterEncoder.getDistance(), Rotations))
+                    .angularVelocity(
+                        m_velocity.mut_replace(m_shooterEncoder.getRate(), RotationsPerSecond));
+              },
+              // Tell SysId to make generated commands require this subsystem, suffix test state in
+              // WPILog with this subsystem's name ("shooter")
+              this));
+
     public SubSys_Shooter () {
 
         // Shooter Wheels 
@@ -153,6 +196,7 @@ public class SubSys_Shooter extends SubsystemBase {
 //        shooterWheelsMtrRight.getPIDController().setIZone(SHOOTER_IZONE);
         shooterWheelsMtrLeft.setClosedLoopRampRate(SHOOTER_RAMP_RATE);
         shooterWheelsMtrLeft.setInverted(true);
+);
     }
 
     /**
@@ -337,4 +381,23 @@ public class SubSys_Shooter extends SubsystemBase {
         SmartDashboard.putNumber("ShooterArmMtrPos", shooterArmMtr.getPosition().getValueAsDouble());
         //SmartDashboard.putNumber("ShooterArmPos", getShooterArmPos());
     }
+
+   /**
+   * Returns a command that will execute a quasistatic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.quasistatic(direction);
+    }
+
+    /**
+    * Returns a command that will execute a dynamic test in the given direction.
+    *
+    * @param direction The direction (forward or reverse) to run the test in
+    */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.dynamic(direction);
+    }
+}
 }
