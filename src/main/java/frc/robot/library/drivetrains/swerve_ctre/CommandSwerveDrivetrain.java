@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -49,7 +50,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         boolean lclFlipPath = false;
         if(DriverStation.getAlliance().isPresent()){
-            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
+            if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
                 lclFlipPath = true;              
             }
         }
@@ -71,6 +72,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+    }
+
+    public Command driveFacingAngle(DoubleSupplier fwdAxis, DoubleSupplier strAxis, DoubleSupplier performanceMode, Supplier<Rotation2d> rotation, SwerveRequest.FieldCentricFacingAngle drive) {
+        return applyRequest(() -> drive
+            .withVelocityX(fwdAxis.getAsDouble() * performanceMode.getAsDouble())
+            .withVelocityY(strAxis.getAsDouble() * performanceMode.getAsDouble())
+            .withTargetDirection(rotation.get()));
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {

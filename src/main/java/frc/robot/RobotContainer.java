@@ -213,6 +213,8 @@ public class RobotContainer {
                 .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
+
+
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 
         if (Utils.isSimulation()) {
