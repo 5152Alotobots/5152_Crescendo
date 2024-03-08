@@ -19,11 +19,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ShooterOccupied;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -157,7 +161,7 @@ public class RobotContainer {
             hmiStation = new HMIStation();
 
             // ---- Intake Subsystem ----
-            intakeSubSys = new SubSys_Intake(subSysBling);
+            intakeSubSys = new SubSys_Intake();
 
             // ---- Slider Subsystem ----
             sliderSubSys = new SubSys_Slider();
@@ -194,7 +198,8 @@ public class RobotContainer {
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
-                climberSubSys);
+                    climberSubSys,
+                    subSysBling);
                 
             break;
     }
@@ -254,7 +259,8 @@ public class RobotContainer {
     SubSys_Intake intakeSubSys,
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,
-    SubSys_Climber climberSubSys) {
+    SubSys_Climber climberSubSys,
+    SubSys_Bling subSysBling) {
 
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -301,11 +307,9 @@ public class RobotContainer {
                       new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
                               .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
               ));
-            //   .or(
-    //             hmiStation.shooterShoot.whileTrue(
-    //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
-    //             )
-    //           );
+
+      // Robot Level
+      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
 
       // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
@@ -315,11 +319,12 @@ public class RobotContainer {
             hmiStation.climberSupportRetract, 
             climberSubSys));
 
-      // Robot Level
-      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
-      
+      // -- LEDs --
+      subSysBling.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(subSysBling)); // Default
+      new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
+      new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
+      // ADD READY TO SHOOT
     }
-
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

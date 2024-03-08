@@ -5,13 +5,18 @@ import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.awt.*;
+
 import static frc.robot.Constants.CAN_IDs.CANDLE_CAN_ID;
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.*;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.LED_TYPE;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.MAX_LED_BRIGHTNESS;
 
 public class SubSys_Bling extends SubsystemBase {
     private Animation currentAnimation;
-    private boolean animationMode;
+    private Animation queuedAnimation;
+    private Color currentSolidColor;
+    private Color queuedColor;
     private final CANdle controller = new CANdle(CANDLE_CAN_ID);
 
     public SubSys_Bling() {
@@ -24,35 +29,61 @@ public class SubSys_Bling extends SubsystemBase {
      * Sets the LED strip to be the color of the alliance reported by the FMS/DS
      */
     public void setLedToAllianceColor() {
+        clearAnimation();
         // Alliance colors
         if (DriverStation.getAlliance().isPresent()) {
             if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-                controller.setLEDs(255, 0, 0);
+                setSolidColor(RED_ALLIANCE_COLOR);
             }
         } else {
-            controller.setLEDs(0, 0, 255);
+            setSolidColor(BLUE_ALLIANCE_COLOR);
         }
     }
 
     /**
      * Sets the color of the LED strip. Overrides previously running animations
      *
-     * @param r (0-255)
-     * @param g (0-255)
-     * @param b (0-255)
      */
-    public void setSolidColor(int r, int g, int b) {
-        animationMode = false;
-        controller.setLEDs(r, g, b);
+    public void setSolidColor(Color color) {
+        clearAnimation();
+        currentSolidColor = color;
     }
 
     /**
-     * Sets the CANdle and attached LED's animation. Overrides previous solid colors
+     * Clears the LEDs solid color (Turns off LEDs)
+     */
+    public void clearSolidColor() {
+        currentSolidColor = OFF_COLOR;
+    }
+
+    /**
+     * Queues a color and doesn't set the next one until released
+     *
+     * @param toQueue The color to queue
+     */
+    public void queueColor(Color toQueue) {
+        queuedColor = toQueue;
+    }
+
+    /**
+     * Sets the next color if available. If not, runs default behavior
+     */
+    public void setQueuedColor() {
+        if (queuedColor != null) {
+            setSolidColor(queuedColor);
+            queuedColor = null;
+        } else {
+            runDefault();
+        }
+    }
+
+    /**
+     * Sets the CANdle and attached LED's animation. Overrides previous solid colors and other animations
      *
      * @param animation The animation to set
      */
-    public void setAnimation(Animation animation) {
-        animationMode = true;
+    public void runAnimation(Animation animation) {
+        clearAnimation();
         currentAnimation = animation;
     }
 
@@ -60,22 +91,62 @@ public class SubSys_Bling extends SubsystemBase {
      * Clears the current animation
      */
     public void clearAnimation() {
-        animationMode = false;
+        controller.clearAnimation(0);
         currentAnimation = null;
     }
 
+    /**
+     * Queues an animation and doesn't run the next one until released
+     *
+     * @param toQueue The animation to queue
+     */
+    public void queueAnimation(Animation toQueue) {
+        queuedAnimation = toQueue;
+    }
+
+    /**
+     * Runs the next animation if available. If not, runs default behavior
+     */
+    public void runQueuedAnimation() {
+        if (queuedAnimation != null) {
+            runAnimation(queuedAnimation);
+            queuedAnimation = null;
+        } else {
+            runDefault();
+        }
+    }
+
+    /**
+     * Clears all settings (turns off LEDs)
+     */
+    public void clearAll() {
+        clearAnimation();
+        clearSolidColor();
+    }
+
+    /**
+     * Runs the default action
+     */
+    public void runDefault() {
+        setLedToAllianceColor();
+    }
+
+
+    /**
+     * Updates the controller with the current state.
+     * Should be run in the periodic section of the command
+     */
+    public void update() {
+        if (currentAnimation == null) {
+            controller.clearAnimation(0);
+            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getBlue(), currentSolidColor.getBlue());
+        } else {
+            controller.animate(currentAnimation);
+        }
+    }
 
     @Override
     public void periodic() {
-        // If we have no input
-        if (currentAnimation == null && animationMode) {
-            setLedToAllianceColor();
-            // If we want to use solid colors
-        } else if (!animationMode) {
-            controller.clearAnimation(0);
-            // If we have a valid animation and want to use it
-        } else {
-            controller.animate(currentAnimation, 0);
-        }
     }
+
 }
