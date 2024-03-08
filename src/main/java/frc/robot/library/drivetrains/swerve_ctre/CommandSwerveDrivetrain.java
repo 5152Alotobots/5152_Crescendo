@@ -29,7 +29,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem
  * so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
@@ -40,7 +41,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private boolean m_flipPath = false;
 
     private Field2d field = new Field2d();
-   
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("PoseX", this.m_odometry.getEstimatedPosition().getX());
@@ -49,23 +50,24 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putData("Field", field);
 
         boolean lclFlipPath = false;
-        if(DriverStation.getAlliance().isPresent()){
-            if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
-                lclFlipPath = true;              
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                lclFlipPath = true;
             }
         }
         SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
 
     }
 
-
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
@@ -74,11 +76,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
-    public Command driveFacingAngle(DoubleSupplier fwdAxis, DoubleSupplier strAxis, DoubleSupplier performanceMode, Supplier<Rotation2d> rotation, SwerveRequest.FieldCentricFacingAngle drive) {
+    public Command driveFacingAngle(
+            DoubleSupplier fwdAxis,
+            DoubleSupplier strAxis,
+            DoubleSupplier performanceMode,
+            Supplier<Rotation2d> rotation,
+            SwerveRequest.FieldCentricFacingAngle drive) {
         return applyRequest(() -> drive
-            .withVelocityX(fwdAxis.getAsDouble() * performanceMode.getAsDouble())
-            .withVelocityY(strAxis.getAsDouble() * performanceMode.getAsDouble())
-            .withTargetDirection(rotation.get()));
+                .withVelocityX(fwdAxis.getAsDouble() * performanceMode.getAsDouble())
+                .withVelocityY(strAxis.getAsDouble() * performanceMode.getAsDouble())
+                .withTargetDirection(rotation.get()));
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -86,12 +93,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        
-        
+
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
-    public void updatePoseWithAprilTag(Pose2d aprilTagPose){
+    public void updatePoseWithAprilTag(Pose2d aprilTagPose) {
         this.addVisionMeasurement(aprilTagPose, 0.0);
 
     }
@@ -111,34 +117,34 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-
     // ***** PathPlanner *****
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
 
-    public SendableChooser<Command> getAutoChooser(){
-        //configurePathPlanner();
+    public SendableChooser<Command> getAutoChooser() {
+        // configurePathPlanner();
         return AutoBuilder.buildAutoChooser();
         // Default Path
-        //return AutoBuilder.buildAutoChooser(null);
+        // return AutoBuilder.buildAutoChooser(null);
     }
-    
-    public Command getPathFinderCommand(Pose2d pose){
+
+    public Command getPathFinderCommand(Pose2d pose) {
         Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
-            targetPose,
-            constraints,
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel
+                    // before attempting to rotate.
         );
 
         return pathfindingCommand;
@@ -154,26 +160,27 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
-             
+
         m_flipPath = false;
-        if(DriverStation.getAlliance().isPresent()){
-            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                m_flipPath = true;              
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                m_flipPath = true;
             }
-        SmartDashboard.putBoolean("ConfigPP_flipPath", m_flipPath);
+            SmartDashboard.putBoolean("ConfigPP_flipPath", m_flipPath);
         }
 
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants_MK4iL3_2024.kSpeedAt12VoltsMps,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
-            ()-> m_flipPath, // Change this if the path needs to be flipped on red vs blue
-            this); // Subsystem for requirements
-    }   
+                () -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants_MK4iL3_2024.kSpeedAt12VoltsMps,
+                        driveBaseRadius,
+                        new ReplanningConfig()),
+                () -> m_flipPath, // Change this if the path needs to be flipped on red vs blue
+                this); // Subsystem for requirements
+    }
 }
