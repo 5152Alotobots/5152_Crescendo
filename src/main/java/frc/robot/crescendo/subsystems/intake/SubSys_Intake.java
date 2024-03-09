@@ -255,15 +255,15 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtr.set(spdCmd);
     }
 
-   
+   public double getIntakeArmPos(){
+        return intakeArmMtr.getPosition().getValueAsDouble();
+    }
+
  /**
      * @deprecated Use {@link SubSys_Intake } setIntakeArmDegree instead
      */
     @Deprecated
-    public double getIntakeArmPos(){
-        return intakeArmMtr.getPosition().getValueAsDouble();
-    }
-
+    
     public boolean setIntakeArmPosCmd(double posCmd){
         boolean atPos = false;
         double error = posCmd-getIntakeArmPos();
