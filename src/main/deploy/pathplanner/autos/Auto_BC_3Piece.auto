@@ -1,0 +1,113 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.23,
+      "y": 5.54
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3piece.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3piece.7"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3piecept1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3piecept3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

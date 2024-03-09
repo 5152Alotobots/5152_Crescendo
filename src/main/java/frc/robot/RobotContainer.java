@@ -11,7 +11,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,35 +19,30 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
-import frc.robot.crescendo.commands.Cmd_ScoreAmp;
-import frc.robot.crescendo.commands.Cmd_ScoreSpeakerCenter;
-import frc.robot.crescendo.commands.Cmd_ScoreSpeakerLeft;
-import frc.robot.crescendo.commands.Cmd_ScoreSpeakerRight;
+import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
-import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
-import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
-import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_ArmPosCmd;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
-import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_SimpleDefault;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Transfer;
+import frc.robot.crescendo.subsystems.shooter.commands.*;
+import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
+import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
 import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_SPEAKER;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,7 +56,7 @@ public class RobotContainer {
   private static final int CRESCENDO_ROBOT_2024 = 24;       // 2024 MK4iL3 Swerve
   private static final int CHARGEDUP_ROBOT_2023 = 23;       // 2023 MK4iL2 Swerve
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
-  private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot 
+    private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot
 
   public final SendableChooser<Command> autoChooser;
 
@@ -92,6 +86,7 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
+       final SubSys_Photonvision photonvisionSubSys;
 
     // Switch Robots
        switch (ROBOT) {
@@ -114,8 +109,11 @@ public class RobotContainer {
             // ---- Human Machine Interface Station ----
             hmiStation = new HMIStation();
 
+            // ---- Vision Subsystem ----
+            photonvisionSubSys = new SubSys_Photonvision("camFront");
+
             // Configure the button bindings
-            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, logger, hmiStation);
+            configureButtonBindingsChargedUpRobot2023(drivetrain, drive, photonvisionSubSys, logger, hmiStation);
             break;
     
         // ##### GHETTOBOT #####
@@ -165,14 +163,21 @@ public class RobotContainer {
 
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
+
+            // ---- Vision Subsystem ----
+            photonvisionSubSys = new SubSys_Photonvision("camFront");
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
+            NamedCommands.registerCommand("ShooterShoot", new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
             NamedCommands.registerCommand("IntakePickupNote", new Cmd_SubSys_Intake_PickUpNote(intakeSubSys));
+            NamedCommands.registerCommand("TransferToShooter", new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys));
             NamedCommands.registerCommand("ScoreSpeakerLeft", new Cmd_ScoreSpeakerLeft(shooterSubSys));
             NamedCommands.registerCommand("ScoreSpeakerRight", new Cmd_ScoreSpeakerRight(shooterSubSys));
             NamedCommands.registerCommand("ScoreSpeakerCenter", new Cmd_ScoreSpeakerCenter(shooterSubSys));
             NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
+            NamedCommands.registerCommand("PickupNoteAndTransfer", new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+            NamedCommands.registerCommand("intakeDown", new Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch(intakeSubSys, () -> INTAKE_PRESET_PICKUP));
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
@@ -196,6 +201,7 @@ public class RobotContainer {
   private void configureButtonBindingsChargedUpRobot2023(
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
+    SubSys_Photonvision subSysPhotonvision,
     Telemetry logger,
     HMIStation hmiStation){
 
@@ -268,42 +274,55 @@ public class RobotContainer {
             hmiStation.intakeIn,
             hmiStation.intakeOut));
 
-        //intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
-        //    intakeSubSys, 
-        //    hmiStation::intakeArmAxisRaw,
-        //    hmiStation.intakeIn,
-        //    hmiStation.intakeOut));
-   
-        hmiStation.intakePickupNote
-            .whileTrue(new Cmd_SubSys_Intake_PickUpNote(intakeSubSys))
-            .onFalse(new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmStowPos));
+     
+//      hmiStation.intakePickupNote
+//              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
+//              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
             
+
         // ---- Slider Subsystem ----
-        hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
-        hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
+//        hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
+//        hmiStation.sliderIn.onTrue(new InstantCommand(sliderSubSys::sliderRetractCmd));
 
         // -- Shooter --
-        shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxisRaw, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> DirectionUtils.toShooterDirection(hmiStation.shooterIn)));
-        hmiStation.shooterShoot.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys));
-        hmiStation.shooterTransfer.whileTrue(new Cmd_SubSys_Shooter_Transfer(shooterSubSys, intakeSubSys));
-        //hmiStation.shooterInCoDrvr.whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.IN)));
-        //hmiStation.shooterIn().whileTrue(new InstantCommand(shooterSubSys.setIntakeOutput(IntakeDirection.OUT)));
-        
-        // ---- Climber Subsystem
+      // Default
+      shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> ShooterDirection.OFF));
+
+      // Positions
+      hmiStation.shooterSpeakerPos.whileTrue(
+              new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
+                      .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
+      ).or(
+              hmiStation.shooterAmpPos.whileTrue(
+                      new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
+                              .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
+              ));
+            //   .or(
+    //             hmiStation.shooterShoot.whileTrue(
+    //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
+    //             )
+    //           );
+
+      // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
             hmiStation.climberUp, 
             hmiStation.climberDn,
             hmiStation.climberSupportExtend,
             hmiStation.climberSupportRetract, 
             climberSubSys));
+
+      // Robot Level
+      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+      
     }
+
     /**
-    * Use this to pass the autonomous command to the main {@link Robot} class.
-    *
-    * @return the command to run in autonomous
-    */
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-}
 
+}

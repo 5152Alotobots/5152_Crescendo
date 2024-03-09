@@ -4,19 +4,24 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
+import java.util.function.DoubleSupplier;
+
 
 /**
  * Shoots at a given angle, velocity, and position
  */
-public class Cmd_SubSys_Shooter_AmpShoot extends Command {
+public class Cmd_SubSys_Shooter_ShootAtSpeed extends Command {
     SubSys_Shooter subSysShooter;
-    boolean finished = false;
+    DoubleSupplier speed;
 
     Timer timer = new Timer();
 
-    public Cmd_SubSys_Shooter_AmpShoot(
-            SubSys_Shooter subSysShooter) {
+    public Cmd_SubSys_Shooter_ShootAtSpeed(
+            SubSys_Shooter subSysShooter,
+            DoubleSupplier speed) {
         this.subSysShooter = subSysShooter;
+        this.speed = speed;
+
         addRequirements(subSysShooter);
     }
 
@@ -28,7 +33,7 @@ public class Cmd_SubSys_Shooter_AmpShoot extends Command {
 
     @Override
     public void execute() {
-        subSysShooter.shootDumb(timer);
+        subSysShooter.shootDumbAtSpeed(timer, speed.getAsDouble());
     }
 
     @Override
@@ -39,6 +44,6 @@ public class Cmd_SubSys_Shooter_AmpShoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
     }
 }

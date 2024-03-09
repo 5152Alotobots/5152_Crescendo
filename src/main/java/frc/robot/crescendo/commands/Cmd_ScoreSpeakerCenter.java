@@ -19,14 +19,11 @@ public class Cmd_ScoreSpeakerCenter extends SequentialCommandGroup {
    * 3. Shoot the Note
    * 4. Drive backward
    * 5. Stow the Shooter
- * @param shooterSubSys 
+   * @param shooterSubSys
   */
-  public Cmd_ScoreSpeakerCenter(SubSys_Shooter subSysShooter) {
-    
+  public Cmd_ScoreSpeakerCenter(SubSys_Shooter shooterSubSys) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new Cmd_SubSys_Shooter_Shoot(subSysShooter).withTimeout(3.5)
-      );
+    addCommands(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false).withTimeout(8));
   }
 }

@@ -5,22 +5,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 
 /**
  * Shoots at a given angle, velocity, and position
  */
-public class Cmd_SubSys_Shooter_Shoot extends Command {
+public class Cmd_SubSys_Shooter_ShootDefault extends Command {
     SubSys_Shooter subSysShooter;
     BooleanSupplier velocityWaitMode;
-
+    DoubleSupplier shooterArmSpeed;
     Timer timer = new Timer();
 
-    public Cmd_SubSys_Shooter_Shoot(
+    public Cmd_SubSys_Shooter_ShootDefault(
             SubSys_Shooter subSysShooter,
-            BooleanSupplier velocityWaitMode) {
+            BooleanSupplier velocityWaitMode,
+            DoubleSupplier shooterArmSpeed) {
         this.subSysShooter = subSysShooter;
         this.velocityWaitMode = velocityWaitMode;
+        this.shooterArmSpeed = shooterArmSpeed;
 
         addRequirements(subSysShooter);
     }
@@ -35,10 +38,12 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
 
     @Override
     public void execute() {
+        subSysShooter.setShooterArmOutput(shooterArmSpeed.getAsDouble());
+
         if (velocityWaitMode.getAsBoolean()) {
             subSysShooter.shoot();
         } else {
-        subSysShooter.shootDumb(timer);
+            subSysShooter.shootDumb(timer);
         }
     }
 
@@ -50,7 +55,7 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(2.0);
+        return false;
         // return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
     }
 }

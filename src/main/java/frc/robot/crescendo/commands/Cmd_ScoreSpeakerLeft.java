@@ -20,11 +20,9 @@ public class Cmd_ScoreSpeakerLeft extends SequentialCommandGroup {
    * 4. Drive backward
    * 5. Stow the Shooter
   */
-  public Cmd_ScoreSpeakerLeft(SubSys_Shooter subSysShooter) {
+  public Cmd_ScoreSpeakerLeft(SubSys_Shooter shooterSubSys) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new Cmd_SubSys_Shooter_Shoot(subSysShooter).withTimeout(3.5)
-    );
+    addCommands(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false).withTimeout(3));
   }
 }

@@ -6,8 +6,11 @@ package frc.robot.crescendo.subsystems.intake.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
-import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants;
-import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
+import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_STOW;
+import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_TRANSFER;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,8 +21,8 @@ public class Cmd_SubSys_Intake_PickUpNote extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmPickupPos),
-      new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
-      new Cmd_SubSys_Intake_ArmPosCmd(intakeSubSys, IntakeArm.IntakeArmTransferPos));
+            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_PICKUP),
+            new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
+            new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER));
   }
 }
