@@ -1,18 +1,19 @@
 package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.crescendo.subsystems.intake.IntakeDirection;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.util.IntakeDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
-public class Cmd_TransferIntake2Shooter extends Command {
+public class Cmd_TransferIntakeToShooter extends Command {
     /**
      * Creates a new FalconTalonFXDriveTalonSR.
      */
     private final SubSys_Shooter subSysShooter;
     private final SubSys_Intake subSysIntake;
 
-    public Cmd_TransferIntake2Shooter(
+    public Cmd_TransferIntakeToShooter(
             SubSys_Shooter subSysShooter,
             SubSys_Intake subSysIntake) {
 
@@ -23,15 +24,15 @@ public class Cmd_TransferIntake2Shooter extends Command {
 
     @Override
     public void execute() {
-        subSysShooter.setIntakeOutput(IntakeDirection.TRANSFER);
-        subSysIntake.transferNote();
+        subSysShooter.setIntakeOutput(ShooterIntakeDirection.TRANSFER);
+        subSysIntake.setIntakeDirection(IntakeDirection.TRANSFER);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         subSysShooter.stopAll();
-        subSysIntake.setIntakeRollerSpdDutyCycle(0.0);
+        subSysIntake.setIntakeDirection(IntakeDirection.NONE);
     }
 
     // Returns true when the command should end.

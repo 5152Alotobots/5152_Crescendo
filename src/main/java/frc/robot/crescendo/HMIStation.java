@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain;
-import frc.robot.Constants.Robot.Calibrations.DriveTrain.PerformanceMode_Default;
+import frc.robot.library.driverstation.JoystickUtilities;
 
- /**
+/**
  * The DriverStation class represents the available inputs to the robot, providing access to controllers
  * and defining buttons for various commands.
  */
@@ -31,7 +31,7 @@ public class HMIStation {
 
   // Driver Buttons
   public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  // public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
   public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
@@ -73,33 +73,18 @@ public class HMIStation {
   }
   
   // Driver Trigger Axes
-  /**
-   * Checks if the performance mode A is active.
-   *
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterIn() {
-    return (driverController.getRawAxis(2) > 0.3);
-  }
-
-  /**
-   * Checks if the performance mode B is active.
-   *
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterOut() {
+   
+  public boolean shooterOutTrigger() {
     return (driverController.getRawAxis(3) > 0.3);
   }
+  public final Trigger shooterShoot = new Trigger(() -> shooterOutTrigger());
   
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
 
   // Co-Driver Buttons
   public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  public final JoystickButton shooterSpeakerPos = new JoystickButton(coDriverController, 2);
-  //public final JoystickButton shooterAmpPos = new JoystickButton(coDriverController, 3);
-  public final Trigger shooterShoot = new Trigger(() -> shooterOut());
-  public final Trigger shooterIn = new Trigger(() -> shooterIn());
+  public final JoystickButton pickupNoteTransferToShooter = new JoystickButton(coDriverController, 2);
   public final JoystickButton shooterRollerInSlow = new JoystickButton(coDriverController, 4);
   public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
   public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
@@ -119,6 +104,11 @@ public class HMIStation {
   public double shooterArmAxisRaw() {
     return -1*coDriverController.getRawAxis(5);
   }
+
+  public double shooterArmAxis() {
+    return JoystickUtilities.joyDeadBndScaled(shooterArmAxisRaw(), .5, 1);
+  }
+
   /**
    * Gets the rotation axis value for driving. unmodified.
    *
@@ -127,22 +117,17 @@ public class HMIStation {
   public double intakeArmAxisRaw() {
     return coDriverController.getRawAxis(1);
   }
-  // Driver Trigger Axes
-  /**
-   * Checks if the performance mode A is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterInCoDrvr() {
+  
+  // Co Driver Trigger Axes
+   public boolean shooterSpeakerPosTrigger() {
+    return (coDriverController.getRawAxis(2) > 0.3);
+  }
+  public final Trigger shooterSpeakerPos = new Trigger(() -> shooterSpeakerPosTrigger());
+
+  public boolean shooterAmpPosTrigger() {
     return (coDriverController.getRawAxis(3) > 0.3);
   }
-
-  /**
-   * Checks if the performance mode B is active.
-   * @return True if the mode is active, false otherwise.
-   */
-  public boolean shooterSourcePos() {
-    return (driverController.getRawAxis(2) > 0.3);
-  }
+  public final Trigger shooterAmpPos = new Trigger(() -> shooterAmpPosTrigger());
   
   // Aux Driver Controller
   //private final XboxController auxdriverController = new XboxController(2);

@@ -1,8 +1,8 @@
 package frc.robot.crescendo.subsystems.shooter.util;
 
-public enum IntakeDirection {
+public enum ShooterIntakeDirection {
     IN,
     TRANSFER,
     OFF,
-    OUT
+    SHOOT, OUT
 }

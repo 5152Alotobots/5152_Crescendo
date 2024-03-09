@@ -3,7 +3,7 @@ package frc.robot.crescendo.subsystems.shooter.expirimental;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.MaxSpeeds.MAX_SHOOTER_SPPED_MPS;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.MAX_SHOOTER_SPPED_MPS;
 
 public class AimModule {
     /**

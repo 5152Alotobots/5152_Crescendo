@@ -8,6 +8,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -26,7 +27,11 @@ public class SubSys_Photonvision implements Subsystem {
 
   @Override
   public void periodic() {
-
+    if (getEstimatedVisionPose2d().isPresent()) {
+      SmartDashboard.putString("Vision/Vision Pose Estimate", String.valueOf(getEstimatedVisionPose2d().get().getFirst()));
+    } else {
+      SmartDashboard.putString("Vision/Vision Pose Estimate", "NONE");
+    }
   }
 
 
