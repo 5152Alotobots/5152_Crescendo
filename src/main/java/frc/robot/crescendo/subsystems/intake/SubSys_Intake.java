@@ -68,9 +68,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
-        
-       
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;     
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
