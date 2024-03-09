@@ -139,8 +139,8 @@ public class RobotContainer {
             drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                //.withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
-                .withDriveRequestType(DriveRequestType.Velocity);
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+                //.withDriveRequestType(DriveRequestType.Velocity);
 
             /*
             drive = new SwerveRequest.RobotCentric()
