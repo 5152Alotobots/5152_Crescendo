@@ -268,7 +268,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
     
         // ---- Intake Subsystem ----
-        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_SimpleDefault(
+        intakeSubSys.setDefaultCommand(new Cmd_SubSys_Intake_Default(
             intakeSubSys, 
             hmiStation::intakeArmAxisRaw,
             hmiStation.intakeIn,

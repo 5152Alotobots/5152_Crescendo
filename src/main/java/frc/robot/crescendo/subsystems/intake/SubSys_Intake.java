@@ -62,7 +62,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeRollerMtrPID.setFF(IntakeRoller.PID.FFwd);
         intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput,IntakeRoller.PID.MaxOutput);
 
-        // ***** Configure Intake Arm Motor *****
+        // Configure Intake Arm Motor
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -70,7 +70,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
         
-        // Hardware Limit Switches
+       
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -217,9 +217,9 @@ public class SubSys_Intake extends SubsystemBase {
     }
 
 
-    //public void setIntakeRollerSpdDutyCycle(double spdCmd){
-    //    intakeRollerMtr.set(spdCmd);
-    //}
+    public void setIntakeRollerSpdDutyCycle(double spdCmd){
+        intakeRollerMtr.set(spdCmd);
+    }
 
     public void setIntakeRollerSpdRPM(double spdCmd){
         intakeRollerMtrPID.setReference(spdCmd, CANSparkMax.ControlType.kVelocity);
@@ -257,26 +257,11 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtr.set(spdCmd);
     }
 
-    public boolean getIntakeArmAtFwdLimit(){
-        boolean atLimit = false;
-        var forwardLimit = intakeArmMtr.getForwardLimit();
-        
-        if (forwardLimit.getValue() == ForwardLimitValue.ClosedToGround) {
-            atLimit = true;
-        }
-        return atLimit;
-    }
-
-    public boolean getIntakeArmAtRevLimit(){
-        boolean atLimit = false;
-        var reverseLimit = intakeArmMtr.getReverseLimit();
-        
-        if (reverseLimit.getValue() == ReverseLimitValue.ClosedToGround) {
-            atLimit = true;
-        }
-        return atLimit;
-    }
-
+   
+ /**
+     * @deprecated Use {@link SubSys_Intake } setIntakeArmDegree instead
+     */
+    @Deprecated
     public double getIntakeArmPos(){
         return intakeArmMtr.getPosition().getValueAsDouble();
     }
