@@ -28,9 +28,9 @@ public class SubSys_Intake_Constants {
         public static final double intakeSpeed = 0.75;
         public static final double deploySpeed = 0.25;
 
-        public static final double intakeNoteDutyCycle = -0.75;      // -1 - +1
-        public static final double ejectNoteDutyCycle = 0.25;       // -1 - +1
-        public static final double transferNoteDutyCycle = 0.25;    // -1 - +1
+        public static final double intakeNoteSpeed = -0.60;      // -1 - +1
+        public static final double ejectNoteSpeed = 0.25;       // -1 - +1
+        public static final double transferNoteSpeed = 0.25;    // -1 - +1
 
         public static final double OpenLoopRampRate = 0; // seconds
 
