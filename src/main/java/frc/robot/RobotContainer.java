@@ -30,7 +30,8 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.commands.*;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -41,8 +42,6 @@ import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_SPEAKER;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -291,6 +290,7 @@ public class RobotContainer {
       shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> ShooterDirection.OFF));
 
       // Positions
+      /*
       hmiStation.shooterSpeakerPos.whileTrue(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
                       .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
@@ -304,7 +304,8 @@ public class RobotContainer {
     //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
     //             )
     //           );
-
+*/
+      hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
       // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
             hmiStation.climberUp, 

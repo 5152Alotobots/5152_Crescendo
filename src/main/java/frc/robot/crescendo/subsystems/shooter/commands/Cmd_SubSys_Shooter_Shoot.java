@@ -40,6 +40,7 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
         } else {
         subSysShooter.shootDumb(timer);
         }
+
     }
 
     @Override
@@ -50,7 +51,7 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(2.0);
+        return timer.hasElapsed(3.0);
         // return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
     }
 }
