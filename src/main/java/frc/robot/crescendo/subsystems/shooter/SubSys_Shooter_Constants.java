@@ -50,7 +50,7 @@ public class SubSys_Shooter_Constants {
             public static final double MaxOutput = 1;
             public static final double MinOutput = -1;
             public static final double MaxRPM = 5700;
-            public static final double ClosedLoopRampRate = 1; // seconds
+            public static final double ClosedLoopRampRate = 0.0; // seconds
         }
 
         public static final class SpeedSetPoints{
@@ -60,11 +60,12 @@ public class SubSys_Shooter_Constants {
 
     public static final class PID {
         static final class Shooter {
-            public static final double SHOOTER_P = 0;
+            public static final double SHOOTER_P = 0.1;
             public static final double SHOOTER_I = 0;
             public static final double SHOOTER_D = 0;
             public static final double SHOOTER_IZONE = 1;
-            public static final double SHOOTER_RAMP_RATE = 1; // Number of seconds to full speed
+            public static final double SHOOTER_RAMP_RATE = 0.5; // Number of seconds to full speed
+            public static final double SHOOTER_V = 0.125; // Feedforward gain.
         }
 
         static final class Arm {

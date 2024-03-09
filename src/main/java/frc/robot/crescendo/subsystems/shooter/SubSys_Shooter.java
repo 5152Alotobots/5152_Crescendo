@@ -58,9 +58,13 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrLeftConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         shooterWheelsMtrLeftConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         shooterWheelsMtrLeftConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        shooterWheelsMtrLeftConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SHOOTER_RAMP_RATE;
+        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
+        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
         shooterWheelsMtrLeftConfiguration.Slot0.kP = SHOOTER_P;
         shooterWheelsMtrLeftConfiguration.Slot0.kI = SHOOTER_I;
         shooterWheelsMtrLeftConfiguration.Slot0.kD = SHOOTER_D;
+        shooterWheelsMtrLeftConfiguration.Slot0.kV = SHOOTER_V;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrLeftPID = new VelocityVoltage(0).withSlot(0);
@@ -73,9 +77,13 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRightConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         shooterWheelsMtrRightConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         shooterWheelsMtrRightConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        shooterWheelsMtrRightConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SHOOTER_RAMP_RATE;
+        shooterWheelsMtrRightConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
+        shooterWheelsMtrRightConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
         shooterWheelsMtrRightConfiguration.Slot0.kP = SHOOTER_P;
         shooterWheelsMtrRightConfiguration.Slot0.kI = SHOOTER_I;
         shooterWheelsMtrRightConfiguration.Slot0.kD = SHOOTER_D;
+        shooterWheelsMtrRightConfiguration.Slot0.kV = SHOOTER_V;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrRightPID = new VelocityVoltage(0).withSlot(0);
