@@ -45,23 +45,38 @@ public class HMIStation {
 
   // Driver Axes
   /**
-   * Gets the forward axis value for driving.
+   * Gets the raw forward axis value for driving.
    * 
    * @return The value used for driving forward. unmodified. 
    */
   public double driveFwdAxisRaw() {
-    //return -1*driverController.getRawAxis(1);
-    return driveXSpdFilter.calculate(-1*driverController.getRawAxis(1));
+    return -1*driverController.getRawAxis(1);
+    
   }
 
   /**
-   * Gets the strafe axis value for driving. unmodified.
+   * Gets the Drive Forward Axis with deadband, squared and rate limited
+   * @return double Forward Axis with deadband, squared and rate limited
+   */
+  public double driveFwdAxis() {
+    return driveXSpdFilter.calculate(-1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(1),0.1));
+  }
+
+  /**
+   * Gets the strafe raw axis value for driving. unmodified.
    *
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
-    //return -1*driverController.getRawAxis(0);
-    return driveYSpdFilter.calculate(-1*driverController.getRawAxis(0));
+    return -1*driverController.getRawAxis(0);
+  }
+
+  /**
+   * Gets the Drive Strafe Axis with deadband, squared and rate limited
+   * @return double Strafe Axis with deadband, squared and rate limited
+   */
+  public double driveStrAxis() {
+    return driveYSpdFilter.calculate(-1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(0),0.1));
   }
 
   /**
@@ -72,6 +87,14 @@ public class HMIStation {
     return -1*driverController.getRawAxis(4);
   }
   
+  /**
+   * Gets the Drive Rotation Axis with deadband and squared
+   * @return double Rotation Axis with deadband and squared
+   */
+  public double driveRotAxis() {
+    return -1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(4),0.2);
+  }
+
   // Driver Trigger Axes
    
   public boolean shooterOutTrigger() {

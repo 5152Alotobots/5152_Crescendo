@@ -255,9 +255,9 @@ public class RobotContainer {
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
-                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
-                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
-                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));

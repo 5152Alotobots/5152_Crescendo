@@ -45,6 +45,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
    
     @Override
     public void periodic() {
+        
+        SmartDashboard.putNumber("Drive Yaw", this.m_yawGetter.getValueAsDouble());
+        
+        SmartDashboard.putNumber("Drive Angular Velocity",this.m_angularVelocity.getValueAsDouble());
+        SmartDashboard.putNumber("Drive Opr Forward Direction",this.m_operatorForwardDirection.getDegrees());
+
         SmartDashboard.putNumber("PoseX", this.m_odometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("PoseY", this.m_odometry.getEstimatedPosition().getY());
         field.setRobotPose(this.m_odometry.getEstimatedPosition());
