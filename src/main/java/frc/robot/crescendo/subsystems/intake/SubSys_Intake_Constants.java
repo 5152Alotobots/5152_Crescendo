@@ -58,7 +58,7 @@ public class SubSys_Intake_Constants {
     }
 
     public static final class Limit {
-        public static final double ARM_LIMIT_FORWARD = 0.08;
+        public static final double ARM_LIMIT_FORWARD = 0.01;
         public static final double ARM_LIMIT_REVERSE = -0.43;
         public static final boolean ARM_LIMIT_ENABLE = true;
     }

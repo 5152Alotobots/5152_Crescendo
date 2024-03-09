@@ -3,26 +3,27 @@ package frc.robot.crescendo.subsystems.shooter.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
+import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOTER_WAIT_AFTER_SHOOT;
 
-/**
- * Shoots at a given angle, velocity, and position
- */
-public class Cmd_SubSys_Shooter_ShootDefault extends Command {
+public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
     SubSys_Shooter subSysShooter;
-    BooleanSupplier velocityWaitMode;
+    BooleanSupplier releaseTrigger;
     DoubleSupplier shooterArmSpeed;
+
     Timer timer = new Timer();
 
-    public Cmd_SubSys_Shooter_ShootDefault(
+    public Cmd_SubSys_Shooter_AmpHoldThenShoot(
             SubSys_Shooter subSysShooter,
-            BooleanSupplier velocityWaitMode,
+            BooleanSupplier releaseTrigger,
             DoubleSupplier shooterArmSpeed) {
         this.subSysShooter = subSysShooter;
-        this.velocityWaitMode = velocityWaitMode;
+        this.releaseTrigger = releaseTrigger;
         this.shooterArmSpeed = shooterArmSpeed;
 
         addRequirements(subSysShooter);
@@ -30,20 +31,16 @@ public class Cmd_SubSys_Shooter_ShootDefault extends Command {
 
     @Override
     public void initialize() {
-        if (!velocityWaitMode.getAsBoolean()) {
-            timer.reset();
-            timer.start();
-        }
+        timer.reset();
     }
 
     @Override
     public void execute() {
         subSysShooter.setShooterArmOutput(shooterArmSpeed.getAsDouble());
-
-        if (velocityWaitMode.getAsBoolean()) {
-            subSysShooter.shoot();
-        } else {
-            subSysShooter.shootDumb(timer);
+        subSysShooter.setShooterOutput(ShooterDirection.AMP_OUT);
+        if (releaseTrigger.getAsBoolean()) {
+            subSysShooter.setIntakeOutput(ShooterIntakeDirection.SHOOT);
+            timer.start();
         }
     }
 
@@ -55,7 +52,6 @@ public class Cmd_SubSys_Shooter_ShootDefault extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
-        // return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
+        return !subSysShooter.getIntakeOccupied() && timer.get() > SHOOTER_WAIT_AFTER_SHOOT;
     }
 }
