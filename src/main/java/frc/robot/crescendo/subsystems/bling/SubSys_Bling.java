@@ -8,9 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.*;
 
 import static frc.robot.Constants.CAN_IDs.CANDLE_CAN_ID;
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.*;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.*;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.LED_TYPE;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.MAX_LED_BRIGHTNESS;
 
 public class SubSys_Bling extends SubsystemBase {
     private Animation currentAnimation;
@@ -139,9 +138,9 @@ public class SubSys_Bling extends SubsystemBase {
     public void update() {
         if (currentAnimation == null) {
             controller.clearAnimation(0);
-            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getBlue(), currentSolidColor.getBlue());
+            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, 9, NUM_LEDS);
         } else {
-            controller.animate(currentAnimation);
+            controller.animate(currentAnimation, 0);
         }
     }
 
