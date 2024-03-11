@@ -140,7 +140,7 @@ public class SubSys_Bling extends SubsystemBase {
     public void update() {
         if (currentAnimation == null) {
             controller.clearAnimation(0);
-            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, 9, NUM_LEDS);
+            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, 8, NUM_LEDS);
         } else {
             controller.animate(currentAnimation, 0);
         }

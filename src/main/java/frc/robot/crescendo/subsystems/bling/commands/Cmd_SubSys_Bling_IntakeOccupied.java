@@ -24,7 +24,6 @@ public class Cmd_SubSys_Bling_IntakeOccupied extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        subSysBling.runDefault();
     }
 
     @Override
