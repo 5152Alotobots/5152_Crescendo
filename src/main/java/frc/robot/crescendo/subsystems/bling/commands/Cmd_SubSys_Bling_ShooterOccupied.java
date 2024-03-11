@@ -14,7 +14,6 @@ public class Cmd_SubSys_Bling_ShooterOccupied extends Command {
 
     @Override
     public void initialize() {
-        subSysBling.clearAll();
         subSysBling.setSolidColor(SHOOTER_OCCUPIED_COLOR);
     }
 

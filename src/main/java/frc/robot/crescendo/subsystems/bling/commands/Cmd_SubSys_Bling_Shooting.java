@@ -14,7 +14,6 @@ public class Cmd_SubSys_Bling_Shooting extends Command {
 
     @Override
     public void initialize() {
-        subSysBling.clearAll();
         subSysBling.runAnimation(SHOOTING_ANIMATION);
     }
 

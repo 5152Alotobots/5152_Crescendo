@@ -13,7 +13,6 @@ public class Cmd_SubSys_Bling_DefaultSetToAllianceColor extends Command {
 
     @Override
     public void initialize() {
-        subSysBling.clearAll();
         subSysBling.setLedToAllianceColor();
     }
 
