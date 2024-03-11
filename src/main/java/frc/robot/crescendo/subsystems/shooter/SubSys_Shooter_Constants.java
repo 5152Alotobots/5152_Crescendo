@@ -21,7 +21,7 @@ public class SubSys_Shooter_Constants {
         public static final double OpenLoopRampRate = 0.5; // seconds
 
         public static final class PID {
-            public static final double Pgain = 1.5;
+            public static final double Pgain = 2.5;
             public static final double Igain = 0.0;
             public static final double Dgain = 0.0;
             public static final double Izone = 0.0;
@@ -33,7 +33,7 @@ public class SubSys_Shooter_Constants {
         }
 
         public static final class SpeedSetPoints{
-            public static final double SPEAKER_DEFAULT_SPD_CMD = 95.0; // rotations/s
+            public static final double SPEAKER_DEFAULT_SPD_CMD = 90.0; // rotations/s
         }
     }
 

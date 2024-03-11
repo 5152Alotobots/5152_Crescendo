@@ -20,7 +20,7 @@ public class Cmd_SubSys_Shooter_AimSpinUpShoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Shooter_AimSpinUp(shooterArmPosCmd,shooterWheelsSpdCmd,subSysShooter),
+      new Cmd_SubSys_Shooter_AimSpinUp(shooterArmPosCmd,shooterWheelsSpdCmd,subSysShooter).withTimeout(1),
       new Cmd_SubSys_Shooter_AimSpinShoot(shooterArmPosCmd, shooterWheelsSpdCmd, subSysShooter)
     );
   }
