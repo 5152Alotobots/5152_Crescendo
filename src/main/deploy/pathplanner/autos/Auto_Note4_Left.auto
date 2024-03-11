@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.23,
-      "y": 5.54
+      "x": 0.87,
+      "y": 4.56
     },
-    "rotation": 0
+    "rotation": -45.72337456063685
   },
   "command": {
     "type": "sequential",
@@ -31,13 +31,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3piece.5"
+                  "pathName": "Auto_4Piece_pt1"
                 }
               },
               {
@@ -52,7 +52,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3piece.7"
+            "pathName": "Auto_4Piece_pt2"
           }
         },
         {
@@ -75,19 +75,19 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto_4Piece_Pt3"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "PickupNoteAndTransfer"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "3piecept1"
                 }
               }
             ]
@@ -96,7 +96,51 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3piecept3"
+            "pathName": "Auto_4Piece_Pt4"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto_4Piece_pt5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_4Piece_Pt6"
           }
         },
         {

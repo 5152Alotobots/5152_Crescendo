@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9292510892714109,
-      "y": 6.541783083566167
+      "x": 1.23,
+      "y": 5.54
     },
-    "rotation": 43.025065989118
+    "rotation": 0.14986635833951462
   },
   "command": {
     "type": "sequential",
@@ -31,19 +31,44 @@
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "playoffpt1"
+                  "pathName": "3piece.5"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakePickupNote"
+                  "name": "PickupNoteAndTransfer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3piece.7"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
                 }
               }
             ]
@@ -54,62 +79,24 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "playoffpt2"
+                  "name": "PickupNoteAndTransfer"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "TransferToShooter"
+                  "pathName": "3piecept1"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "ScoreSpeakerCenter"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "playoffpt3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakePickupNote"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "playoffpt4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "TransferToShooter"
-                }
-              }
-            ]
+            "pathName": "3piecept3"
           }
         },
         {
