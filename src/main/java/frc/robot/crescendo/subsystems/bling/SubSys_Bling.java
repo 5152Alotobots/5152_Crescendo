@@ -33,9 +33,11 @@ public class SubSys_Bling extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent()) {
             if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
                 setSolidColor(RED_ALLIANCE_COLOR);
+            } else {
+                setSolidColor(BLUE_ALLIANCE_COLOR);
             }
         } else {
-            setSolidColor(BLUE_ALLIANCE_COLOR);
+            setSolidColor(NO_ALLIANCE_COLOR);
         }
     }
 
