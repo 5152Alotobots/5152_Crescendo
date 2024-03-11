@@ -4,7 +4,10 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterRoller;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
@@ -49,6 +53,9 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     final VelocityVoltage shooterWheelsMtrLeftPID;
     final VelocityVoltage shooterWheelsMtrRightPID;
+    final VelocityTorqueCurrentFOC shooterWheelsMtrLeftVelTrqCmd;
+    final VelocityTorqueCurrentFOC shooterWheelsMtrRightVelTrqCmd;
+        
     public SubSys_Shooter () {
 
         // Shooter Wheels
@@ -58,16 +65,17 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrLeftConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         shooterWheelsMtrLeftConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         shooterWheelsMtrLeftConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        shooterWheelsMtrLeftConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrLeftConfiguration.Slot0.kP = SHOOTER_P;
-        shooterWheelsMtrLeftConfiguration.Slot0.kI = SHOOTER_I;
-        shooterWheelsMtrLeftConfiguration.Slot0.kD = SHOOTER_D;
-        shooterWheelsMtrLeftConfiguration.Slot0.kV = SHOOTER_V;
+        shooterWheelsMtrLeftConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrLeftConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrLeftConfiguration.Slot0.kP = ShooterWheels.PID.Pgain;
+        shooterWheelsMtrLeftConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
+        shooterWheelsMtrLeftConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
+        shooterWheelsMtrLeftConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrLeftPID = new VelocityVoltage(0).withSlot(0);
+        shooterWheelsMtrLeftVelTrqCmd = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
         TalonFXConfigurator shooterWheelsMtrLeftConfigurator = shooterWheelsMtrLeft.getConfigurator();
         shooterWheelsMtrLeftConfigurator.apply(shooterWheelsMtrLeftConfiguration);
@@ -77,16 +85,17 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRightConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         shooterWheelsMtrRightConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         shooterWheelsMtrRightConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        shooterWheelsMtrRightConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrRightConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrRightConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = SHOOTER_RAMP_RATE;
-        shooterWheelsMtrRightConfiguration.Slot0.kP = SHOOTER_P;
-        shooterWheelsMtrRightConfiguration.Slot0.kI = SHOOTER_I;
-        shooterWheelsMtrRightConfiguration.Slot0.kD = SHOOTER_D;
-        shooterWheelsMtrRightConfiguration.Slot0.kV = SHOOTER_V;
+        shooterWheelsMtrRightConfiguration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrRightConfiguration.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrRightConfiguration.OpenLoopRamps.VoltageOpenLoopRampPeriod = ShooterWheels.PID.ClosedLoopRampRate;
+        shooterWheelsMtrRightConfiguration.Slot0.kP = ShooterWheels.PID.Pgain;
+        shooterWheelsMtrRightConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
+        shooterWheelsMtrRightConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
+        shooterWheelsMtrRightConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrRightPID = new VelocityVoltage(0).withSlot(0);
+        shooterWheelsMtrRightVelTrqCmd = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
         TalonFXConfigurator shooterWheelsMtrRightConfigurator = shooterWheelsMtrRight.getConfigurator();
         shooterWheelsMtrRightConfigurator.apply(shooterWheelsMtrRightConfiguration);
@@ -224,6 +233,28 @@ public class SubSys_Shooter extends SubsystemBase {
         double rightVelocity = shooterWheelsMtrRight.getVelocity().getValueAsDouble();
         double averageRpm = (leftVelocity + rightVelocity) / 2.0;
         return averageRpm / METERS_TO_RPM_RATIO;
+    }
+
+    /**
+     * Set Shooter Wheels Velocity in rotations per second.  This is a FOC command
+     * @param speedCmd double rotations/s
+     * @return boolean Shooters wheels within 2 rotations/s of the speedCmd
+     */
+    public boolean setShooterWheelsVelocity(double speedCmd){
+        shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelTrqCmd.withVelocity(speedCmd));
+        shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelTrqCmd.withVelocity(speedCmd));
+        double leftVelError = Math.abs(speedCmd-shooterWheelsMtrLeft.getVelocity().getValueAsDouble());
+        double rightVelError = Math.abs(speedCmd-shooterWheelsMtrRight.getVelocity().getValueAsDouble());
+        
+        if ((leftVelError < 5) && (rightVelError < 5)){
+            if(speedCmd < 5){
+                shooterWheelsMtrLeft.set(0);
+                shooterWheelsMtrRight.set(0);
+            }
+            return true;
+        }else{
+            return false;
+        }
     }
 
     // Arm ------

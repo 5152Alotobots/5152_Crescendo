@@ -30,6 +30,9 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUp;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
@@ -305,7 +308,12 @@ public class RobotContainer {
     //             )
     //           );
 */
-      hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
+      //hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
+      hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_AimSpinUp(
+        PresentArmPositions.ARM_PRESET_SPEAKER,
+        ShooterWheels.SpeedSetPoints.SPEAKER_DEFAULT_SPD_CMD,
+        shooterSubSys));
+
       // ---- Climber Subsystem
         climberSubSys.setDefaultCommand(new Cmd_SubSys_Climber_Default(
             hmiStation.climberUp, 

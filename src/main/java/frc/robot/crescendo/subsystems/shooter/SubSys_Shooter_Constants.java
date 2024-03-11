@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = -0.722;
+        public static final double CANcoderMagOffset = 0.2708; //-0.722;
 
         public static final class SoftwareLimits {
 
@@ -21,19 +21,19 @@ public class SubSys_Shooter_Constants {
         public static final double OpenLoopRampRate = 0.5; // seconds
 
         public static final class PID {
-            public static final double Pgain = 0.0;
+            public static final double Pgain = 1.5;
             public static final double Igain = 0.0;
             public static final double Dgain = 0.0;
             public static final double Izone = 0.0;
-            public static final double FFwd = 0.0;
+            public static final double Vgain = 0.125;
             public static final double MaxOutput = 1;
             public static final double MinOutput = -1;
-            public static final double MaxRPM = 5700;
+            //public static final double MaxRPM = 5700;
             public static final double ClosedLoopRampRate = 0.5; // seconds
         }
 
         public static final class SpeedSetPoints{
-
+            public static final double SPEAKER_DEFAULT_SPD_CMD = 95.0; // rotations/s
         }
     }
 
