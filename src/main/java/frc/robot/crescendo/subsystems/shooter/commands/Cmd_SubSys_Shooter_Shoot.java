@@ -51,7 +51,7 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(3.0);
+        return timer.hasElapsed(1.25);
         // return !subSysShooter.getIntakeOccupied(); // Should work, may want to test
     }
 }

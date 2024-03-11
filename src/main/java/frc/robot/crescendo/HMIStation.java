@@ -59,7 +59,7 @@ public class HMIStation {
    * @return double Forward Axis with deadband, squared and rate limited
    */
   public double driveFwdAxis() {
-    return driveXSpdFilter.calculate(-1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(1),0.1));
+    return driveXSpdFilter.calculate(-1*driverController.getRawAxis(1));
   }
 
   /**
@@ -76,7 +76,7 @@ public class HMIStation {
    * @return double Strafe Axis with deadband, squared and rate limited
    */
   public double driveStrAxis() {
-    return driveYSpdFilter.calculate(-1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(0),0.1));
+    return driveYSpdFilter.calculate(-1*driverController.getRawAxis(0));
   }
 
   /**
