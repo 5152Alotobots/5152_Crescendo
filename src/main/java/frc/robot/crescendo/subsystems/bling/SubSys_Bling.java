@@ -37,7 +37,7 @@ public class SubSys_Bling extends SubsystemBase {
                 setSolidColor(BLUE_ALLIANCE_COLOR);
             }
         } else {
-            setSolidColor(NO_ALLIANCE_COLOR);
+            setSolidColor(RED_ALLIANCE_COLOR);
         }
     }
 
