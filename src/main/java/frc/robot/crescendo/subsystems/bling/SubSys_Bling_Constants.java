@@ -1,17 +1,20 @@
 package frc.robot.crescendo.subsystems.bling;
 
-import com.ctre.phoenix.led.CANdle;
-import com.ctre.phoenix.led.ColorFlowAnimation;
+import com.ctre.phoenix.led.*;
 
 import java.awt.*;
 
 public class SubSys_Bling_Constants {
     public static final double MAX_LED_BRIGHTNESS = 1;
     public static final int NUM_LEDS = 200;
+    public static final int LED_OFFSET = 8;
+    public static final boolean DISABLE_STATUS_LED = true;
     public static final CANdle.LEDStripType LED_TYPE = CANdle.LEDStripType.GRB;
 
     public static final class Animations {
-        public static final ColorFlowAnimation SHOOTING_ANIMATION = new ColorFlowAnimation(255, 145, 0, 0, 0.03, NUM_LEDS, ColorFlowAnimation.Direction.Forward);
+        public static final ColorFlowAnimation SHOOTING_ANIMATION = new ColorFlowAnimation(255, 145, 0, 0, 0.03, NUM_LEDS, ColorFlowAnimation.Direction.Forward, LED_OFFSET);
+        public static final ColorFlowAnimation NO_ALLIANCE_ANIMATION = new ColorFlowAnimation(255, 0, 0, 0, 0.6, NUM_LEDS, ColorFlowAnimation.Direction.Forward, LED_OFFSET);
+//        public static final LarsonAnimation NO_ALLIANCE_ANIMATION = new LarsonAnimation(255, 0, 0, 0, 0.5, NUM_LEDS, LarsonAnimation.BounceMode.Center, 20, 8);
     }
 
     public static final class Colors {

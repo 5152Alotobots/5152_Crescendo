@@ -33,6 +33,6 @@ public class Cmd_SubSys_Bling_IntakeOccupied extends Command {
 
     @Override
     public boolean runsWhenDisabled() {
-        return true; // Set LED's when disabled
+        return false; // Set LED's when disabled
     }
 }

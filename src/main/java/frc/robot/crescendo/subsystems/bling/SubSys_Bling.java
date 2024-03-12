@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.*;
 
 import static frc.robot.Constants.CAN_IDs.CANDLE_CAN_ID;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.*;
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animations.NO_ALLIANCE_ANIMATION;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.*;
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.*;
 
 public class SubSys_Bling extends SubsystemBase {
     private Animation currentAnimation;
@@ -21,6 +22,7 @@ public class SubSys_Bling extends SubsystemBase {
     public SubSys_Bling() {
         controller.configBrightnessScalar(MAX_LED_BRIGHTNESS);
         controller.configLEDType(LED_TYPE);
+        controller.configStatusLedState(DISABLE_STATUS_LED);
     }
 
 
@@ -37,7 +39,7 @@ public class SubSys_Bling extends SubsystemBase {
                 setSolidColor(BLUE_ALLIANCE_COLOR);
             }
         } else {
-            setSolidColor(RED_ALLIANCE_COLOR);
+            runAnimation(NO_ALLIANCE_ANIMATION);
         }
     }
 
@@ -140,7 +142,7 @@ public class SubSys_Bling extends SubsystemBase {
     public void update() {
         if (currentAnimation == null) {
             controller.clearAnimation(0);
-            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, 8, NUM_LEDS);
+            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, LED_OFFSET, NUM_LEDS);
         } else {
             controller.animate(currentAnimation, 0);
         }
