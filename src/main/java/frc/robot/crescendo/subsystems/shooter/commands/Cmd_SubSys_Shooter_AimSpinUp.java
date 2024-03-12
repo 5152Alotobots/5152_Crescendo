@@ -5,6 +5,7 @@
 package frc.robot.crescendo.subsystems.shooter.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim;
@@ -54,6 +55,8 @@ public class Cmd_SubSys_Shooter_AimSpinUp extends Command {
         readyToShoot = true;
       }
     }
+    SmartDashboard.putBoolean("ShooterAimSpinUp_atPos", atPos);
+    SmartDashboard.putBoolean("Shooter_AimSpinUp_atSpd", atSpd);
     
   }
 

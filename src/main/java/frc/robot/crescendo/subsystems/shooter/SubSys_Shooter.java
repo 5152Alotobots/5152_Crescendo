@@ -249,12 +249,13 @@ public class SubSys_Shooter extends SubsystemBase {
      * @return boolean Shooters wheels within 2 rotations/s of the speedCmd
      */
     public boolean setShooterWheelsVelocity(double speedCmd){
-        shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelTrqCmd.withVelocity(speedCmd));
-        shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelTrqCmd.withVelocity(speedCmd));
+        shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelTrqCmd.withVelocity(speedCmd).withFeedForward(15));
+        shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelTrqCmd.withVelocity(speedCmd).withFeedForward(8));
         double leftVelError = Math.abs(speedCmd-shooterWheelsMtrLeft.getVelocity().getValueAsDouble());
         double rightVelError = Math.abs(speedCmd-shooterWheelsMtrRight.getVelocity().getValueAsDouble());
-        
-        if ((leftVelError < 5) && (rightVelError < 5)){
+        SmartDashboard.putNumber("shooterWheelMtrLeft_VelError", leftVelError);
+        SmartDashboard.putNumber("shooterWheelMtrRight_VelError", rightVelError);
+        if ((leftVelError < 7) && (rightVelError < 7)){
             if(speedCmd < 5){
                 shooterWheelsMtrLeft.set(0);
                 shooterWheelsMtrRight.set(0);

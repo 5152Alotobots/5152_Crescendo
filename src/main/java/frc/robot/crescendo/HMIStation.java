@@ -31,7 +31,7 @@ public class HMIStation {
 
   // Driver Buttons
   public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  // public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  //public final JoystickButton robotCentric = new JoystickButton(driverController, 2);
   public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
@@ -96,7 +96,11 @@ public class HMIStation {
   }
 
   // Driver Trigger Axes
-   
+  public boolean robotCentricTrigger() {
+    return (driverController.getRawAxis(2) > 0.3);
+  }
+  public final Trigger robotCentric = new Trigger(() -> robotCentricTrigger());
+
   public boolean shooterOutTrigger() {
     return (driverController.getRawAxis(3) > 0.3);
   }

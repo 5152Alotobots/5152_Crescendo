@@ -12,7 +12,7 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentAr
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
-public class Cmd_SubSys_Shooter_AimSpinShoot extends Command {
+public class Cmd_SubSys_Shooter_AimSpinShootManual extends Command {
   /** Creates a new Cmd_SubSys_Shooter_ShootSpeaker. */
   SubSys_Shooter subSysShooter;
   double shooterArmPosCmd;
@@ -22,7 +22,7 @@ public class Cmd_SubSys_Shooter_AimSpinShoot extends Command {
   boolean readyToShoot = false;
   Timer timer = new Timer();
 
-  public Cmd_SubSys_Shooter_AimSpinShoot(
+  public Cmd_SubSys_Shooter_AimSpinShootManual(
     double shooterArmPosCmd,
     double shooterWheelsSpdCmd,
     SubSys_Shooter subSysShooter) {
