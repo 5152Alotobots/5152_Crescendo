@@ -31,7 +31,7 @@ public class HMIStation {
 
   // Driver Buttons
   public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  // public final JoystickButton intakePickupNote = new JoystickButton(driverController, 2);
+  //public final JoystickButton robotCentric = new JoystickButton(driverController, 2);
   public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
@@ -45,22 +45,37 @@ public class HMIStation {
 
   // Driver Axes
   /**
-   * Gets the forward axis value for driving.
+   * Gets the raw forward axis value for driving.
    * 
    * @return The value used for driving forward. unmodified. 
    */
   public double driveFwdAxisRaw() {
-    //return -1*driverController.getRawAxis(1);
+    return -1*driverController.getRawAxis(1);
+    
+  }
+
+  /**
+   * Gets the Drive Forward Axis with deadband, squared and rate limited
+   * @return double Forward Axis with deadband, squared and rate limited
+   */
+  public double driveFwdAxis() {
     return driveXSpdFilter.calculate(-1*driverController.getRawAxis(1));
   }
 
   /**
-   * Gets the strafe axis value for driving. unmodified.
+   * Gets the strafe raw axis value for driving. unmodified.
    *
    * @return The strafe axis value.
    */ 
   public double driveStrAxisRaw() {
-    //return -1*driverController.getRawAxis(0);
+    return -1*driverController.getRawAxis(0);
+  }
+
+  /**
+   * Gets the Drive Strafe Axis with deadband, squared and rate limited
+   * @return double Strafe Axis with deadband, squared and rate limited
+   */
+  public double driveStrAxis() {
     return driveYSpdFilter.calculate(-1*driverController.getRawAxis(0));
   }
 
@@ -72,8 +87,20 @@ public class HMIStation {
     return -1*driverController.getRawAxis(4);
   }
   
+  /**
+   * Gets the Drive Rotation Axis with deadband and squared
+   * @return double Rotation Axis with deadband and squared
+   */
+  public double driveRotAxis() {
+    return -1*JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(4),0.2);
+  }
+
   // Driver Trigger Axes
-   
+  public boolean robotCentricTrigger() {
+    return (driverController.getRawAxis(2) > 0.3);
+  }
+  public final Trigger robotCentric = new Trigger(() -> robotCentricTrigger());
+
   public boolean shooterOutTrigger() {
     return (driverController.getRawAxis(3) > 0.3);
   }
