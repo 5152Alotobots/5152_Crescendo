@@ -30,16 +30,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUp;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUpShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AmpHoldThenShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_HoldThenShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
+import frc.robot.crescendo.subsystems.shooter.commands.*;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -282,7 +273,8 @@ public class RobotContainer {
                 .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())) // Drive counterclockwise with negative X (left)            
         );
 
-        if (Utils.isSimulation()) {
+
+      if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
         drivetrain.registerTelemetry(logger::telemeterize);

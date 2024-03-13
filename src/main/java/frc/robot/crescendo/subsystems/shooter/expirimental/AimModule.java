@@ -2,6 +2,7 @@ package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.MAX_SHOOTER_SPPED_MPS;
 
@@ -42,8 +43,16 @@ public class AimModule {
     /**
      * @return The launch angle (degrees)
      */
-    public static double calculateLaunchAngle(Pose3d targetPose) {
-        return 0; // 0 degrees offset from flat
+    public static double calculateLaunchAngle(Pose3d robotPose, Pose3d targetPose) {
+        // LUT or HashMap here
+        return 0;
+    }
+
+
+    public static Rotation2d calculateRobotHeadingAlignShooterToPose(Pose2d targetPose, Pose2d robotPose) {
+        double offset = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
+        double heading = Math.toRadians(180) + offset;
+        return Rotation2d.fromRadians(heading);
     }
 
 }

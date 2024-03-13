@@ -38,9 +38,9 @@ public class Cmd_SubSys_Shooter_Shoot extends Command {
                 subSysDrivetrain.getCurrentRobotChassisSpeeds().vyMetersPerSecond,
                 targetPose.toPose2d(),
                 subSysDrivetrain.getState().Pose);
-        double calculatedLaunchAngle = AimModule.calculateLaunchAngle(targetPose);
+//        double calculatedLaunchAngle = AimModule.calculateLaunchAngle(targetPose);
 
-        subSysShooter.setShooterArmDegree(calculatedLaunchAngle);
+//        subSysShooter.setShooterArmDegree(calculatedLaunchAngle);
         if (Math.abs(calculatedLaunchPoint.relativeTo(subSysDrivetrain.getState().Pose).getX()) <= LAUNCH_TOLERANCE) {
             subSysShooter.shoot();
             finished = true;
