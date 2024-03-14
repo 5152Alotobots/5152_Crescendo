@@ -1,7 +1,8 @@
 package frc.robot.crescendo.subsystems.shooter.util;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,5 +42,28 @@ public class PoseHashMap extends HashMap<Pose2d, Double> {
 
         // Get the value for the closest pose from this HashMap
         return this.get(closestPose);
+    }
+
+    private static final double FIELD_WIDTH = 16.55;
+
+    public PoseHashMap mirrorForRedSide() {
+        PoseHashMap redSideMap = new PoseHashMap();
+
+        for (Map.Entry<Pose2d, Double> entry : this.entrySet()) {
+            Pose2d bluePose = entry.getKey();
+            double blueX = bluePose.getX();
+            double blueY = bluePose.getY();
+            Rotation2d blueRotation = bluePose.getRotation();
+
+            // Mirror the X coordinate for the red side
+            double redX = FIELD_WIDTH - blueX;
+
+            // Mirror the rotation angle for the red side
+            Rotation2d redRotation = blueRotation.rotateBy(Rotation2d.fromDegrees(180));
+
+            Pose2d redPose = new Pose2d(redX, blueY, redRotation);
+            redSideMap.put(redPose, entry.getValue());
+        }
+        return redSideMap;
     }
 }

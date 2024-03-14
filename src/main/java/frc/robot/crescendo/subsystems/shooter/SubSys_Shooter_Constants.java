@@ -111,12 +111,19 @@ public class SubSys_Shooter_Constants {
     }
 
     public static final Pose2d SPEAKER_POSE_BLUE = new Pose2d(1, 5.4, Rotation2d.fromDegrees(180));
-    public static final Pose2d SPEAKER_POSE_RED = new Pose2d(14.7, 5.4, Rotation2d.fromDegrees(0));
+    public static final Pose2d SPEAKER_POSE_RED = new Pose2d(15.6, 5.4, Rotation2d.fromDegrees(0));
     // This is an example of the PoseHashMap class. It should have a pose value from the blue side and a given shooter angle.
     // Rotational comparison is not taken into account yet
     public static final PoseHashMap ANGLE_BY_DISTANCE_BLUE = new PoseHashMap(){{
         // METERS
         // DIST  DEG
-        put(new Pose2d(1.862, 5.38, new Rotation2d()), -125.0); // Blue side, right next to speaker, center
+        put(new Pose2d(1.862, 5.38, new Rotation2d()), 1.0); // right next to speaker, center
+        put(new Pose2d(2.8, 4.075, new Rotation2d()), 2.0); // just in front of rightmost close note
+        put(new Pose2d(2.8, 5.43, new Rotation2d()), 3.0); // just in front of center close note
+        put(new Pose2d(2.8, 6.78, new Rotation2d()), 4.0); // just in front of leftmost close note
+        put(new Pose2d(2.325, 4.82, new Rotation2d()), 5.0); // In between right and center close note, center on white line
+        put(new Pose2d(2.325, 6.15, new Rotation2d()), 6.0); // In between left and center close note, center on white line
     }};
+
+    public static final PoseHashMap ANGLE_BY_DISTANCE_RED = ANGLE_BY_DISTANCE_BLUE.mirrorForRedSide();
 }
