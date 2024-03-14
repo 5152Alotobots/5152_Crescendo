@@ -12,9 +12,9 @@ public class SubSys_Intake_Constants {
         public static final double IntakeArmPosCmdSpd = 0.15;   // -1 - +1
 
         static final class Arm {
-            public static final double ARM_P = 12;
+            public static final double ARM_P = 50;
             public static final double ARM_I = 11;
-            public static final double ARM_D = 1;
+            public static final double ARM_D = 0;
         }
     }
 
@@ -32,7 +32,7 @@ public class SubSys_Intake_Constants {
         public static final double ejectNoteSpeed = 0.25;       // -1 - +1
         public static final double transferNoteSpeed = 0.25;    // -1 - +1
 
-        public static final double OpenLoopRampRate = 0; // seconds
+        public static final double OpenLoopRampRate = 0.5; // seconds
 
         public static final class PID {
             public static final double Pgain = 0.0;

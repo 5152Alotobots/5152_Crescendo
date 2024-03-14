@@ -35,7 +35,16 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.commands.*;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions;
+import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinShoot;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUp;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUpShoot;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AmpHoldThenShoot;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_HoldThenShoot;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
+import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -83,7 +92,7 @@ public class RobotContainer {
     // ---- Drive Subsystem
     // swerve_ctre
     final CommandSwerveDrivetrain drivetrain;
-    //final SwerveRequest.RobotCentric drive;
+    final SwerveRequest.RobotCentric driveRC;
     final SwerveRequest.FieldCentric drive;
     final Telemetry logger;
     final HMIStation hmiStation;
@@ -145,15 +154,17 @@ public class RobotContainer {
             drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric 
-            /*
-            drive = new SwerveRequest.RobotCentric()
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+                //.withDriveRequestType(DriveRequestType.Velocity);
+
+            
+            driveRC = new SwerveRequest.RobotCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
-
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            
+            
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
 
             subSysBling = new SubSys_Bling();
 
@@ -193,6 +204,7 @@ public class RobotContainer {
             configureButtonBindingsCrescendoRobot2024(
                 drivetrain,
                 drive,
+                driveRC,
                 logger,
                 hmiStation,
                 intakeSubSys,
@@ -254,6 +266,7 @@ public class RobotContainer {
   private void configureButtonBindingsCrescendoRobot2024(
     CommandSwerveDrivetrain drivetrain,
     SwerveRequest.FieldCentric drive,
+    SwerveRequest.RobotCentric driveRC,
     Telemetry logger,
     HMIStation hmiStation,
     SubSys_Intake intakeSubSys,
@@ -265,12 +278,19 @@ public class RobotContainer {
         // ---- Drive Subsystem ----        
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
-                drive.withVelocityX(hmiStation.driveFwdAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
-                .withVelocityY(hmiStation.driveStrAxisRaw() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
-                .withRotationalRate(hmiStation.driveRotAxisRaw() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()) // Drive counterclockwise with negative X (left)
             )
         );
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
+        
+        hmiStation.robotCentric.whileTrue(
+            drivetrain.applyRequest(() -> 
+                driveRC.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
+                .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode()) // Drive left with negative X (left)
+                .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())) // Drive counterclockwise with negative X (left)            
+        );
 
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -299,6 +319,8 @@ public class RobotContainer {
       shooterSubSys.setDefaultCommand(new Cmd_SubSys_Shooter_Default(shooterSubSys, hmiStation::shooterArmAxis, () -> DirectionUtils.toIntakeDirection(hmiStation.shooterRollerIn, hmiStation.shooterRollerOutSlow), () -> ShooterDirection.OFF));
 
       // Positions
+      
+       
       hmiStation.shooterSpeakerPos.whileTrue(
               new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_SPEAKER).withTimeout(2)
                       .andThen(new Cmd_SubSys_Shooter_HoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
