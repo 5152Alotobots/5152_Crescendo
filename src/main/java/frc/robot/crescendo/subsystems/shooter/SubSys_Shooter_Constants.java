@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = -0.895;
+        public static final double CANcoderMagOffset = 0.2708; //-0.722;
 
         public static final class SoftwareLimits {
 
@@ -21,19 +21,19 @@ public class SubSys_Shooter_Constants {
         public static final double OpenLoopRampRate = 0.5; // seconds
 
         public static final class PID {
-            public static final double Pgain = 0.0;
+            public static final double Pgain = 2.5;
             public static final double Igain = 0.0;
             public static final double Dgain = 0.0;
             public static final double Izone = 0.0;
-            public static final double FFwd = 0.0;
+            public static final double Vgain = 0.125;
             public static final double MaxOutput = 1;
             public static final double MinOutput = -1;
-            public static final double MaxRPM = 5700;
+            //public static final double MaxRPM = 5700;
             public static final double ClosedLoopRampRate = 0.5; // seconds
         }
 
         public static final class SpeedSetPoints{
-
+            public static final double SPEAKER_DEFAULT_SPD_CMD = 90.0; // rotations/s
         }
     }
 
@@ -50,7 +50,7 @@ public class SubSys_Shooter_Constants {
             public static final double MaxOutput = 1;
             public static final double MinOutput = -1;
             public static final double MaxRPM = 5700;
-            public static final double ClosedLoopRampRate = 1; // seconds
+            public static final double ClosedLoopRampRate = 0.0; // seconds
         }
 
         public static final class SpeedSetPoints{
@@ -60,11 +60,12 @@ public class SubSys_Shooter_Constants {
 
     public static final class PID {
         static final class Shooter {
-            public static final double SHOOTER_P = 0;
+            public static final double SHOOTER_P = 0.1;
             public static final double SHOOTER_I = 0;
             public static final double SHOOTER_D = 0;
             public static final double SHOOTER_IZONE = 1;
-            public static final double SHOOTER_RAMP_RATE = 1; // Number of seconds to full speed
+            public static final double SHOOTER_RAMP_RATE = 0.5; // Number of seconds to full speed
+            public static final double SHOOTER_V = 0.125; // Feedforward gain.
         }
 
         static final class Arm {
@@ -87,9 +88,9 @@ public class SubSys_Shooter_Constants {
         public static final double METERS_TO_RPM_RATIO = 1200; // X number of rotations per minute equals 1 meter per second
 
         public static final double LAUNCH_TOLERANCE = 1; // +- 1 Meter to launch
-        public static final double SHOOT_SPIN_UP_TEMP = 0.5; // Wait before launch
+        public static final double SHOOT_SPIN_UP_TEMP = .75; // Wait before launch
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
-        public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.01; // +-X counts as at position
+        public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.02; // +-X counts as at position
         public static final double SHOOTER_WAIT_AFTER_SHOOT = 0.5; // X seconds
     }
 
