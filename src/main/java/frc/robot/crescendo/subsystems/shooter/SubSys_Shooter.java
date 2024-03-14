@@ -65,6 +65,7 @@ public class SubSys_Shooter extends SubsystemBase {
     final VelocityVoltage shooterWheelsMtrLeftVelVoltCmd;
     final VelocityVoltage shooterWheelsMtrRightVelVoltCmd;
     final MotionMagicVelocityVoltage shooterWheelsMtrLeftVelVoltMMCmd;
+    final MotionMagicVelocityVoltage shooterWheelsMtrRightVelVoltMMCmd;
     final VelocityTorqueCurrentFOC shooterWheelsMtrLeftVelTrqCmd;
     final VelocityTorqueCurrentFOC shooterWheelsMtrRightVelTrqCmd;
         
@@ -84,10 +85,15 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrLeftConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
         shooterWheelsMtrLeftConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
         shooterWheelsMtrLeftConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
+
+        shooterWheelsMtrLeftConfiguration.Slot1.kS = 0.25;  // Add 0.25 V output to overcome static friction
+        shooterWheelsMtrLeftConfiguration.Slot1.kV = 0.125; // A velocity target of 1 rps results in 0.12 V output
+        shooterWheelsMtrLeftConfiguration.Slot1.kA = 0.01;  // An acceleration of 1 rps/s requires 0.01 V output
         shooterWheelsMtrLeftConfiguration.Slot1.kP = 0.1;
         shooterWheelsMtrLeftConfiguration.Slot1.kI = 0.0;
         shooterWheelsMtrLeftConfiguration.Slot1.kD = 0.0;
-        shooterWheelsMtrLeftConfiguration.Slot1.kV = 0.125;
+        shooterWheelsMtrLeftConfiguration.MotionMagic.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
+        shooterWheelsMtrLeftConfiguration.MotionMagic.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrLeftPID = new VelocityVoltage(0).withSlot(0);
@@ -112,16 +118,22 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRightConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
         shooterWheelsMtrRightConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
         shooterWheelsMtrRightConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
+        shooterWheelsMtrRightConfiguration.Slot1.kS = 0.25;  // Add 0.25 V output to overcome static friction
+        shooterWheelsMtrRightConfiguration.Slot1.kV = 0.125; // A velocity target of 1 rps results in 0.12 V output
+        shooterWheelsMtrRightConfiguration.Slot1.kA = 0.01;  // An acceleration of 1 rps/s requires 0.01 V output
         shooterWheelsMtrRightConfiguration.Slot1.kP = 0.1;
         shooterWheelsMtrRightConfiguration.Slot1.kI = 0.0;
         shooterWheelsMtrRightConfiguration.Slot1.kD = 0.0;
-        shooterWheelsMtrRightConfiguration.Slot1.kV = 0.125;
+        shooterWheelsMtrRightConfiguration.MotionMagic.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
+        shooterWheelsMtrRightConfiguration.MotionMagic.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrRightPID = new VelocityVoltage(0).withSlot(0);
 
         shooterWheelsMtrRightVelVoltCmd = new VelocityVoltage(0).withSlot(1);
         shooterWheelsMtrRightVelVoltCmd.EnableFOC = true;
+        shooterWheelsMtrRightVelVoltMMCmd = new MotionMagicVelocityVoltage(0).withSlot(1);
+
         shooterWheelsMtrRightVelTrqCmd = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
         TalonFXConfigurator shooterWheelsMtrRightConfigurator = shooterWheelsMtrRight.getConfigurator();
@@ -289,6 +301,11 @@ public class SubSys_Shooter extends SubsystemBase {
     public void setShooterWheelsVelocityVolts(double speedCmd){
         shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelVoltCmd.withVelocity(speedCmd));
         shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelVoltCmd.withVelocity(speedCmd));
+    }
+
+    public void setShooterWheelsMMVelocityVolts(double speedCmd){
+        shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelVoltMMCmd.withVelocity(speedCmd).withEnableFOC(true));
+        shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelVoltMMCmd.withVelocity(speedCmd).withEnableFOC(true));
     }
 
     public double getShooterLeftWheelsVelocity(){
