@@ -222,6 +222,9 @@ public final class Constants {
     public static final int ClimberLeftMtr_CAN_ID = 38;        // Talon FX
     public static final int ClimberRightMtr_CAN_ID = 39;        // Talon FX
 
+      // ---- Other ----
+      public static final int CANDLE_CAN_ID = 40;
+
     /** **** End Crescendo Components CAN ID's **** */
   }
 
