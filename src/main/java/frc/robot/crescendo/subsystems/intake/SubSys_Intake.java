@@ -5,7 +5,9 @@ import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -43,6 +45,10 @@ public class SubSys_Intake extends SubsystemBase {
     private double intakeRollerMtrSetpoint = 0.0;
 
     final PositionVoltage intakeArmPid;
+    final VelocityVoltage intakeArmVelVoltCmd;
+    final PositionVoltage intakeArmPosVoltCmd;
+    final MotionMagicPositionVoltage intakeArmPosVoltMMCmd;
+
     public SubSys_Intake () {
         
         intakeRollerMtr.restoreFactoryDefaults();
