@@ -110,6 +110,8 @@ public class SubSys_Shooter_Constants {
         public static final double DEADBAND_PERCENT = 0.1;
     }
 
+    public static final Pose2d SPEAKER_POSE_BLUE = new Pose2d(1, 5.4, Rotation2d.fromDegrees(180));
+    public static final Pose2d SPEAKER_POSE_RED = new Pose2d(14.7, 5.4, Rotation2d.fromDegrees(0));
     // This is an example of the PoseHashMap class. It should have a pose value from the blue side and a given shooter angle.
     // Rotational comparison is not taken into account yet
     public static final PoseHashMap ANGLE_BY_DISTANCE_BLUE = new PoseHashMap(){{

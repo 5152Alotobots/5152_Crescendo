@@ -2,8 +2,9 @@ package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 
-import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ANGLE_BY_DISTANCE_BLUE;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.MAX_SHOOTER_SPPED_MPS;
 
 public class AimModule {
@@ -56,7 +57,17 @@ public class AimModule {
         return Rotation2d.fromRadians(heading);
     }
 
-    public static void main(String[] args) {
-        System.out.println(calculateLaunchAngle(new Pose2d(1, 1, new Rotation2d())));
+    public static Rotation2d calculateRobotHeadingAlignShooterToSpeaker(Pose2d robotPose) {
+        Pose2d targetPose;
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+                targetPose = SPEAKER_POSE_RED;
+            } else {
+                targetPose = SPEAKER_POSE_BLUE;
+            }
+            return calculateRobotHeadingAlignShooterToPose(targetPose, robotPose);
+        } else {
+            return Rotation2d.fromDegrees(0); // Hopefully we always have an alliance??
+        }
     }
 }

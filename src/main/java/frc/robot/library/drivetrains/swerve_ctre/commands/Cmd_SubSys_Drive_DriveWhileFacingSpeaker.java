@@ -1,8 +1,9 @@
 package frc.robot.library.drivetrains.swerve_ctre.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.crescendo.subsystems.shooter.expirimental.AimModule;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 import java.util.function.DoubleSupplier;
@@ -20,24 +21,20 @@ public class Cmd_SubSys_Drive_DriveWhileFacingSpeaker extends Command {
         this.subSysSwerve = subSysSwerve;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
+        addRequirements(subSysSwerve);
     }
 
     @Override
     public void initialize() {
-        if (DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
-
-            }
-        }
     }
 
     @Override
     public void execute() {
-//        Rotation2d targetHeading = AimModule.calculateRobotHeadingAlignShooterToPose()
-//        subSysSwerve.applyRequest(() -> drive
-//                .withVelocityX(velocityX.getAsDouble())
-//                .withVelocityY(velocityY.getAsDouble())
-//                .withTargetDirection())
+        Rotation2d targetHeading = AimModule.calculateRobotHeadingAlignShooterToSpeaker(subSysSwerve.getState().Pose);
+        subSysSwerve.applyRequest(() -> drive
+                .withVelocityX(velocityX.getAsDouble())
+                .withVelocityY(velocityY.getAsDouble())
+                .withTargetDirection(targetHeading));
     }
 
     @Override
@@ -47,6 +44,6 @@ public class Cmd_SubSys_Drive_DriveWhileFacingSpeaker extends Command {
 
     @Override
     public boolean isFinished() {
-        return super.isFinished();
+        return false;
     }
 }

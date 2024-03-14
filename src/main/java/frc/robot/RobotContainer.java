@@ -24,6 +24,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
+import frc.robot.crescendo.commands.expirimental.Cmd_ScoreSpeakerAutomatic;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
@@ -153,7 +154,7 @@ public class RobotContainer {
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-            */
+
 
             logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
 
@@ -320,7 +321,17 @@ public class RobotContainer {
               hmiStation.shooterAmpPos.whileTrue(
                       new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
                               .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
-              ));
+              )
+      ).or(
+              hmiStation.shooterAutoShoot.whileTrue(
+                      new Cmd_ScoreSpeakerAutomatic(
+                              drivetrain,
+                              subSysBling,
+                              shooterSubSys,
+                              () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
+                              () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+              )
+      );
 
       // Robot Level
       hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
