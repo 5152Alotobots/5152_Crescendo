@@ -2,6 +2,7 @@ package frc.robot.crescendo.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.crescendo.subsystems.shooter.util.PoseHashMap;
 
 public class SubSys_Shooter_Constants {
     
@@ -108,4 +109,12 @@ public class SubSys_Shooter_Constants {
     public static final class ControllerOptions {
         public static final double DEADBAND_PERCENT = 0.1;
     }
+
+    // This is an example of the PoseHashMap class. It should have a pose value from the blue side and a given shooter angle.
+    // Rotational comparison is not taken into account yet
+    public static final PoseHashMap ANGLE_BY_DISTANCE_BLUE = new PoseHashMap(){{
+        // METERS
+        // DIST  DEG
+        put(new Pose2d(1.862, 5.38, new Rotation2d()), -125.0); // Blue side, right next to speaker, center
+    }};
 }

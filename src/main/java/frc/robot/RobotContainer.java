@@ -311,11 +311,6 @@ public class RobotContainer {
                       new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_AMP).withTimeout(2)
                               .andThen(new Cmd_SubSys_Shooter_AmpHoldThenShoot(shooterSubSys, hmiStation.shooterShoot, hmiStation::shooterArmAxis))
               ));
-            //   .or(
-    //             hmiStation.shooterShoot.whileTrue(
-    //                 new Cmd_SubSys_Shooter_ShootDefault(shooterSubSys, () -> false, hmiStation::shooterArmAxis)
-    //             )
-    //           );
 
       //hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_Shoot(shooterSubSys, () -> false));
       //hmiStation.shooterSpeakerPos.whileTrue(new Cmd_SubSys_Shooter_AimSpinUpShoot(

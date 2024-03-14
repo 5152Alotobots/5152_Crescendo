@@ -1,9 +1,9 @@
 package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ANGLE_BY_DISTANCE_BLUE;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.MAX_SHOOTER_SPPED_MPS;
 
 public class AimModule {
@@ -43,10 +43,11 @@ public class AimModule {
     /**
      * @return The launch angle (degrees)
      */
-    public static double calculateLaunchAngle(Pose3d robotPose, Pose3d targetPose) {
-        // LUT or HashMap here
-        return 0;
+    public static double calculateLaunchAngle(Pose2d robotPose) {
+        return ANGLE_BY_DISTANCE_BLUE.getValueForClosestPose(robotPose);
+
     }
+
 
 
     public static Rotation2d calculateRobotHeadingAlignShooterToPose(Pose2d targetPose, Pose2d robotPose) {
@@ -55,4 +56,7 @@ public class AimModule {
         return Rotation2d.fromRadians(heading);
     }
 
+    public static void main(String[] args) {
+        System.out.println(calculateLaunchAngle(new Pose2d(1, 1, new Rotation2d())));
+    }
 }
