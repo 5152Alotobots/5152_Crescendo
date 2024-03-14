@@ -20,6 +20,8 @@ public class Cmd_SubSys_Shooter_AimSpinShoot extends Command {
   boolean atPos = false;
   boolean atSpd = false;
   boolean readyToShoot = false;
+  boolean noteInShooter = true;
+
   Timer timer = new Timer();
 
   public Cmd_SubSys_Shooter_AimSpinShoot(
@@ -37,26 +39,42 @@ public class Cmd_SubSys_Shooter_AimSpinShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
     subSysShooter.setShooterArmDegree(shooterArmPosCmd);
     atPos = false;
 
     subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
     atSpd = false;
+
+    readyToShoot = false;
+    noteInShooter = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
     atPos = subSysShooter.shooterArmMtrAtSetpoint();
-    atSpd = subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
-    subSysShooter.setIntakeOutput(ShooterIntakeDirection.SHOOT);
-    if (!readyToShoot){
-      if(atPos && atSpd){
-        readyToShoot = true;
-      }
+    subSysShooter.setShooterWheelsVelocityVolts(shooterWheelsSpdCmd);
+    
+    double leftWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterLeftWheelsVelocity();
+    double rightWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterRightWheelsVelocity();
+    boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
+    boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
+    boolean leftWheelsStable = subSysShooter.getShooterLeftWheelsAcceleration() < 10;
+    boolean rightWheelsStable = subSysShooter.getShooterRightWheelsAcceleration() < 10;
+
+    if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
+      atSpd = true;
+    }else{
+      atSpd = false;
+    }
+
+    if(atSpd && atPos){
+      readyToShoot = true;
+      subSysShooter.setIntakeOutput(ShooterIntakeDirection.SHOOT);
+    }
+    
+    if(noteInShooter && !subSysShooter.getIntakeOccupied()){
+      timer.start();
     }
   }
 

@@ -21,7 +21,7 @@ public class Cmd_SubSys_Shooter_AimSpinUp extends Command {
   boolean atPos = false;
   boolean atSpd = false;
   boolean readyToShoot = false;
- 
+  
   public Cmd_SubSys_Shooter_AimSpinUp(
     double shooterArmPosCmd,
     double shooterWheelsSpdCmd,
@@ -42,22 +42,33 @@ public class Cmd_SubSys_Shooter_AimSpinUp extends Command {
 
     subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
     atSpd = false;
-  }
+    }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     atPos = subSysShooter.shooterArmMtrAtSetpoint();
-    atSpd = subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
+    subSysShooter.setShooterWheelsVelocityVolts(shooterWheelsSpdCmd);
     
-    if (!readyToShoot){
-      if(atPos && atSpd){
-        readyToShoot = true;
-      }
+    double leftWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterLeftWheelsVelocity();
+    double rightWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterRightWheelsVelocity();
+    boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
+    boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
+    boolean leftWheelsStable = subSysShooter.getShooterLeftWheelsAcceleration() < 10;
+    boolean rightWheelsStable = subSysShooter.getShooterRightWheelsAcceleration() < 10;
+
+    if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
+      atSpd = true;
+    }else{
+      atSpd = false;
     }
+
+    if(atSpd && atPos){
+      readyToShoot = true;
+    }
+        
     SmartDashboard.putBoolean("ShooterAimSpinUp_atPos", atPos);
     SmartDashboard.putBoolean("Shooter_AimSpinUp_atSpd", atSpd);
-    
   }
 
   // Called once the command ends or is interrupted.

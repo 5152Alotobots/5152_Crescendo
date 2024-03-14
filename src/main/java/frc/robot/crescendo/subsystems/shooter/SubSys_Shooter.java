@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -53,7 +54,7 @@ public class SubSys_Shooter extends SubsystemBase {
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
     private final RelativeEncoder shooterRollerMtrEncoder;
     private final SparkPIDController shooterRollerMtrPID;
-     private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
+    private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
     private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
 
@@ -61,6 +62,9 @@ public class SubSys_Shooter extends SubsystemBase {
     final PositionVoltage shooterArmPid;
     final VelocityVoltage shooterWheelsMtrLeftPID;
     final VelocityVoltage shooterWheelsMtrRightPID;
+    final VelocityVoltage shooterWheelsMtrLeftVelVoltCmd;
+    final VelocityVoltage shooterWheelsMtrRightVelVoltCmd;
+    final MotionMagicVelocityVoltage shooterWheelsMtrLeftVelVoltMMCmd;
     final VelocityTorqueCurrentFOC shooterWheelsMtrLeftVelTrqCmd;
     final VelocityTorqueCurrentFOC shooterWheelsMtrRightVelTrqCmd;
         
@@ -80,9 +84,17 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrLeftConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
         shooterWheelsMtrLeftConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
         shooterWheelsMtrLeftConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
+        shooterWheelsMtrLeftConfiguration.Slot1.kP = 0.1;
+        shooterWheelsMtrLeftConfiguration.Slot1.kI = 0.0;
+        shooterWheelsMtrLeftConfiguration.Slot1.kD = 0.0;
+        shooterWheelsMtrLeftConfiguration.Slot1.kV = 0.125;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrLeftPID = new VelocityVoltage(0).withSlot(0);
+        shooterWheelsMtrLeftVelVoltCmd = new VelocityVoltage(0).withSlot(1);
+        shooterWheelsMtrLeftVelVoltCmd.EnableFOC = true;
+        shooterWheelsMtrLeftVelVoltMMCmd = new MotionMagicVelocityVoltage(0).withSlot(1);
+
         shooterWheelsMtrLeftVelTrqCmd = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
         TalonFXConfigurator shooterWheelsMtrLeftConfigurator = shooterWheelsMtrLeft.getConfigurator();
@@ -100,9 +112,16 @@ public class SubSys_Shooter extends SubsystemBase {
         shooterWheelsMtrRightConfiguration.Slot0.kI = ShooterWheels.PID.Igain;
         shooterWheelsMtrRightConfiguration.Slot0.kD = ShooterWheels.PID.Dgain;
         shooterWheelsMtrRightConfiguration.Slot0.kV = ShooterWheels.PID.Vgain;
+        shooterWheelsMtrRightConfiguration.Slot1.kP = 0.1;
+        shooterWheelsMtrRightConfiguration.Slot1.kI = 0.0;
+        shooterWheelsMtrRightConfiguration.Slot1.kD = 0.0;
+        shooterWheelsMtrRightConfiguration.Slot1.kV = 0.125;
 
         // create a position closed-loop request, voltage output, slot 0 configs
         shooterWheelsMtrRightPID = new VelocityVoltage(0).withSlot(0);
+
+        shooterWheelsMtrRightVelVoltCmd = new VelocityVoltage(0).withSlot(1);
+        shooterWheelsMtrRightVelVoltCmd.EnableFOC = true;
         shooterWheelsMtrRightVelTrqCmd = new VelocityTorqueCurrentFOC(0).withSlot(0);
 
         TalonFXConfigurator shooterWheelsMtrRightConfigurator = shooterWheelsMtrRight.getConfigurator();
@@ -248,6 +267,7 @@ public class SubSys_Shooter extends SubsystemBase {
      * @param speedCmd double rotations/s
      * @return boolean Shooters wheels within 2 rotations/s of the speedCmd
      */
+    
     public boolean setShooterWheelsVelocity(double speedCmd){
         shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelTrqCmd.withVelocity(speedCmd).withFeedForward(15));
         shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelTrqCmd.withVelocity(speedCmd).withFeedForward(8));
@@ -265,6 +285,29 @@ public class SubSys_Shooter extends SubsystemBase {
             return false;
         }
     }
+    
+    public void setShooterWheelsVelocityVolts(double speedCmd){
+        shooterWheelsMtrLeft.setControl(shooterWheelsMtrLeftVelVoltCmd.withVelocity(speedCmd));
+        shooterWheelsMtrRight.setControl(shooterWheelsMtrRightVelVoltCmd.withVelocity(speedCmd));
+    }
+
+    public double getShooterLeftWheelsVelocity(){
+        return shooterWheelsMtrLeft.getVelocity().getValueAsDouble();
+    }
+
+    public double getShooterLeftWheelsAcceleration(){
+        return shooterWheelsMtrLeft.getAcceleration().getValueAsDouble();
+    }
+
+    public double getShooterRightWheelsVelocity(){
+        return shooterWheelsMtrRight.getVelocity().getValueAsDouble();
+    }
+
+    public double getShooterRightWheelsAcceleration(){
+        return shooterWheelsMtrRight.getAcceleration().getValueAsDouble();
+    }
+
+
 
     // Arm ------
 

@@ -4,23 +4,26 @@
 
 package frc.robot.crescendo.subsystems.shooter.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Cmd_SubSys_Shooter_AimSpinUpShoot extends SequentialCommandGroup {
+public class Cmd_SubSys_Shooter_AimSpinUpShootManualShoot extends SequentialCommandGroup {
   /** Creates a new Cmd_SubSys_Shooter_AimSpinUpShoot. */
-  public Cmd_SubSys_Shooter_AimSpinUpShoot(
+  public Cmd_SubSys_Shooter_AimSpinUpShootManualShoot(
     double shooterArmPosCmd,
     double shooterWheelsSpdCmd,
+    BooleanSupplier trigger,
     SubSys_Shooter subSysShooter
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new Cmd_SubSys_Shooter_AimSpinUp(shooterArmPosCmd,shooterWheelsSpdCmd,subSysShooter).withTimeout(4),
+      new Cmd_SubSys_Shooter_AimSpinUp(shooterArmPosCmd,shooterWheelsSpdCmd,subSysShooter).until(trigger),
       new Cmd_SubSys_Shooter_AimSpinShoot(shooterArmPosCmd, shooterWheelsSpdCmd, subSysShooter).withTimeout(3)
     );
   }
