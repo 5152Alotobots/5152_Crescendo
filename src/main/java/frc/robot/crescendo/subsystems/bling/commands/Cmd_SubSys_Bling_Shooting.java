@@ -10,6 +10,7 @@ public class Cmd_SubSys_Bling_Shooting extends Command {
 
     public Cmd_SubSys_Bling_Shooting(SubSys_Bling subSysBling) {
         this.subSysBling = subSysBling;
+        addRequirements(subSysBling);
     }
 
     @Override
