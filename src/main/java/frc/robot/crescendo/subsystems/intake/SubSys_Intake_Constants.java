@@ -19,7 +19,7 @@ public class SubSys_Intake_Constants {
     }
 
     public static final class MaxSpeeds {
-        public static final double MAX_ARM_ROTATION_SPEED = 0.35; //0.15;
+        public static final double MAX_ARM_ROTATION_SPEED = 0.45; //0.15;
         public static final double MAX_INTAKE_SPEED = -1;
         public static final double TRANSFER_SPEED = 0.2;
     }

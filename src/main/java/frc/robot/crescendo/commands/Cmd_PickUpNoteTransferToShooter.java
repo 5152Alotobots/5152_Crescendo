@@ -6,6 +6,7 @@ package frc.robot.crescendo.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_IntakeNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegree;
@@ -38,6 +39,7 @@ public class Cmd_PickUpNoteTransferToShooter extends SequentialCommandGroup {
       ),  
       new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
       new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER),
+      new WaitCommand(0.5),
       new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys)
       // new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER)
     );
