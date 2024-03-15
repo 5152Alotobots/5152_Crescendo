@@ -121,7 +121,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public SendableChooser<Command> getAutoChooser(){
         //configurePathPlanner();
-        return AutoBuilder.buildAutoChooser();
+        return AutoBuilder.buildAutoChooser("Auto_JustShoot");
         // Default Path
         //return AutoBuilder.buildAutoChooser(null);
     }
