@@ -206,7 +206,8 @@ public class RobotContainer {
                 sliderSubSys,
                 shooterSubSys,
                     climberSubSys,
-                    subSysBling);
+                    subSysBling,
+                    photonvisionSubSys);
                 
             break;
     }
@@ -268,10 +269,11 @@ public class RobotContainer {
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys,
-    SubSys_Bling subSysBling) {
+    SubSys_Bling subSysBling,
+    SubSys_Photonvision photonvisionSubSys) {
 
       // Vision
-      drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
+      drivetrain.setPhotonVisionSubSys(photonvisionSubSys);
 
       // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -303,11 +305,6 @@ public class RobotContainer {
             hmiStation.intakeIn,
             hmiStation.intakeOut));
 
-     
-//      hmiStation.intakePickupNote
-//              .whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys, drivetrain))
-//              .onFalse(new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, INTAKE_PRESET_STOW));
-            
 
         // ---- Slider Subsystem ----
 //        hmiStation.sliderOut.onTrue(new InstantCommand(sliderSubSys::sliderExtendCmd));
