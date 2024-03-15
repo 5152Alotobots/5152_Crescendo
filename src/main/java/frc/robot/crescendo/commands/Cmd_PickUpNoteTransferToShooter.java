@@ -39,7 +39,7 @@ public class Cmd_PickUpNoteTransferToShooter extends SequentialCommandGroup {
       ),  
       new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
       new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER),
-      new WaitCommand(0.5),
+      new WaitCommand(0.2),
       new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys)
       // new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER)
     );
