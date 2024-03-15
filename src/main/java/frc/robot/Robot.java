@@ -34,8 +34,8 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture();
     robotContainer = new RobotContainer();
       // Photonvision
+      PortForwarder.add(1182, "10.51.52.11", 1182);
       PortForwarder.add(5800, "10.51.52.11", 5800);
-      PortForwarder.add(5801, "10.51.52.11", 5801);
 
       // Limelight
       PortForwarder.add(5800, "10.51.52.12", 5800);
