@@ -27,7 +27,9 @@ import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ReadyToShoot;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ShooterOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_Shooting;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -353,7 +355,8 @@ public class RobotContainer {
       subSysBling.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(subSysBling)); // Default
       new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
       new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
-      // ADD READY TO SHOOT
+      new Trigger(shooterSubSys::shooterReady).whileTrue(new Cmd_SubSys_Bling_ReadyToShoot(subSysBling));
+      hmiStation.shooterShoot.onTrue(new Cmd_SubSys_Bling_Shooting(subSysBling).withTimeout(0.5));
     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -361,6 +364,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+
         return autoChooser.getSelected();
     }
 
