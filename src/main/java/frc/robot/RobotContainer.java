@@ -154,10 +154,10 @@ public class RobotContainer {
             driveRC = new SwerveRequest.RobotCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric    
-
-
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            
+            
+            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
 
             subSysBling = new SubSys_Bling();
 

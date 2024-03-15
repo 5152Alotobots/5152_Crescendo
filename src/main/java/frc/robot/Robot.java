@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -32,6 +33,13 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     CameraServer.startAutomaticCapture();
     robotContainer = new RobotContainer();
+      // Photonvision
+      PortForwarder.add(1182, "10.51.52.11", 1182);
+      PortForwarder.add(5800, "10.51.52.11", 5800);
+
+      // Limelight
+      PortForwarder.add(5800, "10.51.52.12", 5800);
+      PortForwarder.add(5801, "10.51.52.12", 5801);
   }
 
   /**

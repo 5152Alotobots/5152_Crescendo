@@ -112,9 +112,8 @@ public class SubSys_Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake/Arm Motor Busy", intakeArmMtrBusy());
         SmartDashboard.putBoolean("Intake/Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
         SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/forwardLimitValue", intakeArmMtr.getForwardLimit().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/reverseLimitValue", intakeArmMtr.getReverseLimit().getValueAsDouble());
-
+        SmartDashboard.putBoolean("Intake/ForwardLimitValue", (intakeArmMtr.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround));
+        SmartDashboard.putBoolean("Intake/ReverseLimitValue", (intakeArmMtr.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround));
     }
 
     /**
