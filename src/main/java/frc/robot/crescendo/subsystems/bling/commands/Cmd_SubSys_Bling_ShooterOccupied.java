@@ -3,6 +3,7 @@ package frc.robot.crescendo.subsystems.bling.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animations.SHOOTING_ANIMATION;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.SHOOTER_OCCUPIED_COLOR;
 
 public class Cmd_SubSys_Bling_ShooterOccupied extends Command {

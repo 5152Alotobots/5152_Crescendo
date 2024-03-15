@@ -1,21 +1,21 @@
 package frc.robot.crescendo.subsystems.bling.commands;
 
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animations.SHOOTING_ANIMATION;
+import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.SHOOTER_READY_COLOR;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 
-public class Cmd_SubSys_Bling_Shooting extends Command {
+public class Cmd_SubSys_Bling_ReadyToShoot extends Command {
     private final SubSys_Bling subSysBling;
 
-    public Cmd_SubSys_Bling_Shooting(SubSys_Bling subSysBling) {
+    public Cmd_SubSys_Bling_ReadyToShoot(SubSys_Bling subSysBling) {
         this.subSysBling = subSysBling;
         addRequirements(subSysBling);
     }
 
     @Override
     public void initialize() {
-        subSysBling.runAnimation(SHOOTING_ANIMATION);
+        subSysBling.setSolidColor(SHOOTER_READY_COLOR);
     }
 
     @Override

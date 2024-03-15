@@ -27,7 +27,9 @@ import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ReadyToShoot;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ShooterOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_Shooting;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -100,6 +102,7 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
+       final SubSys_Bling blingSubSys;
        final SubSys_Photonvision photonvisionSubSys;
        final SubSys_Bling subSysBling;
 
@@ -183,6 +186,8 @@ public class RobotContainer {
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
 
+            blingSubSys = new SubSys_Bling();
+
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
             
@@ -210,8 +215,9 @@ public class RobotContainer {
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
-                    climberSubSys,
-                    subSysBling);
+                climberSubSys,
+                subSysBling,
+                photonvisionSubSys);
                 
             break;
     }
@@ -273,9 +279,13 @@ public class RobotContainer {
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys,
-    SubSys_Bling subSysBling) {
+    SubSys_Bling subSysBling,
+    SubSys_Photonvision subSysPhotonvision) {
 
-        // ---- Drive Subsystem ----        
+      // Vision
+      drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
+
+      // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
@@ -345,7 +355,8 @@ public class RobotContainer {
       subSysBling.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(subSysBling)); // Default
       new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
       new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
-      // ADD READY TO SHOOT
+      new Trigger(shooterSubSys::shooterReady).whileTrue(new Cmd_SubSys_Bling_ReadyToShoot(subSysBling));
+      hmiStation.shooterShoot.onTrue(new Cmd_SubSys_Bling_Shooting(subSysBling).withTimeout(0.5));
     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -353,6 +364,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+
         return autoChooser.getSelected();
     }
 
