@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.*;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_TRANSFER;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.Speeds.MAX_SHOOTER_SPPED_MPS;
 
 public class AimModule {
@@ -45,8 +46,15 @@ public class AimModule {
      * @return The launch angle (degrees)
      */
     public static double calculateLaunchAngle(Pose2d robotPose) {
-        return ANGLE_BY_DISTANCE_BLUE.getValueForClosestPose(robotPose);
-
+        if (DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+                return ANGLE_BY_DISTANCE_RED.getValueForClosestPose(robotPose);
+            } else {
+                return ANGLE_BY_DISTANCE_BLUE.getValueForClosestPose(robotPose);
+            }
+        } else {
+            return ARM_PRESET_TRANSFER; // Safe value if no alliance
+        }
     }
 
 

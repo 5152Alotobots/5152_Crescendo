@@ -24,7 +24,7 @@ import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
-import frc.robot.crescendo.commands.expirimental.Cmd_ScoreSpeakerAutomatic;
+import frc.robot.crescendo.commands.expirimental.Cmd_AngleShooterAndDriveSpeaker;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
@@ -324,12 +324,14 @@ public class RobotContainer {
               )
       ).or(
               hmiStation.shooterAutoShoot.whileTrue(
-                      new Cmd_ScoreSpeakerAutomatic(
+                      new Cmd_AngleShooterAndDriveSpeaker(
                               drivetrain,
                               subSysBling,
                               shooterSubSys,
                               () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
-                              () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                              () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode(),
+                              hmiStation.shooterShoot,
+                              hmiStation::shooterArmAxis)
               )
       );
 
