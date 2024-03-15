@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -13,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.*;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,7 +49,10 @@ public class SubSys_Intake extends SubsystemBase {
     final PositionVoltage intakeArmPid;
     final VelocityVoltage intakeArmVelVoltCmd;
     final PositionVoltage intakeArmPosVoltCmd;
-    final MotionMagicPositionVoltage intakeArmPosVoltMMCmd;
+    final MotionMagicVoltage intakeArmVoltMMCmd;
+    final MotionMagicVelocityVoltage intakeArmVelVoltMMCmd;
+    private ArmFeedforward intakeArmFFVoltCmd;
+    
 
     public SubSys_Intake () {
         
@@ -86,15 +91,36 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot0.kP = ARM_P;
         intakeArmMtrConfiguration.Slot0.kI = ARM_I;
         intakeArmMtrConfiguration.Slot0.kD = ARM_D;
+        intakeArmMtrConfiguration.Slot1.kS = 0.25;  // Add 0.25 V output to overcome static friction
+        intakeArmMtrConfiguration.Slot1.kV = 0.125; // A velocity target of 1 rps results in 0.12 V output
+        intakeArmMtrConfiguration.Slot1.kA = 0.01;  // An acceleration of 1 rps/s requires 0.01 V output
+        intakeArmMtrConfiguration.Slot1.kP = 0.1;
+        intakeArmMtrConfiguration.Slot1.kI = 0.0;
+        intakeArmMtrConfiguration.Slot1.kD = 0.0;
+        // Gravity -0.3
+        // FF 2V = 0.1
+        //    3V = 0.125
+        //    4V = 0.22
+        //    5V = 0.25
+        intakeArmMtrConfiguration.MotionMagic.MotionMagicAcceleration = 0.5; // Target acceleration of 400 rps/s (0.25 seconds to max)
+        intakeArmMtrConfiguration.MotionMagic.MotionMagicJerk = 0.5; // Target jerk of 4000 rps/s/s (0.1 seconds)
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ARM_LIMIT_FORWARD;
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ARM_LIMIT_REVERSE;
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = ARM_LIMIT_ENABLE;
         intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = ARM_LIMIT_ENABLE;
-        // create a position closed-loop request, voltage output, slot 0 configs
-        intakeArmPid = new PositionVoltage(0).withSlot(0);
+
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
-        
+
+        // create a position closed-loop request, voltage output, slot 0 configs
+        intakeArmPid = new PositionVoltage(0).withSlot(0);      
+        intakeArmVelVoltCmd = new VelocityVoltage(0).withSlot(1);
+        intakeArmPosVoltCmd = new PositionVoltage(0).withSlot(1);
+        intakeArmVoltMMCmd = new MotionMagicVoltage(0).withSlot(1);
+        intakeArmVelVoltMMCmd = new MotionMagicVelocityVoltage(0).withSlot(1);
+
+        intakeArmFFVoltCmd = new ArmFeedforward(0, -0.3, 0);
+
         // Configure Intake Arm CANcoder
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
         intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
@@ -321,7 +347,27 @@ public class SubSys_Intake extends SubsystemBase {
     /**
      * @return true if the intake is at the lower limit
      */
-    public boolean atLowerLimit() {
+    public boolean atLowerLimit(){ 
         return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
+    }
+
+    public void setIntakeArmVelVolts(double spdCmd){
+        intakeArmMtr.setControl(intakeArmVelVoltCmd.withVelocity(spdCmd).withEnableFOC(true));
+    }
+
+    public void setIntakeArmVelVoltsMM(double spdCmd){
+        intakeArmMtr.setControl(intakeArmVelVoltMMCmd.withVelocity(spdCmd).withEnableFOC(true));
+    }
+
+    public void setIntakeArmVelVoltsMMPos(double posCmd){
+        intakeArmMtr.setControl(intakeArmVoltMMCmd.withPosition(posCmd).withEnableFOC(true));
+    }
+
+    public double getIntakeArmPosition(){
+        return intakeArmMtr.getPosition().getValueAsDouble();
+    }
+
+    public double getIntakeArmVelocity(){
+        return intakeArmMtr.getVelocity().getValueAsDouble();
     }
 }
