@@ -358,7 +358,30 @@ public class SubSys_Shooter extends SubsystemBase {
         return shooterWheelsMtrRight.getAcceleration().getValueAsDouble();
     }
 
+    public boolean getShooterWheelsAtSpeed(){
+        boolean atSpd = false;
+        // Check if in Velocity Control
+        if(shooterWheelsMtrLeft.getAppliedControl().equals(shooterWheelsMtrLeftVelVoltMMCmd)){
 
+        }
+        return atSpd;
+        
+        // Check Velcity of Both Motors
+        double shooterWheelsSpdCmd = 
+        double leftWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterLeftWheelsVelocity();
+        double rightWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterRightWheelsVelocity();
+        boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
+        boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
+        boolean leftWheelsStable = subSysShooter.getShooterLeftWheelsAcceleration() < 10;
+        boolean rightWheelsStable = subSysShooter.getShooterRightWheelsAcceleration() < 10;
+
+        if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
+            atSpd = true;
+        }else{
+            atSpd = false;
+        }
+        return atSpd;
+    }
 
     // Arm ------
 
