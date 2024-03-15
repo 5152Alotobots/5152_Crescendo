@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
     robotContainer = new RobotContainer();
       // Photonvision
       PortForwarder.add(1182, "10.51.52.11", 1182);

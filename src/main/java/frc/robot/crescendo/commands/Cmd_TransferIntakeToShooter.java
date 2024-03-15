@@ -1,6 +1,7 @@
 package frc.robot.crescendo.commands;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_TRANSFER;
+import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_TRANSFER;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.IntakeDirection;
@@ -26,7 +27,8 @@ public class Cmd_TransferIntakeToShooter extends Command {
 
     @Override
     public void execute() {
-        subSysShooter.setShooterArmDegree(INTAKE_PRESET_TRANSFER); // Hold position while transfering
+        subSysIntake.setIntakeArmDegree(INTAKE_PRESET_TRANSFER); // Hold pos
+        subSysShooter.setShooterArmDegree(ARM_PRESET_TRANSFER); // Hold position while transfering
         subSysShooter.setIntakeOutput(ShooterIntakeDirection.TRANSFER);
         subSysIntake.setIntakeDirection(IntakeDirection.TRANSFER);
     }
