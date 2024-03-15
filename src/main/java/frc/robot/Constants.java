@@ -25,8 +25,8 @@ public final class Constants {
     public static final class Calibrations {
 
       public static final class DriveTrain {
-        public static final double driveXYSpdPerfModeSwFilterRate = 2.0; // m/s/s
-        public static final double driveRotSpdPerfModeSwFilterRate = 2.0; // rad/s/s
+        public static final double driveXYSpdPerfModeSwFilterRate = 8.0; // m/s/s
+        public static final double driveRotSpdPerfModeSwFilterRate = 4.0; // rad/s/s
         public static final double DriveTrainMaxAccel = 3.0; // m/s^2
         public static final double DriveTrainMaxDeccel = -2.0; // m/s^2
 
