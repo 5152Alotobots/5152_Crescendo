@@ -11,4 +11,6 @@ public class SubSys_Photonvision_Constants {
       new Transform3d(
               new Translation3d(-0.646, -0.152, 0.172),
               new Rotation3d(0, 18, Math.toRadians(180)));
+
+  public static final boolean USE_VISION_FOR_POSE_ESTIMATION = true;
 }
