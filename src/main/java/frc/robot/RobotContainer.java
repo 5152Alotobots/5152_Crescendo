@@ -102,9 +102,9 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
-       final SubSys_Bling blingSubSys;
-       final SubSys_Photonvision photonvisionSubSys;
-       final SubSys_Bling subSysBling;
+    final SubSys_Bling blingSubSys;
+    final SubSys_Photonvision photonvisionSubSys;
+    final SubSys_Bling subSysBling;
 
     // Switch Robots
        switch (ROBOT) {

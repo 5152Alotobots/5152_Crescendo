@@ -5,7 +5,7 @@ import com.ctre.phoenix.led.*;
 import java.awt.*;
 
 public class SubSys_Bling_Constants {
-    public static final double MAX_LED_BRIGHTNESS = 1;
+    public static final double MAX_LED_BRIGHTNESS = .5;
     public static final int NUM_LEDS = 92;
     public static final int LED_OFFSET = 8;
     public static final boolean DISABLE_STATUS_LED = false;
