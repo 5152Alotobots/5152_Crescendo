@@ -100,6 +100,7 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
+       final SubSys_Bling blingSubSys;
        final SubSys_Photonvision photonvisionSubSys;
        final SubSys_Bling subSysBling;
 
@@ -183,6 +184,8 @@ public class RobotContainer {
             // ---- Climber Subsystem ----
             climberSubSys = new SubSys_Climber();
 
+            blingSubSys = new SubSys_Bling();
+
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
             
@@ -210,8 +213,9 @@ public class RobotContainer {
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
-                    climberSubSys,
-                    subSysBling);
+                climberSubSys,
+                subSysBling,
+                photonvisionSubSys);
                 
             break;
     }
@@ -273,9 +277,13 @@ public class RobotContainer {
     SubSys_Slider sliderSubSys,
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys,
-    SubSys_Bling subSysBling) {
+    SubSys_Bling subSysBling,
+    SubSys_Photonvision subSysPhotonvision) {
 
-        // ---- Drive Subsystem ----        
+      // Vision
+      drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
+
+      // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode()) // Drive forward with negative Y (forward)
