@@ -14,7 +14,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,7 +30,7 @@ import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.sql.CommonDataSource;
+import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -70,7 +69,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
 
         // Vision estimate
-        if (subSysPhotonvision != null) {
+        if (subSysPhotonvision != null && USE_VISION_POSE_ESTIMATION) {
             Optional<Pair<Pose2d, Double>> estimatedVisionPose2d = subSysPhotonvision.getEstimatedVisionPose2d(this.m_odometry.getEstimatedPosition());
             estimatedVisionPose2d.ifPresent(pose2dDoublePair -> this.addVisionMeasurement(pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
         }
