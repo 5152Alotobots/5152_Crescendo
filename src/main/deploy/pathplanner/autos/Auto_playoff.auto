@@ -5,7 +5,7 @@
       "x": 0.9299622202848008,
       "y": 4.566883368000971
     },
-    "rotation": 34.824489156956794
+    "rotation": -42.273689006093726
   },
   "command": {
     "type": "sequential",
@@ -37,7 +37,26 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Auto_Note3_RightPart1"
+                  "pathName": "mplayoffpt1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIntakeNote"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "newmplayoffpt2"
                 }
               },
               {
@@ -47,12 +66,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto_Note3_RightPart2"
           }
         },
         {
@@ -79,30 +92,37 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "PickupNoteAndTransfer"
+                  "pathName": "mplayoffpt3"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Auto_Note3_RightPart3"
+                  "name": "IntakeIntakeNote"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Auto_Note3_RightPart4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreSpeakerCenter"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "mplayoffpt4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              }
+            ]
           }
         }
       ]
