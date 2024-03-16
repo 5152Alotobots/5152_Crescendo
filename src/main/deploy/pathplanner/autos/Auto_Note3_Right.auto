@@ -1,0 +1,113 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.9299622202848008,
+      "y": 4.566883368000971
+    },
+    "rotation": 34.824489156956794
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto_Note3_RightPart1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_Note3_RightPart2"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ScoreSpeakerCenter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeDown"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupNoteAndTransfer"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto_Note3_RightPart3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto_Note3_RightPart4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreSpeakerCenter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

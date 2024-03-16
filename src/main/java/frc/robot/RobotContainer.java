@@ -28,11 +28,14 @@ import frc.robot.crescendo.commands.expirimental.Cmd_AngleShooterAndDriveSpeaker
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ReadyToShoot;
 import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ShooterOccupied;
+import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_Shooting;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_Default;
+import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_IntakeNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -92,9 +95,9 @@ public class RobotContainer {
     final SubSys_Slider sliderSubSys;
     final SubSys_Shooter shooterSubSys;
     final SubSys_Climber climberSubSys;
-       final SubSys_Bling blingSubSys;
-       final SubSys_Photonvision photonvisionSubSys;
-       final SubSys_Bling subSysBling;
+    final SubSys_Bling blingSubSys;
+    final SubSys_Photonvision photonvisionSubSys;
+    final SubSys_Bling subSysBling;
 
     // Switch Robots
        switch (ROBOT) {
@@ -192,6 +195,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("ScoreAmp", new Cmd_ScoreAmp(shooterSubSys));
             NamedCommands.registerCommand("PickupNoteAndTransfer", new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
             NamedCommands.registerCommand("intakeDown", new Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch(intakeSubSys, () -> INTAKE_PRESET_PICKUP));
+            NamedCommands.registerCommand("IntakeIntakeNote", new Cmd_SubSys_Intake_IntakeNote(intakeSubSys));
             // Auto Chooser
             autoChooser = drivetrain.getAutoChooser();
 
@@ -205,9 +209,9 @@ public class RobotContainer {
                 intakeSubSys,
                 sliderSubSys,
                 shooterSubSys,
-                    climberSubSys,
-                    subSysBling,
-                    photonvisionSubSys);
+                climberSubSys,
+                subSysBling,
+                photonvisionSubSys);
                 
             break;
     }
@@ -270,10 +274,10 @@ public class RobotContainer {
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys,
     SubSys_Bling subSysBling,
-    SubSys_Photonvision photonvisionSubSys) {
+    SubSys_Photonvision subSysPhotonvision) {
 
       // Vision
-      drivetrain.setPhotonVisionSubSys(photonvisionSubSys);
+      drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
 
       // ---- Drive Subsystem ----
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -353,7 +357,8 @@ public class RobotContainer {
       subSysBling.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(subSysBling)); // Default
       new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
       new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
-      // ADD READY TO SHOOT
+      new Trigger(shooterSubSys::shooterReady).whileTrue(new Cmd_SubSys_Bling_ReadyToShoot(subSysBling));
+      hmiStation.shooterShoot.onTrue(new Cmd_SubSys_Bling_Shooting(subSysBling).withTimeout(0.5));
     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -361,6 +366,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+
         return autoChooser.getSelected();
     }
 

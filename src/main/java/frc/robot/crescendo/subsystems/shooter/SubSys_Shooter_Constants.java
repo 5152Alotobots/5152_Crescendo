@@ -93,6 +93,7 @@ public class SubSys_Shooter_Constants {
         public static final double SHOOTER_VELOCITY_TOLERANCE = 0.5; // +-X is counted as ready to shoot
         public static final double SHOOTER_ARM_POSITION_TOLERANCE = 0.02; // +-X counts as at position
         public static final double SHOOTER_WAIT_AFTER_SHOOT = 0.5; // X seconds
+        public static final double READY_TO_SHOOT_RPS = 65; // >85rps is ready to shoot
     }
 
     public static final class FieldConstants {

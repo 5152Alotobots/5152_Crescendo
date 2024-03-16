@@ -30,7 +30,7 @@ import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_FOR_POSE_ESTIMATION;
+import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -69,7 +69,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
 
         // Vision estimate
-        if (subSysPhotonvision != null && USE_VISION_FOR_POSE_ESTIMATION) {
+        if (subSysPhotonvision != null && USE_VISION_POSE_ESTIMATION) {
             Optional<Pair<Pose2d, Double>> estimatedVisionPose2d = subSysPhotonvision.getEstimatedVisionPose2d(this.m_odometry.getEstimatedPosition());
             estimatedVisionPose2d.ifPresent(pose2dDoublePair -> this.addVisionMeasurement(pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
         }
@@ -139,7 +139,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public SendableChooser<Command> getAutoChooser(){
         //configurePathPlanner();
-        return AutoBuilder.buildAutoChooser();
+        return AutoBuilder.buildAutoChooser("Auto_JustShoot");
         // Default Path
         //return AutoBuilder.buildAutoChooser(null);
     }
