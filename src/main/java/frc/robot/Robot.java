@@ -7,11 +7,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.library.drivetrains.swerve_ctre.LocalADStarAK;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,6 +41,9 @@ public class Robot extends TimedRobot {
       // Limelight
       PortForwarder.add(5800, "10.51.52.12", 5800);
       PortForwarder.add(5801, "10.51.52.12", 5801);
+
+    // Automatically log all paths to AdvantageKit
+    Pathfinding.setPathfinder(new LocalADStarAK());
   }
 
   /**
