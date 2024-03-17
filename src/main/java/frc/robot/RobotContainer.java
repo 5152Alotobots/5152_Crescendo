@@ -16,8 +16,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Robot.Calibrations;
@@ -25,11 +23,7 @@ import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
 import frc.robot.crescendo.commands.*;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
-import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
-import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_IntakeOccupied;
-import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ReadyToShoot;
-import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_ShooterOccupied;
-import frc.robot.crescendo.subsystems.bling.commands.Cmd_SubSys_Bling_Shooting;
+import frc.robot.crescendo.subsystems.bling.commands.*;
 import frc.robot.crescendo.subsystems.climber.SubSys_Climber;
 import frc.robot.crescendo.subsystems.climber.commands.Cmd_SubSys_Climber_Default;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
@@ -38,16 +32,7 @@ import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_IntakeNo
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_PickUpNote;
 import frc.robot.crescendo.subsystems.intake.commands.Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions;
-import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWheels;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUp;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AimSpinUpShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_AmpHoldThenShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Default;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_HoldThenShoot;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
-import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_Shoot;
+import frc.robot.crescendo.subsystems.shooter.commands.*;
 import frc.robot.crescendo.subsystems.shooter.util.DirectionUtils;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.slider.SubSys_Slider;
@@ -56,6 +41,7 @@ import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_Jo
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_AMP;
@@ -75,7 +61,7 @@ public class RobotContainer {
   private static final int GHETTOBOT = 99;                  // Mechanum Testbench  
     private static final int ROBOT = CRESCENDO_ROBOT_2024;    // 2024 Robot
 
-  public final SendableChooser<Command> autoChooser;
+    public final LoggedDashboardChooser<Command> autoChooser;
 
   // The robot's subsystems and commands are defined here...
 
@@ -223,7 +209,8 @@ public class RobotContainer {
                 
             break;
     }
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+       // USE LOGGED CHOOSER INSTEAD!! SHOULD AUTO PUBLISH TO NT
+//    SmartDashboard.putData("Auto Chooser", (Sendable) autoChooser);
   }
   
 
@@ -367,7 +354,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        return autoChooser.getSelected();
+        return autoChooser.get();
     }
 
 }

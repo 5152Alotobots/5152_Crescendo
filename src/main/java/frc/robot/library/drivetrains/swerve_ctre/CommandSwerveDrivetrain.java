@@ -20,12 +20,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -137,9 +137,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return new PathPlannerAuto(pathName);
     }
 
-    public SendableChooser<Command> getAutoChooser(){
+    public LoggedDashboardChooser<Command> getAutoChooser() {
         //configurePathPlanner();
-        return AutoBuilder.buildAutoChooser("Auto_JustShoot");
+        return new LoggedDashboardChooser<>("Auto Chooser", AutoBuilder.buildAutoChooser("Auto_JustShoot"));
         // Default Path
         //return AutoBuilder.buildAutoChooser(null);
     }
