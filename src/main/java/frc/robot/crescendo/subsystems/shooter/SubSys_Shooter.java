@@ -363,25 +363,49 @@ public class SubSys_Shooter extends SubsystemBase {
         // Check if in Velocity Control
         if(shooterWheelsMtrLeft.getAppliedControl().equals(shooterWheelsMtrLeftVelVoltMMCmd)){
 
-        }
-        return atSpd;
-        
-        // Check Velcity of Both Motors
-        double shooterWheelsSpdCmd = 
-        double leftWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterLeftWheelsVelocity();
-        double rightWheelsVelError = shooterWheelsSpdCmd - subSysShooter.getShooterRightWheelsVelocity();
-        boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
-        boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
-        boolean leftWheelsStable = subSysShooter.getShooterLeftWheelsAcceleration() < 10;
-        boolean rightWheelsStable = subSysShooter.getShooterRightWheelsAcceleration() < 10;
+            // Get SpdCmd
+            double shooterWheelsSpdCmd = shooterWheelsMtrLeft.getClosedLoopReference().getValueAsDouble();
+            // Calculate Velocity Error
+            double leftWheelsVelError = shooterWheelsSpdCmd - getShooterLeftWheelsVelocity();
+            double rightWheelsVelError = shooterWheelsSpdCmd - getShooterRightWheelsVelocity();
+            // Check Velocity Error Level
+            boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
+            boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
+            // Check Acceleration
+            boolean leftWheelsStable = getShooterLeftWheelsAcceleration() < 10;
+            boolean rightWheelsStable = getShooterRightWheelsAcceleration() < 10;
 
-        if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
-            atSpd = true;
-        }else{
-            atSpd = false;
+            if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
+                atSpd = true;
+            }
         }
         return atSpd;
     }
+
+        public boolean getShooterWheelsAtSpeed(){
+        boolean atSpd = false;
+        // Check if in Velocity Control
+        if(shooterWheelsMtrLeft.getAppliedControl().equals(shooterWheelsMtrLeftVelVoltMMCmd)){
+
+            // Get SpdCmd
+            double shooterWheelsSpdCmd = shooterWheelsMtrLeft.getClosedLoopReference().getValueAsDouble();
+            // Calculate Velocity Error
+            double leftWheelsVelError = shooterWheelsSpdCmd - getShooterLeftWheelsVelocity();
+            double rightWheelsVelError = shooterWheelsSpdCmd - getShooterRightWheelsVelocity();
+            // Check Velocity Error Level
+            boolean leftWheelsVelAtSpd = leftWheelsVelError < 5;
+            boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
+            // Check Acceleration
+            boolean leftWheelsStable = getShooterLeftWheelsAcceleration() < 10;
+            boolean rightWheelsStable = getShooterRightWheelsAcceleration() < 10;
+
+            if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
+                atSpd = true;
+            }
+        }
+        return atSpd;
+    }
+        
 
     // Arm ------
 
