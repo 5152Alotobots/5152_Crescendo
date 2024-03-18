@@ -43,8 +43,9 @@ public class SubSys_Intake extends SubsystemBase {
     private double intakeRollerMtrSetpoint = 0.0;
 
     final PositionVoltage intakeArmPid;
-    public SubSys_Intake () {
-        
+
+    public SubSys_Intake() {
+
         intakeRollerMtr.restoreFactoryDefaults();
         intakeRollerMtr.enableVoltageCompensation(10);
         intakeRollerMtr.setInverted(false);
