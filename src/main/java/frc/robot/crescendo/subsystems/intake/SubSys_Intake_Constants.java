@@ -19,7 +19,7 @@ public class SubSys_Intake_Constants {
     }
 
     public static final class MaxSpeeds {
-        public static final double MAX_ARM_ROTATION_SPEED = 0.35; //0.15;
+        public static final double MAX_ARM_ROTATION_SPEED = 0.45; //0.15;
         public static final double MAX_INTAKE_SPEED = -1;
         public static final double TRANSFER_SPEED = 0.2;
     }
@@ -51,15 +51,15 @@ public class SubSys_Intake_Constants {
     }
 
     public static final class PresetIntakePositions {
-        public static final double INTAKE_PRESET_TRANSFER = -150;
+        public static final double INTAKE_PRESET_TRANSFER = -161.45;
         public static final double INTAKE_PRESET_PICKUP = 10;
         public static final double INTAKE_PRESET_STOW = -100;
-        public static final double INTAKE_ARM_POSITION_TOLERANCE = 0.01; // +-X counts as at position
+        public static final double INTAKE_ARM_POSITION_TOLERANCE = 0.005; // +-X counts as at position
     }
 
     public static final class Limit {
         public static final double ARM_LIMIT_FORWARD = 0.01;
-        public static final double ARM_LIMIT_REVERSE = -0.43;
+        public static final double ARM_LIMIT_REVERSE = -0.44775;
         public static final boolean ARM_LIMIT_ENABLE = true;
     }
 

@@ -43,9 +43,9 @@ public class Cmd_SubSys_Climber_Default extends Command {
     
     // Climber
     if(climberUp.getAsBoolean()){
-      climberSubSys.setVoltCmd(5);
+      climberSubSys.setVoltCmd(11);
     }else if(climberDn.getAsBoolean()){
-      climberSubSys.setVoltCmd(-5);
+      climberSubSys.setVoltCmd(-11);
     }else{
       climberSubSys.setVoltCmd(0);
     }

@@ -332,6 +332,14 @@ public class SubSys_Shooter extends SubsystemBase {
     }
 
     /**
+     * Returns true if the average of the two motors are above READY_TO_SHOOT_MPS
+     */
+    public boolean shooterReady() {
+        // Average the velocities of the motors
+        return ((shooterWheelsMtrLeft.getVelocity().getValueAsDouble() + shooterWheelsMtrRight.getVelocity().getValueAsDouble()) / 2.0) > READY_TO_SHOOT_RPS;
+    }
+
+    /**
      * Stops all motors
      */
     public void stopAll() {

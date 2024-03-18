@@ -25,8 +25,8 @@ public final class Constants {
     public static final class Calibrations {
 
       public static final class DriveTrain {
-        public static final double driveXYSpdPerfModeSwFilterRate = 2.0; // m/s/s
-        public static final double driveRotSpdPerfModeSwFilterRate = 2.0; // rad/s/s
+        public static final double driveXYSpdPerfModeSwFilterRate = 8.0; // m/s/s
+        public static final double driveRotSpdPerfModeSwFilterRate = 4.0; // rad/s/s
         public static final double DriveTrainMaxAccel = 3.0; // m/s^2
         public static final double DriveTrainMaxDeccel = -2.0; // m/s^2
 
@@ -221,6 +221,9 @@ public final class Constants {
     // ---- Climber ----
     public static final int ClimberLeftMtr_CAN_ID = 38;        // Talon FX
     public static final int ClimberRightMtr_CAN_ID = 39;        // Talon FX
+
+      // ---- Other ----
+      public static final int CANDLE_CAN_ID = 40;
 
     /** **** End Crescendo Components CAN ID's **** */
   }
