@@ -1,6 +1,7 @@
 package frc.robot.crescendo.subsystems.bling;
 
-import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.ColorFlowAnimation;
 
 import java.awt.*;
 

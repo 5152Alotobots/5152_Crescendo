@@ -4,6 +4,7 @@ import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLog;
 
 import java.awt.*;
 
@@ -12,6 +13,7 @@ import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animat
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.*;
 import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.*;
 
+@AutoLog
 public class SubSys_Bling extends SubsystemBase {
     private Animation currentAnimation;
     private Animation queuedAnimation;

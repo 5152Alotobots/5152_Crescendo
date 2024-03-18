@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    @AutoLogOutput(key = "Pathplanner/FlipPath")
     private boolean m_flipPath = false;
 
     private Field2d field = new Field2d();
@@ -143,7 +145,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         // Default Path
         //return AutoBuilder.buildAutoChooser(null);
     }
-    
+
     public Command getPath(String pathName){
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
         return AutoBuilder.followPath(path);
