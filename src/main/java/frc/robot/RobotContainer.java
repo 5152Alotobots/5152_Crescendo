@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -19,7 +20,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -358,7 +361,19 @@ public class RobotContainer {
       new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
       new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
       new Trigger(shooterSubSys::shooterReady).whileTrue(new Cmd_SubSys_Bling_ReadyToShoot(subSysBling));
+      
       hmiStation.shooterShoot.onTrue(new Cmd_SubSys_Bling_Shooting(subSysBling).withTimeout(0.5));
+
+      // SysID
+      hmiStation.auxButton1.whileTrue(intakeSubSys.intakeArmSysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton2.whileTrue(intakeSubSys.intakeArmSysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      hmiStation.auxButton3.whileTrue(intakeSubSys.intakeArmSysIdDynamic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton4.whileTrue(intakeSubSys.intakeArmSysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+      /* Manually stop logging with left bumper after we're done with the tests */
+      /* This isn't necessary, but is convenient to reduce the size of the hoot file */
+      hmiStation.auxButton5.onTrue(new RunCommand(SignalLogger::start));
+      hmiStation.auxButton6.onTrue(new RunCommand(SignalLogger::stop));
     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -22,31 +22,15 @@ public class Cmd_SubSys_Intake_ArmPosition extends Command {
 
     @Override
     public void initialize() {
-        subSysIntake.setIntakeArmVelVoltsMMPos(posCmd);
+        subSysIntake.setIntakeArmMtrVelVolts(posCmd);
     }
 
     @Override
     public void execute() {
-        subSysIntake.setIntakeArmVelVoltsMMPos(posCmd);
+        subSysIntake.setIntakeArmMtrVoltsMMPos(posCmd);
     
         double armPosError = posCmd - subSysIntake.getIntakeArmPosition();
         boolean armVelError = subSysIntake.getIntakeArmVelocity() < 5;
-    boolean rightWheelsVelAtSpd = rightWheelsVelError < 5;
-    boolean leftWheelsStable = subSysShooter.getShooterLeftWheelsAcceleration() < 10;
-    boolean rightWheelsStable = subSysShooter.getShooterRightWheelsAcceleration() < 10;
-
-    if(leftWheelsVelAtSpd && rightWheelsVelAtSpd && leftWheelsStable && rightWheelsStable){
-      atSpd = true;
-    }else{
-      atSpd = false;
-    }
-
-    if(atSpd && atPos){
-      readyToShoot = true;
-    }
-        
-    SmartDashboard.putBoolean("ShooterAimSpinUp_atPos", atPos);
-    SmartDashboard.putBoolean("Shooter_AimSpinUp_atSpd", atSpd);
     }
 
     @Override

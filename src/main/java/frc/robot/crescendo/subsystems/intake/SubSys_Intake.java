@@ -1,5 +1,7 @@
 package frc.robot.crescendo.subsystems.intake;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,16 +11,24 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import com.revrobotics.*;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CAN_IDs;
 import frc.robot.Constants.DigitalIO_IDs;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeArm;
@@ -30,41 +40,73 @@ import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.Limi
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.MAX_INTAKE_SPEED;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.MaxSpeeds.TRANSFER_SPEED;
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_ARM_POSITION_TOLERANCE;
-
+import static edu.wpi.first.units.Units.Volts;
 /**
  * Handles outputs and inputs from the intake, including rotation motors and limit switches,
  * and Intake intakeRollerMtr.
  */
-public class SubSys_Intake extends SubsystemBase {
-    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
-    private final SparkPIDController intakeRollerMtrPID;
-    private final RelativeEncoder intakeRollerMtrEncoder;
 
+public class SubSys_Intake extends SubsystemBase {
+    // ********************
+    // Intake Roller
+    // ********************
+    // Intake Roller - Motor
+    private final CANSparkMax intakeRollerMtr = new CANSparkMax(CAN_IDs.IntakeRollerMtr_CAN_ID, CANSparkLowLevel.MotorType.kBrushless);
+    // Intake Roller - Encoder
+    private final RelativeEncoder intakeRollerMtrEncoder;
+    // Intake Roller - Motor PID
+    private final SparkPIDController intakeRollerMtrPID;
+    // Intake Roller IR Sensor
     private final DigitalInput intakeRollerIR = new DigitalInput(DigitalIO_IDs.IntakeRollerIRDetector_ID);
+    
+    // ********************
+    // Intake Arm
+    // ********************
+    // Intake Arm Motor
     private final TalonFX intakeArmMtr = new TalonFX(CAN_IDs.IntakeArmMtr_CAN_ID);
+    // Intake Arm CANcoder
     private final CANcoder intakeArmCANCoder = new CANcoder(CAN_IDs.IntakeArmCANCoder_CAN_ID);
-    private final Timer timer = new Timer();
-    private double intakeRollerMtrSetpoint = 0.0;
+    // Intake Arm Commands
+    private final VoltageOut intakeArmMtrVoltOutCmd = new VoltageOut(0.0); 
+    private final VelocityVoltage intakeArmMtrVelVoltCmd;
+    private final MotionMagicVoltage intakeArmMtrVoltMMCmd;
+    private final MotionMagicVelocityVoltage intakeArmMtrVelVoltMMCmd;
+    private final ArmFeedforward intakeArmFFVoltCmd;
 
     final PositionVoltage intakeArmPid;
-    final VelocityVoltage intakeArmVelVoltCmd;
     final PositionVoltage intakeArmPosVoltCmd;
-    final MotionMagicVoltage intakeArmVoltMMCmd;
-    final MotionMagicVelocityVoltage intakeArmVelVoltMMCmd;
-    private ArmFeedforward intakeArmFFVoltCmd;
     
 
+    // SysID
+    private SysIdRoutine intakeArmSysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,          // Default ramp rate is acceptable
+                Volts.of(4),            // Reduce dynamic voltage to 4 to prevent motor brownout
+                null,           // Default timeout is acceptable
+                                        // Log state with Phoenix SignalLogger class
+                (state)->SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (Measure<Voltage> volts)-> intakeArmMtr.setControl(intakeArmMtrVoltOutCmd.withOutput(volts.in(Volts))),
+                null,
+                this));
+
     public SubSys_Intake () {
-        
+        // ********************
+        // Intake Roller
+        // ********************
+        // Intake Roller - Motor Config
         intakeRollerMtr.restoreFactoryDefaults();
-        intakeRollerMtr.enableVoltageCompensation(10);
+        intakeRollerMtr.enableVoltageCompensation(12);
         intakeRollerMtr.setInverted(false);
-        intakeRollerMtr.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        intakeRollerMtr.setIdleMode(IdleMode.kBrake);
         intakeRollerMtr.setOpenLoopRampRate(IntakeRoller.OpenLoopRampRate);
         intakeRollerMtr.setClosedLoopRampRate(IntakeRoller.PID.ClosedLoopRampRate);
-
+        // Intake Roller - Encoder Config
         intakeRollerMtrEncoder = intakeRollerMtr.getEncoder();
-
+        intakeRollerMtrEncoder.setVelocityConversionFactor(0.016666666666667); // Convert from RPM to Rot/s
+        
+        // Intake Roller - Motor PID Config
         intakeRollerMtrPID = intakeRollerMtr.getPIDController();
         intakeRollerMtrPID.setP(IntakeRoller.PID.Pgain);
         intakeRollerMtrPID.setI(IntakeRoller.PID.Igain);
@@ -73,13 +115,22 @@ public class SubSys_Intake extends SubsystemBase {
         intakeRollerMtrPID.setFF(IntakeRoller.PID.FFwd);
         intakeRollerMtrPID.setOutputRange(IntakeRoller.PID.MinOutput,IntakeRoller.PID.MaxOutput);
 
-        // Configure Intake Arm Motor
+        // ********************
+        // Intake Arm
+        // ********************
+        // Intake Arm Motor Config
         TalonFXConfiguration intakeArmMtrConfiguration = new TalonFXConfiguration();
         intakeArmMtrConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeArmMtrConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         intakeArmMtrConfiguration.Feedback.FeedbackRemoteSensorID = intakeArmCANCoder.getDeviceID();
         intakeArmMtrConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;     
+        intakeArmMtrConfiguration.Feedback.RotorToSensorRatio = 1; // 0.005291;
+
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ARM_LIMIT_FORWARD;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ARM_LIMIT_REVERSE;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = ARM_LIMIT_ENABLE;
+        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = ARM_LIMIT_ENABLE;     
+
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = false;
@@ -88,6 +139,7 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitEnable = true;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
         intakeArmMtrConfiguration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = IntakeArm.RevLimitSwitchPos;
+
         intakeArmMtrConfiguration.Slot0.kP = ARM_P;
         intakeArmMtrConfiguration.Slot0.kI = ARM_I;
         intakeArmMtrConfiguration.Slot0.kD = ARM_D;
@@ -97,31 +149,15 @@ public class SubSys_Intake extends SubsystemBase {
         intakeArmMtrConfiguration.Slot1.kP = 0.1;
         intakeArmMtrConfiguration.Slot1.kI = 0.0;
         intakeArmMtrConfiguration.Slot1.kD = 0.0;
-        // Gravity -0.3
-        // FF 2V = 0.1
-        //    3V = 0.125
-        //    4V = 0.22
-        //    5V = 0.25
+
         intakeArmMtrConfiguration.MotionMagic.MotionMagicAcceleration = 0.5; // Target acceleration of 400 rps/s (0.25 seconds to max)
         intakeArmMtrConfiguration.MotionMagic.MotionMagicJerk = 0.5; // Target jerk of 4000 rps/s/s (0.1 seconds)
-        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = ARM_LIMIT_FORWARD;
-        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = ARM_LIMIT_REVERSE;
-        intakeArmMtrConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = ARM_LIMIT_ENABLE;
-        intakeArmMtrConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = ARM_LIMIT_ENABLE;
+  
 
         TalonFXConfigurator intakeArmMtrConfigurator = intakeArmMtr.getConfigurator();
         intakeArmMtrConfigurator.apply(intakeArmMtrConfiguration);
 
-        // create a position closed-loop request, voltage output, slot 0 configs
-        intakeArmPid = new PositionVoltage(0).withSlot(0);      
-        intakeArmVelVoltCmd = new VelocityVoltage(0).withSlot(1);
-        intakeArmPosVoltCmd = new PositionVoltage(0).withSlot(1);
-        intakeArmVoltMMCmd = new MotionMagicVoltage(0).withSlot(1);
-        intakeArmVelVoltMMCmd = new MotionMagicVelocityVoltage(0).withSlot(1);
-
-        intakeArmFFVoltCmd = new ArmFeedforward(0, -0.3, 0);
-
-        // Configure Intake Arm CANcoder
+        // Intake Arm CANcoder Config
         CANcoderConfiguration intakeArmCANcoderConfiguration = new CANcoderConfiguration();
         intakeArmCANcoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         intakeArmCANcoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
@@ -130,22 +166,219 @@ public class SubSys_Intake extends SubsystemBase {
         CANcoderConfigurator intakeArmCANCoderConfigurator = intakeArmCANCoder.getConfigurator();
         intakeArmCANCoderConfigurator.apply(intakeArmCANcoderConfiguration);
 
-        intakeRollerMtr.setIdleMode(CANSparkBase.IdleMode.kBrake);
+        // Intake Arm Commands Config
+        intakeArmMtrVelVoltCmd = new VelocityVoltage(0).withSlot(1); 
+        intakeArmMtrVoltMMCmd = new MotionMagicVoltage(0).withSlot(1);     
+        intakeArmMtrVelVoltMMCmd = new MotionMagicVelocityVoltage(0).withSlot(1);
+
+        // Intake Arm FF Command
+        intakeArmFFVoltCmd = new ArmFeedforward(-0.075, -0.3, -0.05);
+        // Gravity -0.3
+        // FF 2V = 0.1
+        //    3V = 0.125
+        //    4V = 0.22
+        //    5V = 0.25
+
+        // create a position closed-loop request, voltage output, slot 0 configs
+        intakeArmPid = new PositionVoltage(0).withSlot(0);
+        intakeArmPosVoltCmd = new PositionVoltage(0).withSlot(1);
+        
+        // Intake Arm SysID
+        /* Speed up signals for better charaterization data */
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
+            intakeArmMtr.getPosition(),
+            intakeArmMtr.getVelocity(),
+            intakeArmMtr.getMotorVoltage());
+
+        /* Optimize out the other signals, since they're not particularly helpful for us */
+        intakeArmMtr.optimizeBusUtilization();
+        
+        // Set the logger to log to the first flashdrive plugged in
+        SignalLogger.setPath("/media/sda1/");
+        SignalLogger.start();
+       
     }
     
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
-        SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
-        SmartDashboard.putNumber("Intake/ArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/ArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake/ArmPos", getIntakeArmPos());
-        SmartDashboard.putBoolean("Intake/Arm Motor Busy", intakeArmMtrBusy());
-        SmartDashboard.putBoolean("Intake/Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
-        SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
-        SmartDashboard.putBoolean("Intake/ForwardLimitValue", (intakeArmMtr.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround));
-        SmartDashboard.putBoolean("Intake/ReverseLimitValue", (intakeArmMtr.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround));
+        // ********************
+        // Intake Roller
+        // ********************
+        // Intake Roller - Motor
+        SmartDashboard.putNumber("IntakeRollerSpd", intakeRollerMtrEncoder.getVelocity());
+        // Intake Roller IR Sensor
+        SmartDashboard.putBoolean("IntakeIRRaw", intakeRollerIR.get());
+
+        // ********************
+        // Intake Arm
+        // ********************
+        // Intake Arm Motor
+        SmartDashboard.putNumber("IntakeArmPosRaw", intakeArmMtr.getPosition().getValueAsDouble()); // Remove once verified
+        SmartDashboard.putNumber("IntakeArmPos", getIntakeArmVelocity());
+        SmartDashboard.putNumber("IntakeArmVelRaw", intakeArmMtr.getVelocity().getValueAsDouble()); // Remove once verified
+        SmartDashboard.putNumber("IntakeArmVel", getIntakeArmVelocity());
+        SmartDashboard.putBoolean("IntakeArmFwdLimitSw", intakeArmMtr.getFault_ForwardHardLimit().getValue());
+        SmartDashboard.putBoolean("IntakeArmRevLimitSw", intakeArmMtr.getFault_ReverseHardLimit().getValue());
+        SmartDashboard.putBoolean("IntakeArmFwdSwLimit", intakeArmMtr.getFault_ForwardSoftLimit().getValue());
+        SmartDashboard.putBoolean("IntakeArmRevSwLimit", intakeArmMtr.getFault_ReverseSoftLimit().getValue());
+
+        //SmartDashboard.putBoolean("Intake /IR Raw value", intakeRollerIR.get());
+        //SmartDashboard.putBoolean("Intake/IR Raw value", intakeRollerIR.get());
+        //SmartDashboard.putBoolean("Intake/Intake Occupied", getIntakeOccupied());
+        //SmartDashboard.putNumber("Intake/ArmEncoderAbsolutePos", intakeArmCANCoder.getAbsolutePosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Intake/ArmEncoderPos", intakeArmCANCoder.getPosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Intake/ArmPos", getIntakeArmPos());
+        //SmartDashboard.putBoolean("Intake/Arm Motor Busy", intakeArmMtrBusy());
+        //SmartDashboard.putBoolean("Intake/Arm Motor At Setpoint", intakeArmMtrAtSetpoint());
+        //SmartDashboard.putNumber("Intake/Intake Arm PID Position", intakeArmMtr.getClosedLoopReference().getValueAsDouble());
+        //SmartDashboard.putBoolean("Intake/ForwardLimitValue", (intakeArmMtr.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround));
+        //SmartDashboard.putBoolean("Intake/ReverseLimitValue", (intakeArmMtr.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround));
     }
+
+    // ********************
+    // Intake Roller
+    // ********************
+
+    /**
+     * setIntakeRollerMtrDutyCycle
+     * Open Loop Duty Cycle Command 
+     * @param dutyCycleCmd double Duty Cycle Cmd (-1 - 1)
+     * @return double Intake Roller Motor Velocity (Rot/s)
+     */
+    public double setIntakeRollerMtrDutyCycle(double dutyCycleCmd){
+        intakeRollerMtr.set(dutyCycleCmd);
+        return intakeRollerMtrEncoder.getVelocity();
+    }
+
+    // Intake Roller IR Sensor
+    /** 
+     * getIntakeOccupied
+     * Get Intake IR Sensor
+     * @return true if the intake is occupied with a note
+     * */
+    public boolean getIntakeOccupied() {
+        return !intakeRollerIR.get();
+    }
+
+    // ********************
+    // Intake Arm
+    // ********************
+    // Intake Arm Motor
+
+    /**
+     * getIntakeArmVelocity
+     * Get Intake Arm Velocity
+     * @return double Intake Arm Motor Velocity (Rot/s)
+     */
+    public double getIntakeArmVelocity(){
+        return intakeArmMtr.getVelocity().getValueAsDouble();
+    }
+
+    /**
+    * getIntakeArmPosition
+    * Get Intake Arm Velocity
+    * @return double Intake Arm Motor Velocity (Rot/s)
+    */
+    public double getIntakeArmPosition(){
+        return intakeArmMtr.getPosition().getValueAsDouble();
+    }
+
+
+    /**
+     * setIntakeArmMtrDutyCycle
+     * Set Intake Arm Motor Duty Cycle
+     * @param dutyCycleCmd double Duty Cycle Cmd (-1 - 1)
+     * @return double Intake Arm Motor Velocity (Rot/s)
+     */
+    public double setIntakeArmMtrDutyCycle(double dutyCycleCmd){
+        intakeArmMtr.set(dutyCycleCmd);
+        return intakeArmMtr.getVelocity().getValueAsDouble();
+    }
+
+    /**
+     * setIntakeArmMtrVoltOut
+     * Set Intake Arm Motor Voltage Out
+     * @param voltCmd double Voltage Command (-12 - 12)
+     * @return double Intake Arm Motor Velocity (Rot/s)
+     */
+    public double setIntakeArmMtrVoltOut(double voltCmd){
+        intakeArmMtr.setControl(intakeArmMtrVoltOutCmd.withOutput(voltCmd).withEnableFOC(true));
+        //intakeArmMtr.setControl(intakeArmMtrVoltOutCmd.withOutput(
+        //    voltCmd+
+        //    intakeArmFFVoltCmd.calculate(Units.rotationsToRadians(intakeArmMtr.getPosition().getValueAsDouble()),0.0))
+        //    .withEnableFOC(true));
+        
+        return intakeArmMtr.getVelocity().getValueAsDouble();
+    }
+
+    /**
+     * setIntakeArmMtrVelVolts
+     * Set Intake Arm Motor Velocity in Volt Mode
+     * @param spdCmd double Speed Command (Rot/s)
+     * @return double Intake Arm Motor Velocity (Rot/s)
+     */
+    public double setIntakeArmMtrVelVolts(double spdCmd){
+        intakeArmMtr.setControl(intakeArmMtrVelVoltCmd.withVelocity(spdCmd).withEnableFOC(true));
+        //intakeArmMtr.setControl(intakeArmMtrVelVoltCmd.withVelocity(spdCmd)
+        //    .withFeedForward(intakeArmFFVoltCmd.calculate(Units.rotationsToRadians(intakeArmMtr.getPosition().getValueAsDouble()),Units.rotationsToRadians(spdCmd)))
+        //    .withEnableFOC(true));
+        return intakeArmMtr.getVelocity().getValueAsDouble();
+    }
+
+    /**
+     * setIntakeArmMtrVelVoltsMM
+     * Set Intake Arm Motor Velocity in Volt Mode with Motion Magic
+     * @param spdCmd double Speed Command (Rot/s)
+     * @return MotionMagicIsRunningValue Motion Magic Running Value
+     */
+    public MotionMagicIsRunningValue setIntakeArmMtrVelVoltsMM(double spdCmd){
+        intakeArmMtr.setControl(intakeArmMtrVelVoltMMCmd.withVelocity(spdCmd).withEnableFOC(true));
+        //intakeArmMtr.setControl(intakeArmMtrVelVoltMMCmd.withVelocity(spdCmd)
+        //    .withFeedForward(intakeArmFFVoltCmd.calculate(Units.rotationsToRadians(intakeArmMtr.getPosition().getValueAsDouble()),Units.rotationsToRadians(spdCmd)))
+        //    .withEnableFOC(true));
+        return intakeArmMtr.getMotionMagicIsRunning().getValue();
+    }
+    
+    /**
+     * setIntakeArmMtrVoltsMMPos
+     * Set Intake Arm Position Command in Volt Mode with Motion Magic
+     * @param posCmd double Position Command in Rots
+     * @return boolean Stable at Position Command
+     */
+    public boolean setIntakeArmMtrVoltsMMPos(double posCmd){
+        intakeArmMtr.setControl(intakeArmMtrVoltMMCmd.withPosition(posCmd).withEnableFOC(true));
+        //intakeArmMtr.setControl(intakeArmMtrVoltMMCmd.withPosition(posCmd)
+        //    .withFeedForward(intakeArmFFVoltCmd.calculate(Units.rotationsToRadians(intakeArmMtr.getPosition().getValueAsDouble()),0.0))
+        //    .withEnableFOC(true));
+        return getIntakeArmAtPos(posCmd);
+    }
+
+    /**
+     * getIntakeArmAtPos
+     * Get Intake Arm at Position Command.  Must be within a position error and velocity error
+     * @param posCmd double Position Command in Rots
+     * @return boolean At Position Command
+     */
+    public boolean getIntakeArmAtPos(double posCmd){
+        boolean atPos = false;
+        double posError = posCmd-intakeArmMtr.getPosition().getValueAsDouble();
+        if(Math.abs(posError) < 0.01){
+            if(Math.abs(intakeArmMtr.getVelocity().getValueAsDouble())< 0.001){
+                atPos = true;
+            }
+        }
+        return atPos;
+    }
+
+    // SysID
+    public Command intakeArmSysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return intakeArmSysIdRoutine.quasistatic(direction);
+    }
+    public Command intakeArmSysIdDynamic(SysIdRoutine.Direction direction) {
+        return intakeArmSysIdRoutine.dynamic(direction);
+    }
+
+
 
     /**
      * Calls correct IntakeArm method depending on the values of limit switches
@@ -239,12 +472,7 @@ public class SubSys_Intake extends SubsystemBase {
     //     intakeArmMtr.setControl(new PositionVoltage(degree / 360.0).withSlot(0));
     // }
 
-    /**
-     * @return true if the intake is occupied with a note
-     * */
-    public boolean getIntakeOccupied() {
-        return !intakeRollerIR.get();
-    }
+
 
 
     public void setIntakeRollerSpdDutyCycle(double spdCmd){
@@ -349,25 +577,5 @@ public class SubSys_Intake extends SubsystemBase {
      */
     public boolean atLowerLimit(){ 
         return intakeArmMtr.getForwardLimit().getValue().equals(ForwardLimitValue.ClosedToGround);
-    }
-
-    public void setIntakeArmVelVolts(double spdCmd){
-        intakeArmMtr.setControl(intakeArmVelVoltCmd.withVelocity(spdCmd).withEnableFOC(true));
-    }
-
-    public void setIntakeArmVelVoltsMM(double spdCmd){
-        intakeArmMtr.setControl(intakeArmVelVoltMMCmd.withVelocity(spdCmd).withEnableFOC(true));
-    }
-
-    public void setIntakeArmVelVoltsMMPos(double posCmd){
-        intakeArmMtr.setControl(intakeArmVoltMMCmd.withPosition(posCmd).withEnableFOC(true));
-    }
-
-    public double getIntakeArmPosition(){
-        return intakeArmMtr.getPosition().getValueAsDouble();
-    }
-
-    public double getIntakeArmVelocity(){
-        return intakeArmMtr.getVelocity().getValueAsDouble();
     }
 }
