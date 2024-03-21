@@ -14,4 +14,5 @@ public class SubSys_Limelight_Constants {
     public static final boolean OBJECT_DETECTION_ENABLED = true;
     public static final String NN_LIMELIGHT = "limelight";
     public static final double CONFIDENCE_DECAY = 0.01 * 0.02; // decay per second (assuming 20ms loop time)
+    public static final double POSE_TOLERANCE = 0.15; // 15cm
 }

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 /**
- * Stores information about an object detected by vision
+ * Stores information about an getObject detected by vision
  */
 public class DetectedObject {
     private static CommandSwerveDrivetrain drive;
@@ -37,10 +37,10 @@ public class DetectedObject {
     /**
      * Creates a new DetectedObject
      *
-     * @param xOffset       The x offset from the camera to the object in radians
-     * @param yOffset       The y offset form the camera to the object in radians
-     * @param distance      The distance from the camera to the object in meters
-     * @param type          What type of object it is
+     * @param xOffset       The x offset from the camera to the getObject in radians
+     * @param yOffset       The y offset form the camera to the getObject in radians
+     * @param distance      The distance from the camera to the getObject in meters
+     * @param type          What type of getObject it is
      * @param robotToCamera The transformation form the robot to the camera
      */
     public DetectedObject(double xOffset, double yOffset, double distance, ObjectType type, Transform3d robotToCamera) {
@@ -70,10 +70,10 @@ public class DetectedObject {
     /**
      * Creates a new DetectedObject
      *
-     * @param xOffset       The x offset from the camera to the object in radians
-     * @param yOffset       The y offset form the camera to the object in radians
-     * @param distance      The distance from the camera to the object in meters
-     * @param type          What type of object it is
+     * @param xOffset       The x offset from the camera to the getObject in radians
+     * @param yOffset       The y offset form the camera to the getObject in radians
+     * @param distance      The distance from the camera to the getObject in meters
+     * @param type          What type of getObject it is
      * @param robotToCamera The transformation form the robot to the camera
      */
     public DetectedObject(double xOffset, double yOffset, double distance, long type, Transform3d robotToCamera) {
@@ -81,11 +81,11 @@ public class DetectedObject {
     }
 
     /**
-     * Creates a new DetectedObject, assuming the object is on the ground
+     * Creates a new DetectedObject, assuming the getObject is on the ground
      *
-     * @param xOffset       The x offset from the camera to the object in radians
-     * @param yOffset       The y offset form the camera to the object in radians
-     * @param type          What type of object it is
+     * @param xOffset       The x offset from the camera to the getObject in radians
+     * @param yOffset       The y offset form the camera to the getObject in radians
+     * @param type          What type of getObject it is
      * @param robotToCamera The transformation form the robot to the camera
      */
     public DetectedObject(double xOffset, double yOffset, ObjectType type, Transform3d robotToCamera) {
@@ -94,7 +94,7 @@ public class DetectedObject {
         Translation3d translation = new Translation3d(1, new Rotation3d(0, yOffset, -xOffset));
         // Rotate it to get the position relative to the rotated camera
         translation = translation.rotateBy(robotToCamera.getRotation());
-        // Scale it so that the object will be on the ground (- because translation's z will be negative)
+        // Scale it so that the getObject will be on the ground (- because translation's z will be negative)
         if (!isRobot()) {
             translation = translation.times(-robotToCamera.getZ() / translation.getZ());
         } else {
@@ -121,11 +121,11 @@ public class DetectedObject {
     }
 
     /**
-     * Creates a new DetectedObject, assuming the object is on the ground
+     * Creates a new DetectedObject, assuming the getObject is on the ground
      *
-     * @param xOffset       The x offset from the camera to the object in radians
-     * @param yOffset       The y offset form the camera to the object in radians
-     * @param type          What type of object it is
+     * @param xOffset       The x offset from the camera to the getObject in radians
+     * @param yOffset       The y offset form the camera to the getObject in radians
+     * @param type          What type of getObject it is
      * @param robotToCamera The transformation form the robot to the camera
      */
     public DetectedObject(double xOffset, double yOffset, long type, Transform3d robotToCamera) {
@@ -147,27 +147,27 @@ public class DetectedObject {
     }
 
     /**
-     * Returns if the object is a game piece
+     * Returns if the getObject is a game piece
      *
-     * @return True if the object is a note, false otherwise
+     * @return True if the getObject is a note, false otherwise
      */
     public boolean isGamePiece() {
         return type == ObjectType.NOTE;
     }
 
     /**
-     * Returns if the object is a robot
+     * Returns if the getObject is a robot
      *
-     * @return True if the object is a red or blue robot, false otherwise
+     * @return True if the getObject is a red or blue robot, false otherwise
      */
     public boolean isRobot() {
         return type == ObjectType.RED_ROBOT || type == ObjectType.BLUE_ROBOT;
     }
 
     /**
-     * Returns if the object is a robot on the same alliance
+     * Returns if the getObject is a robot on the same alliance
      *
-     * @return If the object is a robot on the same alliance
+     * @return If the getObject is a robot on the same alliance
      */
     public boolean isSameAllianceRobot() {
         if (DriverStation.getAlliance().isPresent()) {
@@ -178,9 +178,9 @@ public class DetectedObject {
     }
 
     /**
-     * Returns if the object is a robot on the other alliance
+     * Returns if the getObject is a robot on the other alliance
      *
-     * @return If the object is a robot on the other alliance
+     * @return If the getObject is a robot on the other alliance
      */
     public boolean isOtherAllianceRobot() {
         if (DriverStation.getAlliance().isPresent()) {
@@ -191,7 +191,7 @@ public class DetectedObject {
     }
 
     /**
-     * Gets the distance from the center of the robot to the object
+     * Gets the distance from the center of the robot to the getObject
      *
      * @return The distance in meters
      */
@@ -200,7 +200,7 @@ public class DetectedObject {
     }
 
     /**
-     * Gets the field relative angle from the robot to the object
+     * Gets the field relative angle from the robot to the getObject
      *
      * @return The angle in radians
      */
