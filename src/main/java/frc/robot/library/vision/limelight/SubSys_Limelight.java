@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.library.vision.limelight.util.DetectedObject;
 
 import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
 
@@ -54,7 +55,6 @@ public class SubSys_Limelight extends SubsystemBase {
         if (OBJECT_DETECTION_ENABLED && limelightConnected) {
             objectDetected = LimelightLib.getTV(NN_LIMELIGHT);
             jsonDumpResults = LimelightLib.getLatestResults(NN_LIMELIGHT);
-
             if (objectDetected) {
                 horizontalOffset = Math.toRadians(LimelightLib.getTX(NN_LIMELIGHT));
                 verticalOffset = Math.toRadians(LimelightLib.getTY(NN_LIMELIGHT));
