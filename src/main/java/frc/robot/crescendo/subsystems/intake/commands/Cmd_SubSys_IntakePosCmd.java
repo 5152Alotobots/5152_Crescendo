@@ -33,13 +33,13 @@ public class Cmd_SubSys_IntakePosCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    atPos = intakeSubSys.setIntakeArmPosCmd(posCmd);
+    //atPos = intakeSubSys.setIntakeArmPosCmd(posCmd);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeArmSpd(0.0);
+    //intakeSubSys.setIntakeArmSpd(0.0);
   }
 
   // Returns true when the command should end.

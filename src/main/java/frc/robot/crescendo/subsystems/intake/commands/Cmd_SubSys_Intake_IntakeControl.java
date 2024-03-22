@@ -25,13 +25,13 @@ public class Cmd_SubSys_Intake_IntakeControl extends Command {
 
   @Override
   public void execute() {
-    intakeSubSys.setIntakeDirection(intakeDirection);
+    //intakeSubSys.setIntakeDirection(intakeDirection);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
+    //intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
     timer.stop();
   }
 

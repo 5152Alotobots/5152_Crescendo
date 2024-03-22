@@ -27,17 +27,17 @@ public class Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch extends Command {
 
     @Override
     public void execute() {
-        subSysIntake.setIntakeArmDegree(degrees.getAsDouble());
+        //subSysIntake.setIntakeArmDegree(degrees.getAsDouble());
     }
 
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        subSysIntake.setIntakeArmSpeed(0);
+        //subSysIntake.setIntakeArmSpeed(0);
     }
 
     @Override
     public boolean isFinished() {
-        return subSysIntake.atLowerLimit(); // account for delay
+        return true; //subSysIntake.atLowerLimit(); // account for delay
     }
 }

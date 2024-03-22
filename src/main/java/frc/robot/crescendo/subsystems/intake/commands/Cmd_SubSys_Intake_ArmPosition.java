@@ -10,7 +10,7 @@ import java.util.function.DoubleSupplier;
 public class Cmd_SubSys_Intake_ArmPosition extends Command {
     SubSys_Intake subSysIntake;
     double posCmd;
-    Timer timer = new Timer();
+    boolean atPos = false;
 
     /**
      * Rotates the intake to a degree offset from (down position) 0 degrees
@@ -22,25 +22,21 @@ public class Cmd_SubSys_Intake_ArmPosition extends Command {
 
     @Override
     public void initialize() {
-        subSysIntake.setIntakeArmMtrVelVolts(posCmd);
+        subSysIntake.setIntakeArmMtrPosVolts(posCmd);
     }
 
     @Override
     public void execute() {
-        subSysIntake.setIntakeArmMtrVoltsMMPos(posCmd);
-    
-        double armPosError = posCmd - subSysIntake.getIntakeArmPosition();
-        boolean armVelError = subSysIntake.getIntakeArmVelocity() < 5;
+        atPos = subSysIntake.setIntakeArmMtrPosVolts(posCmd);
     }
 
     @Override
     public void end(boolean interrupted) {
-        timer.stop();
-        subSysIntake.setIntakeArmSpeed(0);
+        subSysIntake.setIntakeArmMtrDutyCycle(0);
     }
 
     @Override
     public boolean isFinished() {
-        return subSysIntake.intakeArmMtrAtSetpoint() && timer.get() > 0.8; // account for delay
+        return atPos;
     }
 }

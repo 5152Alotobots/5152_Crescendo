@@ -1,6 +1,6 @@
 package frc.robot.crescendo.commands;
 
-import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_TRANSFER;
+//import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_TRANSFER;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_TRANSFER;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,17 +27,17 @@ public class Cmd_TransferIntakeToShooter extends Command {
 
     @Override
     public void execute() {
-        subSysIntake.setIntakeArmDegree(INTAKE_PRESET_TRANSFER); // Hold pos
+        //subSysIntake.setIntakeArmDegree(INTAKE_PRESET_TRANSFER); // Hold pos
         subSysShooter.setShooterArmDegree(ARM_PRESET_TRANSFER); // Hold position while transfering
         subSysShooter.setIntakeOutput(ShooterIntakeDirection.TRANSFER);
-        subSysIntake.setIntakeDirection(IntakeDirection.TRANSFER);
+        //subSysIntake.setIntakeDirection(IntakeDirection.TRANSFER);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         subSysShooter.stopAll();
-        subSysIntake.setIntakeDirection(IntakeDirection.NONE);
+        //subSysIntake.setIntakeDirection(IntakeDirection.NONE);
     }
 
     // Returns true when the command should end.

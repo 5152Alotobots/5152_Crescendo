@@ -142,7 +142,7 @@ public class HMIStation {
    * @return The rotation axis value.
    */ 
   public double intakeArmAxisRaw() {
-    return coDriverController.getRawAxis(1);
+    return JoystickUtilities.joyDeadBnd(coDriverController.getRawAxis(1),0.1);
   }
   
   // Co Driver Trigger Axes

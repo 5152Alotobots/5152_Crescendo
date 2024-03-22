@@ -15,7 +15,7 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
 import frc.robot.crescendo.subsystems.shooter.commands.Cmd_SubSys_Shooter_RotateToDegree;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
-import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.*;
+//import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PresentArmPositions.ARM_PRESET_TRANSFER;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -34,13 +34,13 @@ public class Cmd_PickUpNoteTransferToShooter extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ParallelCommandGroup(
-        new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_TRANSFER),
-        new Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch(intakeSubSys, () -> INTAKE_PRESET_PICKUP)
+        new Cmd_SubSys_Shooter_RotateToDegree(shooterSubSys, () -> ARM_PRESET_TRANSFER)//,
+        //new Cmd_SubSys_Intake_RotateToDegreeWithLimitSwitch(intakeSubSys, () -> INTAKE_PRESET_PICKUP)
       ),  
-      new Cmd_SubSys_Intake_IntakeNote(intakeSubSys),
-      new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER),
-      new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER).withTimeout(0.2),
-      new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys)
+      new Cmd_SubSys_Intake_IntakeNote(intakeSubSys)//,
+      //new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER),
+      //new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER).withTimeout(0.2),
+      //new Cmd_TransferIntakeToShooter(shooterSubSys, intakeSubSys)
       // new Cmd_SubSys_Intake_RotateToDegree(intakeSubSys, () -> INTAKE_PRESET_TRANSFER)
     );
   }

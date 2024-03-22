@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.intake.IntakeDirection;
 import frc.robot.crescendo.subsystems.intake.SubSys_Intake;
+import frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.IntakeRollerMtr;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -27,20 +28,21 @@ public class Cmd_SubSys_Intake_Default extends Command {
   @Override
   public void execute() {
     SmartDashboard.putNumber("Intake/Input Axis", intakeArmSpeedAxis.getAsDouble());
-    intakeSubSys.setIntakeArmSpeedWithLimits(intakeArmSpeedAxis.getAsDouble());
+    intakeSubSys.setIntakeArmMtrVoltOut(intakeArmSpeedAxis.getAsDouble()*12);
+
     if (intakeButton.getAsBoolean()) 
-      intakeSubSys.setIntakeDirection(IntakeDirection.IN);
+      intakeSubSys.setIntakeRollerMtrDutyCycle(IntakeRollerMtr.SpeedSettings.IntakeDutyCycle);
     else if (outputButton.getAsBoolean())
-      intakeSubSys.setIntakeDirection(IntakeDirection.TRANSFER);
+      intakeSubSys.setIntakeRollerMtrDutyCycle(IntakeRollerMtr.SpeedSettings.TransferDutyCycle);
     else 
-      intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
+      intakeSubSys.setIntakeRollerMtrDutyCycle(0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeArmSpeed(0);
-    intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
+    intakeSubSys.setIntakeArmMtrDutyCycle(0);
+    intakeSubSys.setIntakeRollerMtrDutyCycle(0);
   }
 
   // Returns true when the command should end.

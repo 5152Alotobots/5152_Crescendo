@@ -27,14 +27,14 @@ public class Cmd_SubSys_Intake_IntakeNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubSys.setIntakeDirection(IntakeDirection.IN);
+    //intakeSubSys.setIntakeDirection(IntakeDirection.IN);
     // Code to drive forward into note
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
+    //intakeSubSys.setIntakeDirection(IntakeDirection.NONE);
   }
 
   // Returns true when the command should end.
