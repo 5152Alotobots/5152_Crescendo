@@ -47,6 +47,7 @@ import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+import frc.robot.library.vision.limelight.SubSys_Limelight;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
@@ -97,6 +98,7 @@ public class RobotContainer {
     final SubSys_Climber climberSubSys;
     final SubSys_Bling blingSubSys;
     final SubSys_Photonvision photonvisionSubSys;
+    final SubSys_Limelight limelightSubSys;
     final SubSys_Bling subSysBling;
 
     // Switch Robots
@@ -183,6 +185,8 @@ public class RobotContainer {
 
             // ---- Vision Subsystem ----
             photonvisionSubSys = new SubSys_Photonvision("camFront");
+
+            limelightSubSys = new SubSys_Limelight(subSysBling, drivetrain);
             
             // ---- Auto ----
             // Register Named Commands for PathPlanner
@@ -211,7 +215,8 @@ public class RobotContainer {
                 shooterSubSys,
                 climberSubSys,
                 subSysBling,
-                photonvisionSubSys);
+                photonvisionSubSys,
+                    limelightSubSys);
                 
             break;
     }
@@ -274,7 +279,8 @@ public class RobotContainer {
     SubSys_Shooter shooterSubSys,
     SubSys_Climber climberSubSys,
     SubSys_Bling subSysBling,
-    SubSys_Photonvision subSysPhotonvision) {
+    SubSys_Photonvision subSysPhotonvision,
+    SubSys_Limelight subSysLimelight) {
 
       // Vision
       drivetrain.setPhotonVisionSubSys(subSysPhotonvision);

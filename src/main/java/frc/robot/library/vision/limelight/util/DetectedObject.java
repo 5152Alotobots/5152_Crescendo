@@ -196,7 +196,9 @@ public class DetectedObject {
      * @return The distance in meters
      */
     public double getDistance() {
-        return drive.getState().Pose.getTranslation().getDistance(pose.getTranslation().toTranslation2d());
+        if (drive != null) {
+            return drive.getState().Pose.getTranslation().getDistance(pose.getTranslation().toTranslation2d());
+        } else return 0;
     }
 
     /**
@@ -205,7 +207,9 @@ public class DetectedObject {
      * @return The angle in radians
      */
     public double getAngle() {
-        return Math.atan2(pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
+        if (drive != null) {
+            return Math.atan2(pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
+        } else return 0;
     }
 
     /**

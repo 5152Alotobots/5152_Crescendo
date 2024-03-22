@@ -9,8 +9,8 @@ public class SubSys_Limelight_Constants {
     // ROLL, PITCH, YAW: CCW +
     public static final Transform3d LL_OFFSET =
             new Transform3d(
-                    new Translation3d(-0.36, 0.175, 0.172),
-                    new Rotation3d(0, Math.toRadians(-54), Math.toRadians(180)));
+                    new Translation3d(0.15, 0, 0.37),
+                    new Rotation3d(0, Math.toRadians(12), Math.toRadians(0)));
 
     public static final boolean OBJECT_DETECTION_ENABLED = true;
     public static final String NN_LIMELIGHT = "limelight";
