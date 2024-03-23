@@ -69,14 +69,13 @@ public class SubSys_Limelight extends SubsystemBase {
 
                 // Loop through every result in the array
                 for (LimelightLib.LimelightTarget_Detector detection : latestResults.targetingResults.targets_Detector) {
-
                     // compute the offsets in radians (DetectedObject uses radians)
-                    double horizontalOffset = -Math.toRadians(detection.tx); // MAKE CCW POS
-                    double verticalOffset = Math.toRadians(detection.ty);
+                    double horizontalOffset = Math.toRadians(detection.tx);
+                    double verticalOffset = Math.toRadians(-detection.ty); // MAKE CCW POS
 
                     // Compute the distance to the getObject
-                    double targetDist = targetDistanceMetersCamera(0, verticalOffset);
-                    DetectedObject note = new DetectedObject(horizontalOffset, verticalOffset, targetDist, DetectedObject.ObjectType.NOTE, LL_OFFSET);
+                    // double targetDist = targetDistanceMetersCamera(0, verticalOffset);
+                    DetectedObject note = new DetectedObject(horizontalOffset, verticalOffset,DetectedObject.ObjectType.NOTE, LL_OFFSET);
                     detectedObjectList.add(new DetectedObjectList.DetectedObjectPair(note, detection.confidence));
                 }
             }

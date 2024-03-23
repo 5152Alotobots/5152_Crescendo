@@ -20,9 +20,9 @@ crop_x_max:1.000000
 crop_x_min:-1.000000
 crop_y_max:1.000000
 crop_y_min:-1.000000
-cross_a_a:0.118262
-cross_a_x:0.020312
-cross_a_y:-0.775000
+cross_a_a:1
+cross_a_x:0
+cross_a_y:0.21
 cross_b_a:1
 cross_b_x:0
 cross_b_y:0
