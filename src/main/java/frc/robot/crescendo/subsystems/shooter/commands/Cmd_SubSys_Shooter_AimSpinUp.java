@@ -50,7 +50,7 @@ public class Cmd_SubSys_Shooter_AimSpinUp extends Command {
     atPos = subSysShooter.shooterArmMtrAtSetpoint();
     atSpd = subSysShooter.setShooterWheelsVelocity(shooterWheelsSpdCmd);
     
-    if (!readyToShoot){
+    if (readyToShoot == false){
       if(atPos && atSpd){
         readyToShoot = true;
       }

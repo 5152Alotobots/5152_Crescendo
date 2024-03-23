@@ -18,6 +18,16 @@ public class Cmd_SubSys_Shooter_AmpHoldThenShoot extends Command {
 
     Timer timer = new Timer();
 
+    /**
+     * 
+     * @param subSysShooter shooter subsystem
+     * @param releaseTrigger will release with intake on true
+     * @param shooterArmSpeed allows for manuel adjustment of shooter angle
+     * 
+     * Sets shooter to spin up to amp speed then shoot after the release trigger is true
+     * 
+     * @ends when intake is not occupied with a delay to keep shooter motors spinning after shoot
+     */
     public Cmd_SubSys_Shooter_AmpHoldThenShoot(
             SubSys_Shooter subSysShooter,
             BooleanSupplier releaseTrigger,

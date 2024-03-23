@@ -11,6 +11,8 @@ import java.util.function.DoubleSupplier;
 
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.SHOOTER_WAIT_AFTER_SHOOT;
 
+
+
 public class Cmd_SubSys_Shooter_HoldThenShoot extends Command {
     SubSys_Shooter subSysShooter;
     BooleanSupplier releaseTrigger;
@@ -18,6 +20,16 @@ public class Cmd_SubSys_Shooter_HoldThenShoot extends Command {
 
     Timer timer = new Timer();
 
+    /**
+     * 
+     * @param subSysShooter shooter subsystem
+     * @param releaseTrigger will release with intake on true
+     * @param shooterArmSpeed allows for joystick control of shooter while running command 1 - -1
+     * 
+     * Sets shooter to spin up then shoot after the release trigger is true
+     * 
+     * @ends when intake is not occupied with a delay to keep shooter motors spinning after shoot
+     */
     public Cmd_SubSys_Shooter_HoldThenShoot(
             SubSys_Shooter subSysShooter,
             BooleanSupplier releaseTrigger,

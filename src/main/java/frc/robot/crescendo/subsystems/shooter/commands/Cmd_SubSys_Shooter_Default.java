@@ -15,6 +15,16 @@ public class Cmd_SubSys_Shooter_Default extends Command {
   private final Supplier<ShooterIntakeDirection> intakeDirection;
   private final Supplier<ShooterDirection> shooterDirection;
 
+  /**
+   * 
+   * @param subSysShooter shooter subsystem
+   * @param shooterArmSpeed allows manuel control of the shooter angle
+   * @param intakeDirection direction to set intakeRoller
+   * @param shooterDirection direction to set the shooter intakeRoller to
+   * 
+   * this is the default command for the shooter, it allows for control of the shooter angle
+   * with a joystick and allows for control of the intake and shooter rollers 
+   */
   public Cmd_SubSys_Shooter_Default(
           SubSys_Shooter subSysShooter,
           DoubleSupplier shooterArmSpeed,
