@@ -157,7 +157,14 @@ public class HMIStation {
   public final Trigger shooterAmpPos = new Trigger(() -> shooterAmpPosTrigger());
   
   // Aux Driver Controller
-  //private final XboxController auxdriverController = new XboxController(2);
+  public final XboxController auxdriverController = new XboxController(2);
+
+  public final JoystickButton auxButton1 = new JoystickButton(auxdriverController, 1);
+  public final JoystickButton auxButton2 = new JoystickButton(auxdriverController, 2);
+  public final JoystickButton auxButton3 = new JoystickButton(auxdriverController, 3);
+  public final JoystickButton auxButton4 = new JoystickButton(auxdriverController, 4);
+  public final JoystickButton auxButton5 = new JoystickButton(auxdriverController, 5);
+  public final JoystickButton auxButton6 = new JoystickButton(auxdriverController, 6);
 
   // Button Box
 
