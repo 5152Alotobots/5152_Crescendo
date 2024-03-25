@@ -35,7 +35,7 @@ public class TunerConstants_MK4iL3_2024 {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 300.0;
+    private static final double kSlipCurrentA = 60.0;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
@@ -53,7 +53,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    private static final String kCANbusName = "";
+    private static final String kCANbusName = "CTRDriveBus";
     private static final int kPigeonId = 3;
 
 
@@ -91,7 +91,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final int kFrontLeftDriveMotorId = 10;
     private static final int kFrontLeftSteerMotorId = 11;
     private static final int kFrontLeftEncoderId = 12;
-    private static final double kFrontLeftEncoderOffset = -0.18;
+    private static final double kFrontLeftEncoderOffset = -0.186279296875;
 
     private static final double kFrontLeftXPosInches = 11.375;
     private static final double kFrontLeftYPosInches = 9.25;
@@ -100,7 +100,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final int kFrontRightDriveMotorId = 13;
     private static final int kFrontRightSteerMotorId = 14;
     private static final int kFrontRightEncoderId = 15;
-    private static final double kFrontRightEncoderOffset = -0.47900390625;
+    private static final double kFrontRightEncoderOffset = -0.477783203125;
 
     private static final double kFrontRightXPosInches = 11.375;
     private static final double kFrontRightYPosInches = -9.25;
@@ -109,7 +109,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final int kBackLeftDriveMotorId = 16;
     private static final int kBackLeftSteerMotorId = 17;
     private static final int kBackLeftEncoderId = 18;
-    private static final double kBackLeftEncoderOffset = 0.05615234375;
+    private static final double kBackLeftEncoderOffset = 0.061279296875;
 
     private static final double kBackLeftXPosInches = -11.375;
     private static final double kBackLeftYPosInches = 9.25;
@@ -118,7 +118,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final int kBackRightDriveMotorId = 19;
     private static final int kBackRightSteerMotorId = 20;
     private static final int kBackRightEncoderId = 21;
-    private static final double kBackRightEncoderOffset = 0.351318359375;
+    private static final double kBackRightEncoderOffset = 0.353515625;
 
     private static final double kBackRightXPosInches = -11.375;
     private static final double kBackRightYPosInches = -9.25;
