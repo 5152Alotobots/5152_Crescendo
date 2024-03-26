@@ -12,6 +12,7 @@ public class Cmd_SubSys_Shooter_RotateToDegree extends Command {
     Timer timer = new Timer();
 
     /**
+     * @param degrees The degree to rotate to 
      * Rotates the shooter to a degree offset from flat 0 degrees
      */
     public Cmd_SubSys_Shooter_RotateToDegree(SubSys_Shooter subSysShooter, DoubleSupplier degrees) {
