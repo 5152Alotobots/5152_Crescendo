@@ -35,7 +35,7 @@ public class TunerConstants_MK4iL3_2024 {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 300.0;
+    private static final double kSlipCurrentA = 60.0;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
@@ -53,7 +53,7 @@ public class TunerConstants_MK4iL3_2024 {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    private static final String kCANbusName = "";
+    private static final String kCANbusName = "CTRDriveBus";
     private static final int kPigeonId = 3;
 
 
