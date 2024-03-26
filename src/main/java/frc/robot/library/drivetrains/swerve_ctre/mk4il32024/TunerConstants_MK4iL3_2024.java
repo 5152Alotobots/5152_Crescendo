@@ -109,7 +109,8 @@ public class TunerConstants_MK4iL3_2024 {
     private static final int kBackLeftDriveMotorId = 16;
     private static final int kBackLeftSteerMotorId = 17;
     private static final int kBackLeftEncoderId = 18;
-    private static final double kBackLeftEncoderOffset = 0.061279296875;
+    private static final double kBackLeftEncoderOffset = 0.05615234375;
+
 
     private static final double kBackLeftXPosInches = -11.375;
     private static final double kBackLeftYPosInches = 9.25;
