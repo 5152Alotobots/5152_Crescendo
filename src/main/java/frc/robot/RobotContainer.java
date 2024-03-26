@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -19,7 +20,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.chargedup.DriverStation;
 import frc.robot.crescendo.HMIStation;
@@ -55,6 +58,8 @@ import frc.robot.library.drivetrains.mecanum.SubSys_MecanumDrive;
 import frc.robot.library.drivetrains.mecanum.commands.Cmd_SubSys_MecanumDrive_JoystickDefault;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
+import frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023;
+import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
 import static frc.robot.crescendo.subsystems.intake.SubSys_Intake_Constants.PresetIntakePositions.INTAKE_PRESET_PICKUP;
@@ -98,6 +103,8 @@ public class RobotContainer {
     final SwerveRequest.RobotCentric driveRC;
     final SwerveRequest.FieldCentric drive;
     final Telemetry logger;
+    final double MaxSpeed; 
+
     final HMIStation hmiStation;
     final SubSys_Intake intakeSubSys;
     final SubSys_Slider sliderSubSys;
@@ -120,7 +127,7 @@ public class RobotContainer {
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1) // Add a 10% deadband
                     .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+            logger = new Telemetry(TunerConstants_MK4iL2_2023.kSpeedAt12VoltsMps); 
 
             // Auto
             autoChooser = drivetrain.getAutoChooser();
@@ -168,7 +175,7 @@ public class RobotContainer {
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             
             
-            logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);          
+            logger = new Telemetry(TunerConstants_MK4iL3_2024.kSpeedAt12VoltsMps);          
 
             subSysBling = new SubSys_Bling();
 
@@ -247,8 +254,9 @@ public class RobotContainer {
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
+        
         drivetrain.registerTelemetry(logger::telemeterize);
-      
+        
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     }
 
@@ -358,7 +366,24 @@ public class RobotContainer {
       new Trigger(shooterSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_ShooterOccupied(subSysBling)); // Shooter occupied
       new Trigger(intakeSubSys::getIntakeOccupied).whileTrue(new Cmd_SubSys_Bling_IntakeOccupied(subSysBling)); // Intake occupied
       new Trigger(shooterSubSys::shooterReady).whileTrue(new Cmd_SubSys_Bling_ReadyToShoot(subSysBling));
+     
       hmiStation.shooterShoot.onTrue(new Cmd_SubSys_Bling_Shooting(subSysBling).withTimeout(0.5));
+
+      // Robot Level
+      hmiStation.pickupNoteTransferToShooter.whileTrue(new Cmd_PickUpNoteTransferToShooter(intakeSubSys, shooterSubSys));
+     
+      // SysID    
+      hmiStation.auxButton1.whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton2.whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      hmiStation.auxButton3.whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      hmiStation.auxButton4.whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+      /* Manually stop logging with left bumper after we're done with the tests */
+      /* This isn't necessary, but is convenient to reduce the size of the hoot file */
+      hmiStation.auxButton5.onTrue(new RunCommand(SignalLogger::start));
+      hmiStation.auxButton6.onTrue(new RunCommand(SignalLogger::stop));
+
+
     }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -366,7 +391,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-
         return autoChooser.getSelected();
     }
 

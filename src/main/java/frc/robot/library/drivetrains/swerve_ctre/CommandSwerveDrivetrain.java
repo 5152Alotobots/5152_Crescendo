@@ -1,5 +1,6 @@
 package frc.robot.library.drivetrains.swerve_ctre;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -15,7 +16,11 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -24,12 +29,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
@@ -45,8 +52,59 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     private Field2d field = new Field2d();
 
+    // Logging WPILib
+    StructPublisher<Pose2d> publisherRobotPose = NetworkTableInstance.getDefault()
+        .getStructTopic("RobotPose", Pose2d.struct).publish();
+    
+        //StructArrayPublisher<Pose2d> arrayPublisher = NetworkTableInstance.getDefault()
+    //    .getStructArrayTopic("MyPoseArray", Pose2d.struct).publish();
+    
+    StructArrayPublisher<SwerveModuleState> publisherSwerveModules = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("SwerveModuleStates", SwerveModuleState.struct).publish();
+
     private SubSys_Photonvision subSysPhotonvision;
    
+    // SysID
+    private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+    private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+
+    /* Use one of these sysidroutines for your particular test */
+    private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(TranslationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+
+    private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(RotationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+    private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(7),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(SteerCharacterization.withVolts(volts)),
+                    null,
+                    this));
+
+    /* Change this to the sysid routine you want to test */
+    private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
+    
     @Override
     public void periodic() {
         
@@ -57,8 +115,17 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         SmartDashboard.putNumber("PoseX", this.m_odometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("PoseY", this.m_odometry.getEstimatedPosition().getY());
+
         field.setRobotPose(this.m_odometry.getEstimatedPosition());
         SmartDashboard.putData("Field", field);
+
+        // Logging WPILib
+        publisherRobotPose.set(this.m_odometry.getEstimatedPosition());
+        
+        //arrayPublisher.set(new Pose2d[] {poseA, poseB});
+        
+        publisherSwerveModules.set(this.m_moduleStates);
+
 
         boolean lclFlipPath = false;
         if(DriverStation.getAlliance().isPresent()){
@@ -200,4 +267,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             ()-> m_flipPath, // Change this if the path needs to be flipped on red vs blue
             this); // Subsystem for requirements
     }   
+
+    // SysID
+        public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return RoutineToApply.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return RoutineToApply.dynamic(direction);
+    }
 }
