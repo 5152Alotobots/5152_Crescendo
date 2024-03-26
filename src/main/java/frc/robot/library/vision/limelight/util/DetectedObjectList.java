@@ -57,22 +57,29 @@ public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObj
 
     /**
      * Sorts the list based on the confidence values, with the highest confidence value at index 0 and decreasing as the index increases.
+     * Updates the list and returns the new copy.
+     *
+     * @return The sorted list of DetectedObjectPair objects.
      */
-    public void sortByConfidence() {
+    public DetectedObjectList sortByConfidence() {
         sort(Comparator.comparingDouble(DetectedObjectPair::getConfidence).reversed());
+        return this;
     }
 
     /**
      * Sorts the list based on the distance from the given Pose2d to the Pose3d of each DetectedObject.
      * The DetectedObject with the closest Pose3d to the given Pose2d will be at index 0, and the distance increases as the index increases.
+     * Updates the list and returns the new copy.
      *
      * @param pose The Pose2d to calculate distances from.
+     * @return The sorted list of DetectedObjectPair objects.
      */
-    public void sortByPose(Pose2d pose) {
+    public DetectedObjectList sortByPose(Pose2d pose) {
         sort(Comparator.comparingDouble(pair -> {
             Translation2d translation = new Translation2d(pair.getObject().pose.getX(), pair.getObject().pose.getY());
             return pose.getTranslation().getDistance(translation);
         }));
+        return this;
     }
 
     /**
@@ -149,7 +156,7 @@ public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObj
         }
         @Override
         public String toString() {
-            return String.format("(X: %.2f, Y: %.2f, Z: %.2f, RobotToObjAngle: %.2f) Class: %S, Conf: %.2f",
+            return String.format("(X: %.2f, Y: %.2f, Z: %.2f, FieldAngle: %.2f) Class: %S, Conf: %.2f",
                     getObject().pose.getX(),
                     getObject().pose.getY(),
                     getObject().pose.getZ(),

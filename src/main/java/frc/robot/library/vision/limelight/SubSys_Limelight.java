@@ -26,8 +26,14 @@ public class SubSys_Limelight extends SubsystemBase {
         detectedObjectsShuffleboard = Shuffleboard
                 .getTab("Limelight")
                 .getLayout("Detected Objects", BuiltInLayouts.kGrid)
-                .withProperties(Map.of("Number of columns", 1, "Number of rows", 5));
-        detectedObjectsShuffleboard.addStringArray("Detected Objects", () -> detectedObjectList.toArray());
+                .withProperties(Map.of("Number of columns", 1, "Number of rows", 3));
+        detectedObjectsShuffleboard.addStringArray("Highest Confidence", () -> detectedObjectList.sortByConfidence().toArray());
+        // Only log closest to robot if drive is available
+        if (subSys_Drive != null) {
+            detectedObjectsShuffleboard.addStringArray("Closest To Robot:", () -> detectedObjectList.sortByPose(subSys_Drive.getState().Pose).toArray());
+        } else {
+            detectedObjectsShuffleboard.addString("Closest To Robot:", () -> "Cannot get Pose from drive!");
+        }
     }
 
     /**
@@ -74,7 +80,6 @@ public class SubSys_Limelight extends SubsystemBase {
                     double verticalOffset = Math.toRadians(-detection.ty); // MAKE CCW POS
 
                     // Compute the distance to the getObject
-                    // double targetDist = targetDistanceMetersCamera(0, verticalOffset);
                     DetectedObject note = new DetectedObject(horizontalOffset, verticalOffset,DetectedObject.ObjectType.NOTE, LL_OFFSET);
                     detectedObjectList.add(new DetectedObjectList.DetectedObjectPair(note, detection.confidence));
                 }
