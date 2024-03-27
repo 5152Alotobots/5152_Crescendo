@@ -1,5 +1,7 @@
 package frc.robot.crescendo.subsystems.shooter;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,6 +11,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
@@ -36,6 +39,7 @@ import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.ShooterWh
 import frc.robot.crescendo.subsystems.shooter.util.ShooterDirection;
 import frc.robot.crescendo.subsystems.shooter.util.ShooterIntakeDirection;
 
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.AutoAim.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Arm.*;
 import static frc.robot.crescendo.subsystems.shooter.SubSys_Shooter_Constants.PID.Shooter.*;
@@ -53,7 +57,7 @@ public class SubSys_Shooter extends SubsystemBase {
     private final CANSparkMax shooterRollerMtr = new CANSparkMax(CAN_IDs.ShooterRollerMtr_CAN_ID, MotorType.kBrushless);
     private final RelativeEncoder shooterRollerMtrEncoder;
     private final SparkPIDController shooterRollerMtrPID;
-     private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
+    private final DigitalInput shooterRollerIR = new DigitalInput(DigitalIO_IDs.ShooterRollerIRDetector_ID);
     private final TalonFX shooterArmMtr = new TalonFX(CAN_IDs.ShooterArmMtr_CAN_ID);
     private final CANcoder shooterArmCANCoder = new CANcoder(CAN_IDs.ShooterArmCANCoder_CAN_ID);
 
@@ -64,6 +68,23 @@ public class SubSys_Shooter extends SubsystemBase {
     final VelocityTorqueCurrentFOC shooterWheelsMtrLeftVelTrqCmd;
     final VelocityTorqueCurrentFOC shooterWheelsMtrRightVelTrqCmd;
         
+    
+    // SysID
+    private final VoltageOut m_SysIDShooterWheelVoltCmd = new VoltageOut(0);
+
+    private SysIdRoutine m_SysIdShooterWheelRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,          // Default ramp rate is acceptable
+                Volts.of(4),            // Reduce dynamic voltage to 4 to prevent motor brownout
+                null,           // Default timeout is acceptable
+                                        // Log state with Phoenix SignalLogger class
+                (state)->SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (Measure<Voltage> volts)-> shooterWheelsMtrRight.setControl(m_SysIDShooterWheelVoltCmd.withOutput(volts.in(Volts))),
+                null,
+                this));
+
     public SubSys_Shooter () {
 
         // Shooter Wheels
@@ -157,6 +178,10 @@ public class SubSys_Shooter extends SubsystemBase {
         CANcoderConfigurator shooterArmCANCoderConfigurator = shooterArmCANCoder.getConfigurator();
         shooterArmCANCoderConfigurator.apply(shooterArmCaNcoderConfiguration);
 
+        // SysID
+        // Set the logger to log to the first flashdrive plugged in
+        SignalLogger.setPath("/media/sda1/");
+        SignalLogger.start();
     }
 
     /**
