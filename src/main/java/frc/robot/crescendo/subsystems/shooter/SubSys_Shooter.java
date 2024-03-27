@@ -373,6 +373,15 @@ public class SubSys_Shooter extends SubsystemBase {
         setShooterArmOutput(0);
     }
 
+
+    // SysID
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_SysIdShooterWheelRoutine.quasistatic(direction);
+    }
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_SysIdShooterWheelRoutine.dynamic(direction);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake/Shooter Arm Velocity", Math.abs(shooterArmMtr.getVelocity().getValueAsDouble()));
