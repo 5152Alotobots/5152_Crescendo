@@ -2,6 +2,7 @@ package frc.robot.crescendo.subsystems.shooter.expirimental;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
 import frc.robot.crescendo.subsystems.shooter.SubSys_Shooter;
@@ -55,6 +56,7 @@ public class Cmd_SubSys_Shooter_AutoShoot extends Command {
                 targetPose,
                 subSysDrivetrain.getState().Pose);
         double calculatedLaunchAngle = AimModule.calculateLaunchAngle(subSysDrivetrain.getState().Pose);
+        SmartDashboard.putNumber("Calculate Launch Angle", calculatedLaunchAngle);
         subSysShooter.setShooterArmDegree(calculatedLaunchAngle);
         if (Math.abs(calculatedLaunchPoint.relativeTo(subSysDrivetrain.getState().Pose).getX()) <= LAUNCH_TOLERANCE) {
             subSysShooter.shoot();

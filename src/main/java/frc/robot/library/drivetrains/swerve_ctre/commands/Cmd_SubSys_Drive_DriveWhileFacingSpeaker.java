@@ -2,6 +2,7 @@ package frc.robot.library.drivetrains.swerve_ctre.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.crescendo.subsystems.shooter.expirimental.AimModule;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
@@ -31,6 +32,7 @@ public class Cmd_SubSys_Drive_DriveWhileFacingSpeaker extends Command {
     @Override
     public void execute() {
         Rotation2d targetHeading = AimModule.calculateRobotHeadingAlignShooterToSpeaker(subSysSwerve.getState().Pose);
+        SmartDashboard.putNumber("Auto Aim Target Heading", targetHeading.getDegrees());
         subSysSwerve.applyRequest(() -> drive
                 .withVelocityX(velocityX.getAsDouble())
                 .withVelocityY(velocityY.getAsDouble())
