@@ -7,7 +7,7 @@ import frc.robot.crescendo.subsystems.shooter.util.PoseHashMap;
 public class SubSys_Shooter_Constants {
     
     public static final class ShooterArm {
-        public static final double CANcoderMagOffset = 0.2708; //-0.722;
+        public static final double CANcoderMagOffset = 0.10644;//0.2708; //-0.722;
 
         public static final class SoftwareLimits {
 
